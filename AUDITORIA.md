@@ -115,3 +115,29 @@ Os scripts ficam em `tools/`:
 ```bash
 node "LUMA - PROJETO PRINCIPAL/tools/sweep-dead-code.cjs" "LUMA - PROJETO PRINCIPAL/index.html"
 node "LUMA - PROJETO PRINCIPAL/tools/sweep-dom-refs.cjs" "LUMA - PROJETO PRINCIPAL/index.html"
+node "LUMA - PROJETO PRINCIPAL/tools/check-reachability.cjs"
+node "LUMA - PROJETO PRINCIPAL/tools/sweep-i18n.cjs"
+```
+
+## Varredura de tradução (06/09/2026)
+
+Depois de somar espanhol, alemão, francês, russo e italiano, um teste no navegador mostrou o painel do mapa em **português** com o resto do jogo em **russo**. Os 42 testes estavam verdes. A partir daí, `tools/sweep-i18n.cjs` passou a cruzar o que a tela mostra com o que os dicionários sabem.
+
+O que apareceu — nenhum item foi encontrado pelos testes, todos por leitura de tela ou pela varredura:
+
+| defeito | onde | efeito para o jogador |
+|---|---|---|
+| **Telas de JS não se retraduzem** | `setLocale()` só chamava `applyLocaleToDOM()` | Trocar de idioma no mapa deixava o painel no idioma anterior até trocar de nó. Corrigido com `refreshTranslatedScreens()`. |
+| **Rótulo em inglês sobrescrevendo tradução** | `22-map.js` — `"CURRENT RITUAL"` e `"LOCKED"` | Duas linhas escreviam por cima do `t(node.state)` correto três linhas acima. O terceiro ramo (`completed`/`available`) não escrevia texto nenhum e **herdava o rótulo do nó anterior**. |
+| **Português cru na interface** | `19-ui-bindings.js` — `'ativado' : 'desativado'` | Sobrevivente da passagem para inglês. Aparecia para todo mundo, inclusive em inglês. |
+| **Toasts fora do `t()`** | `22-map.js` — `NEW RITUAL UNLOCKED`, `Launching …` | Nunca traduziam em idioma nenhum. |
+| **`no seals yet.` cru** | `10-run-lifecycle.js:188` | Chave existia nos seis dicionários e nunca era usada — aparecia como órfã na varredura. |
+| **46 frases sem tradução** | 22 toasts de conclusão + 24 rótulos de bioma | Metade visível do mapa em inglês nos seis idiomas. |
+
+**A lição que vale guardar:** os testes liam o dicionário e confirmavam que ele estava completo. O dicionário *estava* completo. O que faltava era o caminho entre o dicionário e a tela — e isso nenhum teste de dicionário alcança. Foi preciso abrir o jogo, trocar de idioma e **ler o que estava escrito**.
+
+Repete-se o padrão já registrado neste documento: sistemas completos e desligados. Aqui, `t(node.state)` funcionava perfeitamente e era sobrescrito duas linhas depois.
+
+### A fronteira entre nome próprio e frase
+
+`02b-i18n.js` já registrava a decisão de deixar os nomes das missões em inglês, como topônimos. A decisão é boa e foi mantida. Mas ela vinha protegendo, por vizinhança, coisas que não são nomes próprios: os **toasts** ("Fog clears") são frases, e os **rótulos de bioma** ("Ritual · Forest") são categoria + lugar. Esses passaram a traduzir. A varredura lê a lista de nomes próprios direto do campo `title` de `05-missions.js`, então a decisão continua registrada num lugar só e a ferramenta não acusa falso positivo.

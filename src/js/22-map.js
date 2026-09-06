@@ -84,7 +84,7 @@
            if (node.id === mapProgress.currentNodeId) {
                const idx = MAP_NODES.findIndex(n => n.id === node.id);
                if (idx >= 0 && idx < MAP_NODES.length - 1) mapProgress.currentNodeId = MAP_NODES[idx + 1].id;
-               setTimeout(() => showMapToast(`✨ NEW RITUAL UNLOCKED: ${MAP_NODES[idx + 1].title}`), 800);
+               setTimeout(() => showMapToast(`✨ ${t('new ritual unlocked')}: ${t(MAP_NODES[idx + 1].title)}`), 800);
            }
        }
        if (perfDone && !mapProgress.perfectNodes.includes(node.id)) mapProgress.perfectNodes.push(node.id);
@@ -423,7 +423,7 @@
 
     if (node.state === 'current') {
         if (mapUI.state) {
-            mapUI.state.textContent = "CURRENT RITUAL";
+            // O texto do selo já foi escrito com t(node.state) acima; aqui só a cor muda.
             mapUI.state.style.color = "var(--sun-core)";
             mapUI.state.style.border = "1px solid rgba(255, 216, 147, 0.4)";
             mapUI.state.style.background = "rgba(255, 216, 147, 0.1)";
@@ -434,7 +434,6 @@
         }
     } else if (node.state === 'locked') {
         if (mapUI.state) {
-            mapUI.state.textContent = "LOCKED";
             mapUI.state.style.color = "rgba(255,255,255,0.4)";
             mapUI.state.style.border = "1px solid rgba(255,255,255,0.05)";
             mapUI.state.style.background = "transparent";
@@ -550,7 +549,7 @@
 
   if (mapUI.btnPlay) {
       mapUI.btnPlay.addEventListener('click', () => {
-        showMapToast(`Launching ${getMapNodeById(selectedNodeId).title}...`);
+        showMapToast(`${t('entering')} ${t(getMapNodeById(selectedNodeId).title)}...`);
         const fade = document.getElementById('fade');
         if (fade) fade.classList.add('active');
         setTimeout(() => { 

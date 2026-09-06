@@ -185,7 +185,7 @@
             `;
         }
     });
-    if (sealsGrid.innerHTML === '') sealsGrid.innerHTML = '<div style="grid-column: 1 / -1; color: var(--ui-tertiary); font-size: 13px;">no seals yet.</div>';
+    if (sealsGrid.innerHTML === '') sealsGrid.innerHTML = `<div style="grid-column: 1 / -1; color: var(--ui-tertiary); font-size: 13px;">${t('no seals yet.')}</div>`;
 
     // Biomas
     const BIOMES = [

@@ -79,7 +79,7 @@
   const setAnalyticsEl = document.getElementById('setAnalytics');
   if (setAnalyticsEl) setAnalyticsEl.addEventListener('change', e => {
       settings.analyticsConsent = e.target.checked;
-      document.getElementById('valAnalytics').textContent = e.target.checked ? 'ativado' : 'desativado';
+      document.getElementById('valAnalytics').textContent = t(e.target.checked ? 'on' : 'off');
       applySettingsToDOM(); saveProgress();
       if (settings.analyticsConsent) analytics.start(); else analytics.stop();
       analytics.track(EVENT_TYPES.ANALYTICS_CONSENT, { consent: settings.analyticsConsent });
