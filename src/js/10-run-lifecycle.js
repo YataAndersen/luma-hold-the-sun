@@ -61,7 +61,7 @@
     state.worldLight = calculateWorldLight().percentage;
     if(ui.menuWorldLightFill) ui.menuWorldLightFill.style.width = `${state.worldLight}%`;
     const txt = document.getElementById("menuWorldLightText");
-    if (txt) txt.textContent = `${Math.floor(state.worldLight)}% restored`;
+    if (txt) txt.textContent = `${Math.floor(state.worldLight)}% ${t('restored')}`;
     
     const sWl = document.getElementById("settingsWorldLightText");
     if (sWl) sWl.textContent = `${Math.floor(state.worldLight)}%`;
@@ -71,7 +71,7 @@
         const node = MAP_NODES.find(n => n.id === m.id);
         const eyebrow = document.querySelector('#menuScreen .eyebrow');
         if (eyebrow && node) {
-            eyebrow.textContent = `journey: ${node.title.toLowerCase()}`;
+            eyebrow.textContent = `${t('journey')}: ${t(node.title).toLowerCase()}`;
         }
     }
   }

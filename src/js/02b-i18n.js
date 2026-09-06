@@ -75,6 +75,8 @@
       'world light': 'luz do mundo',
       'save & return': 'salvar & voltar',
       'language': 'idioma',
+      'restored': 'restaurado',
+      'world progressed': 'mundo restaurado',
 
       // --- tutorial ---
       'skip ritual': 'pular ritual',
