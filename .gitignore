@@ -8,3 +8,5 @@ dist/
 node_modules/
 .DS_Store
 Thumbs.db
+
+# As artes de divulgação ficam versionadas em press/, não em dist/

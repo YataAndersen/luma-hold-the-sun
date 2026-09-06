@@ -159,7 +159,21 @@ Duas travas para não regredir:
 - `tools/check-reachability.cjs` lista objetivo por objetivo com o teto de cada missão;
 - um teste na suíte falha se qualquer objetivo cronometrado passar do que a própria missão comporta.
 
-## 11. Paridade de input
+## 11. A luz do mundo satura em duas partidas (pendente)
+
+Descoberto ao montar saves para as capturas de imprensa. `calculateWorldLight()` soma:
+
+| fonte | peso | quanto para 100% sozinho |
+|---|---|---|
+| aves | `birds × 0,5` | **200 aves** |
+| metros | `metros × 0,001` | 100.000 m |
+| selos | 0,5 a 2 por missão | 50 missões perfeitas |
+
+O bot rastreador fez **137 aves numa única corrida**. Ou seja, duas partidas boas zeram a meta-progressão inteira — a barra que deveria representar a jornada completa de 50 missões enche antes da terceira.
+
+Os pesos foram calibrados quando as aves eram raras. Depois que sustentar passou a gerar aves com frequência, a escala ficou obsoleta. Uma correção plausível: aves valendo `0,05` (2.000 aves para 100%) e o peso dos selos subindo, para que a luz do mundo represente de fato o avanço pela jornada. Precisa de decisão de design antes de mexer.
+
+## 12. Paridade de input
 
 - O `keydown` disparava um pulso a cada evento de auto-repeat do sistema: segurar Espaço jogava sozinho. Agora o auto-repeat sustenta, mas só uma tecla realmente pressionada pulsa.
 - O sustain por teclado passou a acompanhar o sol a cada frame (`input.keyboardHold`) em vez de depender dos eventos de repeat para reposicionar o toque.
