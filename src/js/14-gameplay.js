@@ -90,18 +90,28 @@
     state.sun.impulseEfficiency = lerp(state.sun.impulseEfficiency, 1, dt * 5);
 
     state.sun.errorTremor = lerp(state.sun.errorTremor, 0, dt * 15);
+    state.sun.reachHint = Math.max(0, state.sun.reachHint - dt * 1.6);
     state.sun.glowFail = lerp(state.sun.glowFail, 0, dt * 12);
 
     // --- SISTEMA BIOLÓGICO: RESPIRAÇÃO v2.0 ---
-    let breathFreq = 2.5;
+    // A pulsação do sol é o metrônomo da respiração do jogador, então ela DESACELERA
+    // conforme ele acerta: 1,26 rad/s ≈ 5s por ciclo, o tempo de um gesto inteiro.
+    // Antes acelerava com o combo, o que premiava o acerto fazendo respirar mais rápido —
+    // o oposto do efeito que o jogo busca.
+    let breathFreq = 1.5;
     let breathAmp = 0.04;
-    if (state.sun.stability > 0.7) { breathAmp *= 1.5; breathFreq *= 1.2; }
-    if (state.combo > 0) { breathFreq *= 1.3; } // Flow state acelera
-    
+    if (state.sun.stability > 0.7) { breathAmp *= 1.5; breathFreq *= 0.9; }
+    if (state.combo > 0) { breathFreq *= 0.84; }
+    // Prender a respiração aperta e acelera: a tensão é visível antes de ser explicada.
+    if (state.sun.strain > 0) {
+      breathFreq *= 1 + state.sun.strain * 1.6;
+      breathAmp *= 1 - state.sun.strain * 0.6;
+    }
+
     state.sun.breath += dt * breathFreq;
     state.sun.breathStrength = breathAmp;
 
-    let maxEnergy = 1 - state.sun.wear * 0.5;
+    let maxEnergy = maxBreath();
 
     let newPhase = 1,
         phaseName = "Phase I: Awakening";
@@ -141,11 +151,24 @@
             dist = Math.hypot(dx, dy);
       if (dist <= currentInfluenceRadius) {
         const influence = getInteractionStrength(dist, currentInfluenceRadius);
-        const lift = sustainConfig.liftForce * state.mods.liftMult * influence * state.emotion.runtime.physics.assistMul;
+        // A tensão mata a sustentação. Sem isto, segurar para sempre seria a estratégia
+        // ótima e o ciclo não fecharia: o jogo precisa que soltar seja necessário, não
+        // apenas recomendado. É o que transforma o gesto numa duração com fim.
+        const lift = sustainConfig.liftForce * state.mods.liftMult * influence
+                   * state.emotion.runtime.physics.assistMul * (1 - state.sun.strain * 0.6);
         state.sun.vy -= lift * dt;
         state.sun.stability = clamp(state.sun.stability + sustainConfig.stabilityGain * state.mods.stabGainMult * influence * dt, 0, 1);
         state.sun.energy = clamp(state.sun.energy + sustainConfig.energyRecovery * state.mods.energyRecMult * influence * dt, 0, maxEnergy);
         holdIntensity = influence;
+
+        // Inspirou até encher e continuou segurando: a partir daqui tensiona, não acumula.
+        // É o que dá ao gesto um fim — e é o que transforma "segurar" numa duração a julgar
+        // em vez de um botão a manter apertado.
+        if (state.sun.energy >= maxEnergy - 0.001) {
+          state.sun.strain = Math.min(1, state.sun.strain + dt / breathConfig.strainTime);
+          state.sun.stability = clamp(
+            state.sun.stability - breathConfig.strainStabilityDrain * state.sun.strain * dt, 0, 1);
+        }
         if (influence > .74) state.sun.stableTimer += dt;
         else state.sun.stableTimer = Math.max(0, state.sun.stableTimer - dt * 1.4);
         
@@ -160,6 +183,11 @@
     } else {
       state.sun.stability = clamp(state.sun.stability - .08 * dt, 0, 1);
       state.sun.stableTimer = Math.max(0, state.sun.stableTimer - dt * 1.3);
+    }
+
+    // Fora do ponto cheio — soltando, ou ainda enchendo — a tensão cede sozinha.
+    if (!(state.input.holding && state.input.inside && state.sun.energy >= maxEnergy - 0.001)) {
+      state.sun.strain = Math.max(0, state.sun.strain - dt / breathConfig.strainRelease);
     }
 
     if (state.sun.stableTimer > 2.2) {
@@ -219,7 +247,7 @@
     // --- CÁLCULO CORRETO DE ALTITUDE (BASEADO NA SUBIDA DA CÂMERA E DO SOL) ---
     const startY = H * 0.38;
     const pixelsAboveStart = Math.max(0, startY - state.sun.y);
-    const METERS_PER_PIXEL = 0.025; // Reduzido drasticamente para garantir que a missão demore e possa ser apreciada
+    const METERS_PER_PIXEL = 0.07; // Reescalado junto com o tempo respiratório: ver tools/sim-breath.cjs
     state.scoreMeters = Math.max(state.scoreMeters, Math.floor(pixelsAboveStart * METERS_PER_PIXEL));
     
     const altNorm = clamp(state.scoreMeters / 3000, 0, 1);
@@ -230,7 +258,7 @@
     } else {
       state.sun.wear *= 0.95; // Decai lentamente
     }
-    maxEnergy = 1 - state.sun.wear * 0.5;
+    maxEnergy = maxBreath();
 
     // DYNAMIC WEATHER: Frente fria se o sol cair
     let targetRain = 0;
@@ -305,7 +333,7 @@
           state.sun.nearFail = false;
           state.sun.vy = -400; // Impulso massivo pra cima
           spawnSpark(state.sun.x, state.sun.y, false, 20);
-          showFloating("escudo quebrado", true);
+          showFloating("the shelter broke", true);
       } else {
           let baseGrace = settings.gameplay.difficulty === 'easy' ? 0.30 : (settings.gameplay.difficulty === 'hard' ? 0.18 : 0.22);
           state.graceTime = baseGrace + state.mods.graceTimeBonus;
@@ -491,7 +519,7 @@
         state.sun.energy = 0.2;
         state.sun.stability = 0.5;
         state.sun.vy = -800;
-        showFloating("eternidade", true);
+        showFloating("eternity holds you", true);
       } else {
         state.sun.y = HORIZON_Y + 6;
         endRun(false);

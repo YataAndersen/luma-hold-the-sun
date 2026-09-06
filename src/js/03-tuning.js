@@ -1,21 +1,30 @@
+  // --- A CONSTANTE DE TEMPO DO JOGO ---
+  // O LUMA é o avesso do Flappy Bird: desafiar sem estressar. Isso é uma decisão de
+  // FREQUÊNCIA, não de dificuldade. Os números antigos — queda a 710px/s, cooldown de
+  // 0,14s, ~1,9 pulsos por segundo sustentáveis — rodavam na frequência do dedo, a mesma
+  // ordem de grandeza do Flappy Bird. Estes rodam na frequência da respiração: um gesto a
+  // cada ~5s, ~12 por minuto, que é a faixa onde a sincronia cardiorrespiratória acontece.
+  // Mexa nisto como conjunto: queda, impulso e custo do pulso formam um ciclo só.
   const tune = {
-    maxFall: 710,
-    clickImpulseBase: 300,
-    clickImpulsePerfect: 350,
+    maxFall: 240,
+    clickImpulseBase: 170,
+    clickImpulsePerfect: 210,
     damping: 0.985,
     influenceRadius: 145,
-    clickCooldown: 0.14,
-    antiSpamWindow: 0.22,
+    // Um gesto por respiração: o custo do pulso já impede repetir antes de ~4s. O cooldown
+    // sobrou só para matar o toque duplo acidental.
+    clickCooldown: 0.35,
+    antiSpamWindow: 0.5,
     antiSpamMult: 0.78,
     nearFailBand: 115,
-    windForce: 300
+    windForce: 110
   };
 
   const gravityConfig = {
-    base: 850,
-    max: 1140,
+    base: 190,
+    max: 270,
     progression: 1.08,
-    entropy: 240
+    entropy: 90
   };
 
   function getCurrentGravity(difficulty, entropy) {
@@ -25,14 +34,40 @@
   }
 
   const sustainConfig = {
-    liftForce: 790,
-    // Sustentar é a única fonte real de energia: ~2,1s no ponto perfeito enchem a barra vazia.
-    energyRecovery: 0.42,
+    // Segurar tem que VENCER a gravidade com folga, inclusive no estado near_fail, onde
+    // gravityMul chega a 1,12. Com 215 a margem era de 7% no estado calmo e negativa em
+    // pânico: o sol afundava justamente quando o jogador tentava salvá-lo, e a corrida
+    // morria em ~3,5s. Num jogo que quer acalmar, o pânico precisa ter saída.
+    liftForce: 260,
+    // Inspirar: a barra vazia enche em ~4,5s. Esse é o tempo do gesto.
+    energyRecovery: 0.22,
     stabilityGain: 0.08
   };
 
-  // Um pulso é racionado pela energia. Barra cheia paga ~4,5 pulsos.
-  const pulseEnergyCost = 0.22;
+  // Um gesto é uma expiração inteira: esvazia o peito, tenha enchido ou não. Encher de
+  // novo leva ~4,5s, e é isso — não uma trava de cooldown — que dá o compasso ao jogo.
+  // Mantido como constante porque a economia de fôlego e as graças se referem a ele.
+  const pulseEnergyCost = 0.85;
+
+  // Teto de fôlego, descontado o desgaste acumulado na corrida.
+  function maxBreath() { return 1 - state.sun.wear * 0.5; }
+
+  // --- O PONTO ÓTIMO QUE SE PODE PASSAR ---
+  // Antes, segurar era monotônico: somava energia até travar no teto, e segurar demais
+  // nunca era pior que segurar o certo. Sem penalidade nas duas pontas não existe compasso,
+  // e a estratégia degenerava em "encher tudo, esvaziar o mais rápido possível".
+  // Agora, passar do ponto cheio é prender a respiração: tensiona em vez de acumular.
+  const breathConfig = {
+    // Abaixo disto não há ar para soltar: é a única recusa que sobrou.
+    minBreath: 0.12,
+    // Segundos segurando além do cheio até a tensão chegar ao máximo.
+    strainTime: 2.6,
+    // Soltar alivia mais rápido do que tensionar, para o erro não virar castigo.
+    strainRelease: 1.1,
+    // Quanto a tensão máxima rouba do impulso do pulso e da estabilidade.
+    strainImpulsePenalty: 0.55,
+    strainStabilityDrain: 0.22
+  };
 
   const influenceZones = {
     perfect: 0.15,

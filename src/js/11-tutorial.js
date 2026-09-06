@@ -44,8 +44,11 @@
 
       if (state.tutorial.delay > 0) { state.tutorial.delay -= dt; return; }
 
-      if (state.tutorial.chapter === 1) { // CHAPTER 1: SUSTAIN
-          state.entropy = 0; state.sun.energy = 1; 
+      if (state.tutorial.chapter === 1) { // CAPÍTULO 1: INSPIRAR
+          // A energia NÃO é mais fixada em 1. Fixá-la ensinava o gesto num mundo onde
+          // segurar não custava nada, e o jogador saía do tutorial sem nunca ter sentido
+          // o fôlego encher — que é a única coisa que o jogo pede dele.
+          state.entropy = 0;
           if (state.tutorial.step === 1) {
               setTut("☼", "the sun waits. touch near it to hold it up.", true);
               if (state.input.holding && isNear) { state.tutorial.step = 2; state.tutorial.delay = 1.0; showFloating("like that. the sun responds.", true); }
@@ -58,18 +61,33 @@
                   if (ui.tutContainer) ui.tutContainer.classList.add('hidden');
               }
           }
-      } else if (state.tutorial.chapter === 2) { // CHAPTER 2: RHYTHM
+      } else if (state.tutorial.chapter === 2) { // CAPÍTULO 2: SOLTAR NO PONTO
           state.entropy = 0;
           if (state.tutorial.step === 1) {
-              setTut("⌖", "tap the core to pulse.", true);
-              if (state.tutorial.perfects >= 3) { state.tutorial.step = 2; state.tutorial.delay = 1.5; showFloating("perfect. the rhythm begins.", true); }
+              // Espera o peito encher antes de pedir o gesto, para que o primeiro toque
+              // do jogador aconteça exatamente no ponto e ele sinta a diferença.
+              const cheio = state.sun.energy >= maxBreath() - 0.02;
+              setTut(cheio ? "◉" : "◌",
+                     cheio ? "the light is full. release it now." : "hold. let the light gather.",
+                     cheio);
+              if (state.tutorial.perfects >= 2) { state.tutorial.step = 2; state.tutorial.delay = 1.5; showFloating("perfect. the rhythm begins.", true); }
           } else if (state.tutorial.step === 2) {
-              setTut("∿", "pulses in sequence build rhythm. reach combo x3.", false);
+              setTut("∿", "let it fill, then release. three times.", false);
               if (state.combo >= 3) {
-                  state.tutorial.chapter = 3; state.tutorial.step = 1; state.tutorial.delay = 2.0;
+                  state.tutorial.chapter = 2.5; state.tutorial.step = 1; state.tutorial.delay = 2.0;
                   showFloating("the world begins to wake.", true);
                   if (ui.tutContainer) ui.tutContainer.classList.add('hidden');
               }
+          }
+      } else if (state.tutorial.chapter === 2.5) { // CAPÍTULO 2.5: SEGURAR DEMAIS
+          // O jogador precisa SENTIR a outra ponta do erro, não só a pressa. Este capítulo
+          // só sai quando ele deixa a respiração prender uma vez e vê a luz endurecer.
+          state.entropy = 0;
+          setTut("◍", "hold too long and the light tightens. feel it.", false);
+          if (state.sun.strain > 0.75) {
+              state.tutorial.chapter = 3; state.tutorial.step = 1; state.tutorial.delay = 2.0;
+              showFloating("that is the edge. breathe before it.", true);
+              if (ui.tutContainer) ui.tutContainer.classList.add('hidden');
           }
       } else if (state.tutorial.chapter === 3) { // CHAPTER 3: CARE
           if (state.tutorial.step === 1) {

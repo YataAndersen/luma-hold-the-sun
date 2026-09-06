@@ -43,6 +43,16 @@ for (const [f, s] of fonte) {
     const linha = s.slice(0, m.index).split('\n').length;
     dinamicas.push(`${f}:${linha}  t(${m[1]})`);
   }
+  // Funções que traduzem o que recebem: o literal fica no ponto de chamada, e sem isto
+  // ele não aparece em lugar nenhum do relatório. Foi assim que as falas do tutorial
+  // passaram despercebidas — elas chegam ao t() por dentro de setTut().
+  for (const m of s.matchAll(/\b(setTut|showFloating|showReward|showMapToast)\(([^)]*)\)/g)) {
+    for (const arg of m[2].matchAll(/(['"])((?:(?!\1)[^\\]|\\.)*)\1/g)) {
+      const texto = arg[2].replace(/\\'/g, "'").replace(/\\"/g, '"');
+      // Ícones são glifos soltos, não texto de jogador.
+      if (/[A-Za-z]{3}/.test(texto)) usadas.add(texto);
+    }
+  }
 }
 // O DOM entrega textContent já decodificado, então a chave real é "&", não "&amp;".
 const decodificar = s => s

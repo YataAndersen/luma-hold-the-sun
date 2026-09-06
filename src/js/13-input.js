@@ -43,16 +43,37 @@
     const currentInfluenceRadius = tune.influenceRadius * (state.mods.areaSustain ? 1.8 : 1) * sensMult;
     
     const dx = state.input.x - state.sun.x, dy = state.input.y - sunScreenY, dist = Math.hypot(dx, dy);
-    if (dist > currentInfluenceRadius) return;
-    // FIX: Fallback seguro caso o mod.cooldown seja undefined (evita NaN e rate-limit quebrado)
-    if (now - state.input.lastClick < tune.clickCooldown * (state.mods.cooldown || 1)) return;
 
-    // Sem fôlego: o pulso é recusado antes de gastar energia ou creditar combo.
-    if (state.sun.energy < pulseEnergyCost) {
+    // As três recusas abaixo existiam e eram mudas: o jogador tocava e nada acontecia, sem
+    // saber qual das regras tinha quebrado. Cada uma agora responde com um gesto físico
+    // distinto — sem texto, para não competir com a atenção no sol.
+    if (dist > currentInfluenceRadius) {
+      // Longe demais: o halo se encolhe na direção do dedo, mostrando onde é o alcance.
+      if (now - state.input.lastRefusal > 0.35) {
+        state.input.lastRefusal = now;
+        state.sun.reachHint = 1;
+        state.sun.reachHintX = dx; state.sun.reachHintY = dy;
+      }
+      return;
+    }
+    // FIX: Fallback seguro caso o mod.cooldown seja undefined (evita NaN e rate-limit quebrado)
+    if (now - state.input.lastClick < tune.clickCooldown * (state.mods.cooldown || 1)) {
+      // Rápido demais: o sol engasga — um recuo curto, legível como "ainda não".
+      state.sun.tapScale = Math.min(state.sun.tapScale, 0.94);
+      return;
+    }
+
+    // Sem fôlego nenhum: recusa. Acima disso o gesto SEMPRE sai — o que muda é a força.
+    // Um portão duro ("só pulsa com a barra cheia") premiava quem martelava, porque
+    // disparava sozinho no instante em que ficava disponível e nunca deixava a tensão
+    // acumular: medido, martelar rendia 98m contra 53m de quem respirava. Agora soltar
+    // cedo é permitido e desperdiça o fôlego, então a pressa se pune sozinha.
+    if (state.sun.energy < breathConfig.minBreath) {
       if (now - state.input.lastEmptyPulse > 0.4) {
         state.input.lastEmptyPulse = now;
-        triggerScreenFlash('rgba(120,140,170,0.06)');
-        state.sun.tapScale = 0.96;
+        state.sun.errorTremor = Math.max(state.sun.errorTremor, 0.55);
+        state.sun.tapScale = 0.92;
+        emitAudioEvent('error_muffle', 1, 0);
       }
       return;
     }
@@ -70,10 +91,20 @@
     let dynamicPulseMult = state.mods.pulseMult;
     if (perfect && state.mods.cometStacks > 0) dynamicPulseMult += Math.min(0.5, state.mods.consecutivePulses * 0.1);
 
-    const impulse = baseImpulse * dynamicPulseMult * influence * antiSpam * state.sun.impulseEfficiency * state.feedbackLoops.recoveryAssist * (1 - (1 - state.sun.energy) * .25) * state.emotion.runtime.physics.assistMul;
+    // A força do gesto é a qualidade da respiração, e a curva tem um pico nítido:
+    // ao quadrado, meio fôlego rende só um quarto do impulso. É o que separa julgar a
+    // duração de apertar depressa — e é a única "dificuldade" que o LUMA quer ter.
+    const fullness = clamp(state.sun.energy / maxBreath(), 0, 1);
+    // Guardado antes de zerar abaixo: a qualidade do gesto é a do instante em que soltou.
+    const strainAoSoltar = state.sun.strain;
+    const breathQuality = fullness * fullness * (1 - strainAoSoltar * breathConfig.strainImpulsePenalty);
+
+    const impulse = baseImpulse * dynamicPulseMult * influence * antiSpam * state.sun.impulseEfficiency * state.feedbackLoops.recoveryAssist * state.emotion.runtime.physics.assistMul * breathQuality;
 
     state.sun.vy -= impulse;
-    state.sun.energy = clamp(state.sun.energy - pulseEnergyCost, 0, 1);
+    // Expirar esvazia o peito, tenha ele enchido ou não: soltar cedo custa o fôlego inteiro.
+    state.sun.energy = 0;
+    state.sun.strain = 0;
 
     state.sun.stability = clamp(state.sun.stability + (perfect ? .09 : .05), 0, 1);
     state.sun.haloPulse = 1; state.sun.tapScale = 1.08; state.input.lastClick = now;
@@ -82,8 +113,10 @@
     
     if (perfect) {
       const oldCombo = state.combo;
-      // Combo é mestria, não velocidade: pulsos dentro da janela de anti-spam não constroem combo.
-      if (antiSpam === 1) {
+      // Combo mede consistência de ritmo, não velocidade: só conta o gesto solto perto do
+      // ponto cheio. Com o pulso custando quase todo o fôlego, a janela do anti-spam nunca
+      // dispara sozinha — quem separa um bom gesto de um gesto apressado é a tensão.
+      if (antiSpam === 1 && fullness > 0.9 && strainAoSoltar < 0.3) {
         state.combo = Math.min(20, state.combo + 1);
         state.maxComboThisRun = Math.max(state.maxComboThisRun, state.combo);
         state.mods.consecutivePulses++;

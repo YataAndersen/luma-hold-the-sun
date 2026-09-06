@@ -93,6 +93,7 @@
       lastPress: -999,
       lastClick: -999,
       lastEmptyPulse: -999,
+      lastRefusal: -999,
       keyboardHold: false
     },
 
@@ -108,6 +109,12 @@
       wear: 0, 
       breath: 0,
       breathStrength: 0.18,
+      // Respiração presa: 0 = fôlego no ponto, 1 = segurou muito além do cheio.
+      strain: 0,
+      // Dica de alcance: acende quando um toque cai fora do raio de influência.
+      reachHint: 0,
+      reachHintX: 0,
+      reachHintY: 0,
       haloPulse: 0,
       nearFail: false,
       breakthrough: false,

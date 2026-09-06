@@ -120,10 +120,15 @@
     .hud-bottom{display:flex;gap:10px;justify-content:space-between;align-items:center;font:300 11px/1 var(--font-ui);color:rgba(255,249,236,.6)}
     .hud-chip{padding:4px 8px;background:transparent;border:none;backdrop-filter:none;white-space:nowrap;box-shadow:none;letter-spacing:0.2em;text-transform:lowercase;}
 
-    .combo-label{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);z-index:26;pointer-events:none;font:300 14px/1 var(--font-display);letter-spacing:.3em;text-transform:lowercase;color:var(--ui-secondary);text-shadow:0 0 12px rgba(255,249,236,.15);opacity:0;animation-fill-mode:forwards}
+    /* A câmera mantém o sol em ~45% da altura da tela: é onde o olho e o dedo ficam
+       durante todo o gesto. Nada transitório pode morar entre 35% e 62%, ou o jogo
+       interrompe a própria concentração que ele está tentando criar. Estes três
+       viviam em 43%, 49% e 58% — em cima do sol. */
+    .combo-label{position:absolute;left:50%;top:88%;transform:translate(-50%,-50%);z-index:26;pointer-events:none;font:300 14px/1 var(--font-display);letter-spacing:.3em;text-transform:lowercase;color:var(--ui-secondary);text-shadow:0 0 12px rgba(255,249,236,.15);opacity:0;animation-fill-mode:forwards}
     .combo-label.show{animation:fantasyFloatUp .8s ease-out forwards}
 
-    .floating-message{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);z-index:27;pointer-events:none;font:300 16px/1 var(--font-display);letter-spacing:.2em;text-transform:lowercase;color:var(--ui-primary);text-shadow:0 0 18px rgba(255,249,236,.2);opacity:0;white-space:nowrap}
+    /* nowrap com 16px estourava a largura no celular (444px); agora quebra e centraliza. */
+    .floating-message{position:absolute;left:50%;top:80%;transform:translate(-50%,-50%);z-index:27;pointer-events:none;font:300 15px/1.4 var(--font-display);letter-spacing:.2em;text-transform:lowercase;color:var(--ui-primary);text-shadow:0 0 18px rgba(255,249,236,.2);opacity:0;max-width:82vw;text-align:center}
     .floating-message.show{animation:fantasyFloatUp 1.2s ease-out forwards}
     
     @keyframes fantasyFloatUp {
@@ -134,7 +139,7 @@
       100% { opacity: 0; transform: translate(-50%, -130%) scale(0.8) rotate(0deg); }
     }
 
-    .reward-badge{position:absolute;left:50%;top:58%;transform:translate(-50%,-50%) scale(.92);z-index:25;pointer-events:none;padding:10px 16px;border-radius:var(--radius-pill);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);color:var(--ui-primary);font:700 14px/1 var(--font-display);box-shadow:0 0 18px rgba(255,217,122,.14);opacity:0;transition:opacity .22s ease,transform .22s ease;white-space:nowrap}
+    .reward-badge{position:absolute;left:50%;top:71%;transform:translate(-50%,-50%) scale(.92);z-index:25;pointer-events:none;padding:10px 16px;border-radius:var(--radius-pill);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);color:var(--ui-primary);font:700 14px/1 var(--font-display);box-shadow:0 0 18px rgba(255,217,122,.14);opacity:0;transition:opacity .22s ease,transform .22s ease;white-space:nowrap}
     .reward-badge.show{animation:rewardBurst .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards}
 
     @keyframes rewardBurst {

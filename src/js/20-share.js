@@ -71,7 +71,7 @@
             preview.appendChild(cachedShareCanvas);
             modal.classList.remove('hidden');
         } catch(e) {
-            showFloating("erro ao gerar imagem", false);
+            showFloating("the image would not form", false);
         } finally {
             card.remove();
         }
@@ -87,7 +87,7 @@
   if (copyTextBtn) {
       copyTextBtn.addEventListener('click', () => {
           navigator.clipboard.writeText(cachedShareText + " " + window.location.href);
-          showFloating("poesia copiada", true);
+          showFloating("the poem is yours", true);
       });
   }
   

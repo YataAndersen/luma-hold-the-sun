@@ -293,7 +293,24 @@
       "Constellation · Ursa": "Constelação · Ursa",
       "Constellation · Orion": "Constelação · Órion",
       "Constellation · Aries": "Constelação · Áries",
-      "Apex · Zenith": "Ápice · Zênite"
+      "Apex · Zenith": "Ápice · Zênite",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "segure. deixe a luz se juntar.",
+      "the light is full. release it now.": "a luz está cheia. solte agora.",
+      "let it fill, then release. three times.": "deixe encher, então solte. três vezes.",
+      "hold too long and the light tightens. feel it.": "segure demais e a luz endurece. sinta.",
+      "that is the edge. breathe before it.": "esse é o limite. respire antes dele.",
+      "THE SKY RESPONDS": "O CÉU RESPONDE",
+      "flow state": "estado de fluxo",
+      "light rises": "a luz sobe",
+      "luminous rhythm": "ritmo luminoso",
+      "resilience": "resiliência",
+      "the sky answers": "o céu responde",
+      "the shelter broke": "o amparo se rompeu",
+      "eternity holds you": "a eternidade te segura",
+      "the image would not form": "a imagem não se formou",
+      "the poem is yours": "o poema é seu"
     },
 
     'es': {  // espanhol
@@ -560,7 +577,24 @@
       "Constellation · Ursa": "Constelación · Osa",
       "Constellation · Orion": "Constelación · Orión",
       "Constellation · Aries": "Constelación · Aries",
-      "Apex · Zenith": "Cénit · Cima"
+      "Apex · Zenith": "Cénit · Cima",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "sostén. deja que la luz se reúna.",
+      "the light is full. release it now.": "la luz está llena. suéltala ahora.",
+      "let it fill, then release. three times.": "deja que se llene y suelta. tres veces.",
+      "hold too long and the light tightens. feel it.": "sostén de más y la luz se tensa. siéntelo.",
+      "that is the edge. breathe before it.": "ese es el límite. respira antes de él.",
+      "THE SKY RESPONDS": "EL CIELO RESPONDE",
+      "flow state": "estado de flujo",
+      "light rises": "la luz asciende",
+      "luminous rhythm": "ritmo luminoso",
+      "resilience": "resiliencia",
+      "the sky answers": "el cielo responde",
+      "the shelter broke": "el amparo se rompió",
+      "eternity holds you": "la eternidad te sostiene",
+      "the image would not form": "la imagen no se formó",
+      "the poem is yours": "el poema es tuyo"
     },
 
     'de': {  // alemao
@@ -827,7 +861,24 @@
       "Constellation · Ursa": "Sternbild · Bär",
       "Constellation · Orion": "Sternbild · Orion",
       "Constellation · Aries": "Sternbild · Widder",
-      "Apex · Zenith": "Gipfel · Zenit"
+      "Apex · Zenith": "Gipfel · Zenit",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "halte. lass das Licht sich sammeln.",
+      "the light is full. release it now.": "das Licht ist voll. lass jetzt los.",
+      "let it fill, then release. three times.": "füllen lassen, dann loslassen. dreimal.",
+      "hold too long and the light tightens. feel it.": "hältst du zu lang, verspannt sich das Licht. spüre es.",
+      "that is the edge. breathe before it.": "das ist die Grenze. atme davor.",
+      "THE SKY RESPONDS": "DER HIMMEL ANTWORTET",
+      "flow state": "Flow-Zustand",
+      "light rises": "das Licht steigt",
+      "luminous rhythm": "leuchtender Rhythmus",
+      "resilience": "Widerstandskraft",
+      "the sky answers": "der Himmel antwortet",
+      "the shelter broke": "die Obhut zerbrach",
+      "eternity holds you": "die Ewigkeit hält dich",
+      "the image would not form": "das Bild entstand nicht",
+      "the poem is yours": "das Gedicht gehört dir"
     },
 
     'fr': {  // frances
@@ -1094,7 +1145,24 @@
       "Constellation · Ursa": "Constellation · Ourse",
       "Constellation · Orion": "Constellation · Orion",
       "Constellation · Aries": "Constellation · Bélier",
-      "Apex · Zenith": "Apogée · Zénith"
+      "Apex · Zenith": "Apogée · Zénith",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "tiens. laisse la lumière se rassembler.",
+      "the light is full. release it now.": "la lumière est pleine. relâche maintenant.",
+      "let it fill, then release. three times.": "laisse emplir, puis relâche. trois fois.",
+      "hold too long and the light tightens. feel it.": "tiens trop longtemps et la lumière se crispe. sens-le.",
+      "that is the edge. breathe before it.": "c'est la limite. respire avant elle.",
+      "THE SKY RESPONDS": "LE CIEL RÉPOND",
+      "flow state": "état de flux",
+      "light rises": "la lumière monte",
+      "luminous rhythm": "rythme lumineux",
+      "resilience": "résilience",
+      "the sky answers": "le ciel répond",
+      "the shelter broke": "l’abri s’est rompu",
+      "eternity holds you": "l’éternité te retient",
+      "the image would not form": "l’image ne s’est pas formée",
+      "the poem is yours": "le poème est à toi"
     },
 
     'ru': {  // russo
@@ -1361,7 +1429,24 @@
       "Constellation · Ursa": "Созвездие · Медведица",
       "Constellation · Orion": "Созвездие · Орион",
       "Constellation · Aries": "Созвездие · Овен",
-      "Apex · Zenith": "Пик · Зенит"
+      "Apex · Zenith": "Пик · Зенит",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "держи. дай свету собраться.",
+      "the light is full. release it now.": "свет полон. отпусти сейчас.",
+      "let it fill, then release. three times.": "дай наполниться и отпусти. трижды.",
+      "hold too long and the light tightens. feel it.": "передержишь — свет напрягается. почувствуй.",
+      "that is the edge. breathe before it.": "вот предел. дыши до него.",
+      "THE SKY RESPONDS": "НЕБО ОТВЕЧАЕТ",
+      "flow state": "состояние потока",
+      "light rises": "свет поднимается",
+      "luminous rhythm": "светящийся ритм",
+      "resilience": "стойкость",
+      "the sky answers": "небо отвечает",
+      "the shelter broke": "приют разрушен",
+      "eternity holds you": "вечность держит тебя",
+      "the image would not form": "изображение не сложилось",
+      "the poem is yours": "стихи твои"
     },
 
     'it': {  // italiano
@@ -1628,7 +1713,24 @@
       "Constellation · Ursa": "Costellazione · Orsa",
       "Constellation · Orion": "Costellazione · Orione",
       "Constellation · Aries": "Costellazione · Ariete",
-      "Apex · Zenith": "Apice · Zenit"
+      "Apex · Zenith": "Apice · Zenit",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "tieni. lascia che la luce si raccolga.",
+      "the light is full. release it now.": "la luce è piena. lasciala andare ora.",
+      "let it fill, then release. three times.": "lascia riempire, poi lascia andare. tre volte.",
+      "hold too long and the light tightens. feel it.": "tieni troppo e la luce si irrigidisce. sentilo.",
+      "that is the edge. breathe before it.": "quello è il limite. respira prima.",
+      "THE SKY RESPONDS": "IL CIELO RISPONDE",
+      "flow state": "stato di flusso",
+      "light rises": "la luce sale",
+      "luminous rhythm": "ritmo luminoso",
+      "resilience": "resilienza",
+      "the sky answers": "il cielo risponde",
+      "the shelter broke": "il riparo si è rotto",
+      "eternity holds you": "l’eternità ti sostiene",
+      "the image would not form": "l’immagine non si è formata",
+      "the poem is yours": "la poesia è tua"
     }
   };
 

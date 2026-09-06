@@ -277,6 +277,37 @@
     ctx.scale(1, fatigueSquash);
     const grad = ctx.createRadialGradient(0,0,10,0,0,haloR);
     
+    // --- ANEL DE ALCANCE ---
+    // O raio de influência governa todo toque e nunca era desenhado: o jogador só descobria
+    // o alcance errando. Aparece de leve enquanto o dedo está na tela e acende quando um
+    // toque é recusado por distância — resposta espacial, sem uma palavra.
+    if (state.mode === 'gameplay' && (state.input.holding || state.sun.reachHint > 0.01)) {
+      const sens = 0.5 + (settings.gameplay.sensitivity / 100);
+      const reachR = tune.influenceRadius * (state.mods.areaSustain ? 1.8 : 1) * sens;
+      const held = state.input.holding ? 0.05 : 0;
+      const alpha = (held + state.sun.reachHint * 0.22) * visuals.haloIntensity * 2;
+      if (alpha > 0.004) {
+        ctx.save();
+        ctx.globalAlpha = Math.min(0.3, alpha);
+        ctx.strokeStyle = `rgba(${cEdge.join(',')}, 1)`;
+        ctx.lineWidth = 1 + state.sun.reachHint * 1.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, reachR * (1 - state.sun.reachHint * 0.06), 0, Math.PI * 2);
+        ctx.stroke();
+        // Na recusa por distância, um arco mais forte no lado onde o dedo tocou: diz
+        // "o alcance é aqui" apontando, em vez de só mostrar o círculo inteiro.
+        if (state.sun.reachHint > 0.01) {
+          const ang = Math.atan2(state.sun.reachHintY, state.sun.reachHintX);
+          ctx.globalAlpha = Math.min(0.42, state.sun.reachHint * 0.42);
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(0, 0, reachR * (1 - state.sun.reachHint * 0.06), ang - 0.5, ang + 0.5);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    }
+
     const haloOpacityDrop = 1 - (state.sun.glowFail * 0.4);
     grad.addColorStop(0, `rgba(${cCore.join(',')}, ${0.35 * haloOpacityDrop})`);
     grad.addColorStop(.4, `rgba(${cMid.join(',')}, 0.12)`);

@@ -80,6 +80,8 @@ function makeHarness({ keyboard = false } = {}) {
     between('  const influenceZones = {', '\n  };'),
     between('  const sustainConfig = {', '\n  };'),
     between('  const pulseEnergyCost =', '\n', false),
+    between('  const breathConfig = {', '\n  };'),
+    functionSource('maxBreath'),
     between('  const EMOTION_STATES = {', '\n  };'),
     functionSource('EmotionRuntime'),
     between('  const state = {', '\n  };'),
@@ -127,50 +129,122 @@ function makeHarness({ keyboard = false } = {}) {
   };
 }
 
-test('14 deliberate perfect pulses reach the late mission combo target', () => {
+// Uma respiração inteira: encher o fôlego e soltar no ponto. É a unidade de jogo agora,
+// e é o que estes testes usam no lugar de "mais um toque".
+function breatheOnce(game) {
+  game.state.t += game.run('1 / sustainConfig.energyRecovery');
+  game.run('state.sun.energy = 1; state.sun.strain = 0');
+  game.context.tryClickImpulse();
+}
+
+test('14 well-judged breaths reach the late mission combo target', () => {
   const game = makeHarness();
   game.state.input.x = game.state.sun.x;
   game.state.input.y = game.state.sun.y + game.state.camera.y;
-  for (let i = 0; i < 14; i++) {
-    game.state.t += 0.5;
-    // Sustaining is what pays for the next pulse: half a second of contact at full influence.
-    game.run('state.sun.energy = Math.min(1, state.sun.energy + sustainConfig.energyRecovery * 0.5)');
-    game.context.tryClickImpulse();
-  }
+  for (let i = 0; i < 14; i++) breatheOnce(game);
   assert.equal(game.state.combo, 14);
   assert.equal(game.state.maxComboThisRun, 14);
   assert.equal(game.effects.pulses, 14);
   assert.equal(game.run('evaluateLiveCondition(getReqForMission(missions.find(m => m.id === "m47")))'), true);
 });
 
-test('an exhausted sun refuses the pulse instead of spending what it does not have', () => {
-  const game = makeHarness();
-  game.state.input.x = game.state.sun.x;
-  game.state.input.y = game.state.sun.y + game.state.camera.y;
-  game.run('state.sun.energy = pulseEnergyCost - 0.01');
-  game.state.t = 5;
-  game.context.tryClickImpulse();
-  assert.equal(game.effects.pulses, 0, 'No pulse may leave the sun below zero energy');
-  assert.equal(game.state.combo, 0, 'A refused pulse must not build mastery');
-  assert.equal(game.run('state.sun.energy'), game.run('pulseEnergyCost - 0.01'), 'A refused pulse costs nothing');
-});
-
-test('a full bar buys a burst of pulses, then sustaining is the only way to keep climbing', () => {
+test('one breath buys exactly one gesture: the game runs at breathing tempo', () => {
   const game = makeHarness();
   game.state.input.x = game.state.sun.x;
   game.state.input.y = game.state.sun.y + game.state.camera.y;
   game.run('state.sun.energy = 1');
-  const affordable = Math.floor(1 / game.run('pulseEnergyCost'));
-  for (let i = 0; i < affordable + 3; i++) {
+  // Dez tentativas seguidas, com folga de cooldown entre elas: o fôlego, não o dedo,
+  // é quem limita. Se algum dia um fôlego cheio comprar dois gestos, o jogo voltou
+  // para a frequência do Flappy Bird e este teste avisa.
+  for (let i = 0; i < 10; i++) {
     game.state.t += 0.5;
     game.context.tryClickImpulse();
   }
-  assert.equal(game.effects.pulses, affordable, 'Spending stops exactly when the bar runs out');
-  // One second of contact at full influence buys the next pulse back.
-  game.run('state.sun.energy += sustainConfig.energyRecovery');
-  game.state.t += 0.5;
+  assert.equal(game.effects.pulses, 1, 'A full breath must buy one gesture, not a burst');
+});
+
+test('holding past full weakens the gesture and denies the combo', () => {
+  const game = makeHarness();
+  game.state.input.x = game.state.sun.x;
+  game.state.input.y = game.state.sun.y + game.state.camera.y;
+
+  // Fôlego cheio, solto no ponto: impulso inteiro e combo creditado.
+  game.run('state.sun.energy = 1; state.sun.strain = 0; state.sun.vy = 0');
+  game.state.t += 5;
   game.context.tryClickImpulse();
-  assert.equal(game.effects.pulses, affordable + 1);
+  const noPonto = -game.state.sun.vy;
+  assert.equal(game.state.combo, 1, 'A well-judged breath builds rhythm');
+
+  // Mesmo fôlego, mas preso até o limite: impulso menor e sem combo.
+  game.run('state.sun.energy = 1; state.sun.strain = 1; state.sun.vy = 0');
+  game.state.t += 5;
+  game.context.tryClickImpulse();
+  const preso = -game.state.sun.vy;
+
+  assert.ok(preso < noPonto, `Prender a respiração deve custar impulso: ${preso} deveria ser menor que ${noPonto}`);
+  assert.equal(game.state.combo, 1, 'Um gesto com a respiração presa não constrói ritmo');
+});
+
+test('a sun with no breath left refuses the gesture instead of faking one', () => {
+  const game = makeHarness();
+  game.state.input.x = game.state.sun.x;
+  game.state.input.y = game.state.sun.y + game.state.camera.y;
+  game.run('state.sun.energy = breathConfig.minBreath - 0.01');
+  game.state.t = 5;
+  game.context.tryClickImpulse();
+  assert.equal(game.effects.pulses, 0, 'With no air there is nothing to release');
+  assert.equal(game.state.combo, 0, 'A refused gesture must not build rhythm');
+  assert.equal(game.run('state.sun.energy'), game.run('breathConfig.minBreath - 0.01'), 'A refused gesture costs nothing');
+});
+
+test('releasing early is allowed and wastes the breath: haste punishes itself', () => {
+  const game = makeHarness();
+  game.state.input.x = game.state.sun.x;
+  game.state.input.y = game.state.sun.y + game.state.camera.y;
+
+  // Meio fôlego: o gesto sai, mas rende bem menos que a metade — a curva é quadrática.
+  game.run('state.sun.energy = 0.5 * maxBreath(); state.sun.strain = 0; state.sun.vy = 0');
+  game.state.t += 5;
+  game.context.tryClickImpulse();
+  const meio = -game.state.sun.vy;
+  assert.equal(game.effects.pulses, 1, 'Releasing early must be allowed, not blocked');
+  assert.equal(game.run('state.sun.energy'), 0, 'Releasing early still empties the chest');
+
+  game.run('state.sun.energy = maxBreath(); state.sun.strain = 0; state.sun.vy = 0');
+  game.state.t += 5;
+  game.context.tryClickImpulse();
+  const cheio = -game.state.sun.vy;
+
+  assert.ok(meio < cheio * 0.35,
+    `Meio fôlego deveria render bem menos de um terço: ${meio.toFixed(0)} contra ${cheio.toFixed(0)}`);
+});
+
+test('sustaining is the only thing that pays for the next gesture', () => {
+  const game = makeHarness();
+  game.state.input.x = game.state.sun.x;
+  game.state.input.y = game.state.sun.y + game.state.camera.y;
+  game.run('state.sun.energy = 1');
+  game.state.t += 5;
+  game.context.tryClickImpulse();
+  assert.equal(game.effects.pulses, 1);
+
+  // Sem sustentar, nenhum tempo de espera devolve o gesto.
+  game.state.t += 30;
+  game.context.tryClickImpulse();
+  assert.equal(game.effects.pulses, 1, 'Waiting must never refill the breath by itself');
+
+  // Uma inspiração inteira devolve, e só ela.
+  breatheOnce(game);
+  assert.equal(game.effects.pulses, 2);
+});
+
+test('a breath takes about as long as a calm inhale', () => {
+  const game = makeHarness();
+  const segundos = game.run('pulseEnergyCost / sustainConfig.energyRecovery');
+  // A âncora do projeto: o gesto tem que caber num ritmo respiratório (~12/min), não
+  // na frequência do dedo. Fora desta faixa o jogo deixa de acalmar.
+  assert.ok(segundos >= 3 && segundos <= 7,
+    `Um gesto leva ${segundos.toFixed(1)}s; fora da faixa respiratória de 3 a 7s`);
 });
 
 test('a fall after achieving the altitude goal saves the record without completing the mission', () => {
@@ -218,7 +292,10 @@ for (const code of ['Space', 'Enter']) {
     assert.equal(game.state.input.holding, true);
     game.key('keyup', code);
     assert.equal(game.state.input.holding, false);
+    // O primeiro gesto gastou o fôlego; segurar é o que paga o próximo, no teclado igual
+    // ao toque. Sem repor, o teste mediria a falta de ar em vez da regra de auto-repeat.
     game.state.t += 0.5;
+    game.run('state.sun.energy = 1');
     game.key('keydown', code);
     assert.equal(game.effects.pulses, 2, 'A fresh press after release must work');
   });
@@ -321,4 +398,27 @@ test('the late combo missions are reachable at all', () => {
     .map(m => m.id)
     .join(', ')`);
   assert.equal(impossible, '', `Missions ask for more combo than the game can reach: ${impossible}`);
+});
+
+test('every altitude mission is reachable at the pace the physics actually allows', () => {
+  const game = makeHarness();
+  // Subida por gesto, derivada das constantes de verdade: segurar quase neutraliza a
+  // gravidade, então o ganho de altitude é o impulso do gesto amortecido.
+  const porGesto = game.run('tune.clickImpulsePerfect / (1 - Math.pow(tune.damping, 60))');
+  const segundosPorGesto = game.run('pulseEnergyCost / sustainConfig.energyRecovery');
+  const metrosPorPixel = Number(/const METERS_PER_PIXEL = ([\d.]+)/.exec(source)[1]);
+
+  // Array.from porque o vm devolve arrays de outro realm, e o assert estrito compara protótipos.
+  const alvos = Array.from(game.run(`missions
+    .filter(m => m.kind === MissionKind.REACH_ALTITUDE)
+    .map(m => m.id + ':' + m.target + ':' + (60 + Math.floor((Number(m.id.slice(1)) - 1) / 10) * 15))`));
+
+  const impossiveis = alvos
+    .map(linha => linha.split(':'))
+    .filter(([, target, tempo]) => Number(target) > (Number(tempo) / segundosPorGesto) * porGesto * metrosPorPixel)
+    .map(([id, target, tempo]) => `${id} pede ${target}m em ${tempo}s`)
+    .join(' | ');
+
+  assert.equal(impossiveis, '',
+    `Missões de altitude acima do que a física entrega: ${impossiveis}`);
 });

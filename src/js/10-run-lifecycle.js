@@ -23,11 +23,13 @@
     };
     state.draft = { radiance: 0, count: 0, pending: 0, thresholds: [10, 25, 45, 70], max: 4, lastAltitudeMilestone: 0, sustainTimer: 0 };
     
-    state.input.lastClick = -999; state.input.lastPress = -999; state.input.lastEmptyPulse = -999; state.input.keyboardHold = false; state.input.holding = false; state.input.inside = false; state.input.x = W * .5; state.input.y = H * .42;
+    state.input.lastClick = -999; state.input.lastPress = -999; state.input.lastEmptyPulse = -999; state.input.lastRefusal = -999; state.input.keyboardHold = false; state.input.holding = false; state.input.inside = false; state.input.x = W * .5; state.input.y = H * .42;
     state.entropy = .12;
     state.sun.x = W * .5; state.sun.y = H * .38; state.sun.vx = 0; state.sun.vy = 0; state.sun.stability = .22; state.sun.energy = .92; state.sun.wear = 0;
     state.sun.breath = 0;
     state.sun.breathStrength = .18;
+    state.sun.strain = 0;
+    state.sun.reachHint = 0;
     state.sun.errorTremor = 0;
     state.sun.glowFail = 0;
     state.sun.haloPulse = 0;

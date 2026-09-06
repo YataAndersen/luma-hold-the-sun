@@ -131,10 +131,15 @@
     .hud-bottom{display:flex;gap:10px;justify-content:space-between;align-items:center;font:300 11px/1 var(--font-ui);color:rgba(255,249,236,.6)}
     .hud-chip{padding:4px 8px;background:transparent;border:none;backdrop-filter:none;white-space:nowrap;box-shadow:none;letter-spacing:0.2em;text-transform:lowercase;}
 
-    .combo-label{position:absolute;left:50%;top:43%;transform:translate(-50%,-50%);z-index:26;pointer-events:none;font:300 14px/1 var(--font-display);letter-spacing:.3em;text-transform:lowercase;color:var(--ui-secondary);text-shadow:0 0 12px rgba(255,249,236,.15);opacity:0;animation-fill-mode:forwards}
+    /* A câmera mantém o sol em ~45% da altura da tela: é onde o olho e o dedo ficam
+       durante todo o gesto. Nada transitório pode morar entre 35% e 62%, ou o jogo
+       interrompe a própria concentração que ele está tentando criar. Estes três
+       viviam em 43%, 49% e 58% — em cima do sol. */
+    .combo-label{position:absolute;left:50%;top:88%;transform:translate(-50%,-50%);z-index:26;pointer-events:none;font:300 14px/1 var(--font-display);letter-spacing:.3em;text-transform:lowercase;color:var(--ui-secondary);text-shadow:0 0 12px rgba(255,249,236,.15);opacity:0;animation-fill-mode:forwards}
     .combo-label.show{animation:fantasyFloatUp .8s ease-out forwards}
 
-    .floating-message{position:absolute;left:50%;top:49%;transform:translate(-50%,-50%);z-index:27;pointer-events:none;font:300 16px/1 var(--font-display);letter-spacing:.2em;text-transform:lowercase;color:var(--ui-primary);text-shadow:0 0 18px rgba(255,249,236,.2);opacity:0;white-space:nowrap}
+    /* nowrap com 16px estourava a largura no celular (444px); agora quebra e centraliza. */
+    .floating-message{position:absolute;left:50%;top:80%;transform:translate(-50%,-50%);z-index:27;pointer-events:none;font:300 15px/1.4 var(--font-display);letter-spacing:.2em;text-transform:lowercase;color:var(--ui-primary);text-shadow:0 0 18px rgba(255,249,236,.2);opacity:0;max-width:82vw;text-align:center}
     .floating-message.show{animation:fantasyFloatUp 1.2s ease-out forwards}
     
     @keyframes fantasyFloatUp {
@@ -145,7 +150,7 @@
       100% { opacity: 0; transform: translate(-50%, -130%) scale(0.8) rotate(0deg); }
     }
 
-    .reward-badge{position:absolute;left:50%;top:58%;transform:translate(-50%,-50%) scale(.92);z-index:25;pointer-events:none;padding:10px 16px;border-radius:var(--radius-pill);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);color:var(--ui-primary);font:700 14px/1 var(--font-display);box-shadow:0 0 18px rgba(255,217,122,.14);opacity:0;transition:opacity .22s ease,transform .22s ease;white-space:nowrap}
+    .reward-badge{position:absolute;left:50%;top:71%;transform:translate(-50%,-50%) scale(.92);z-index:25;pointer-events:none;padding:10px 16px;border-radius:var(--radius-pill);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.09);color:var(--ui-primary);font:700 14px/1 var(--font-display);box-shadow:0 0 18px rgba(255,217,122,.14);opacity:0;transition:opacity .22s ease,transform .22s ease;white-space:nowrap}
     .reward-badge.show{animation:rewardBurst .8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards}
 
     @keyframes rewardBurst {
@@ -1625,7 +1630,24 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Constellation · Ursa": "Constelação · Ursa",
       "Constellation · Orion": "Constelação · Órion",
       "Constellation · Aries": "Constelação · Áries",
-      "Apex · Zenith": "Ápice · Zênite"
+      "Apex · Zenith": "Ápice · Zênite",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "segure. deixe a luz se juntar.",
+      "the light is full. release it now.": "a luz está cheia. solte agora.",
+      "let it fill, then release. three times.": "deixe encher, então solte. três vezes.",
+      "hold too long and the light tightens. feel it.": "segure demais e a luz endurece. sinta.",
+      "that is the edge. breathe before it.": "esse é o limite. respire antes dele.",
+      "THE SKY RESPONDS": "O CÉU RESPONDE",
+      "flow state": "estado de fluxo",
+      "light rises": "a luz sobe",
+      "luminous rhythm": "ritmo luminoso",
+      "resilience": "resiliência",
+      "the sky answers": "o céu responde",
+      "the shelter broke": "o amparo se rompeu",
+      "eternity holds you": "a eternidade te segura",
+      "the image would not form": "a imagem não se formou",
+      "the poem is yours": "o poema é seu"
     },
 
     'es': {  // espanhol
@@ -1892,7 +1914,24 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Constellation · Ursa": "Constelación · Osa",
       "Constellation · Orion": "Constelación · Orión",
       "Constellation · Aries": "Constelación · Aries",
-      "Apex · Zenith": "Cénit · Cima"
+      "Apex · Zenith": "Cénit · Cima",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "sostén. deja que la luz se reúna.",
+      "the light is full. release it now.": "la luz está llena. suéltala ahora.",
+      "let it fill, then release. three times.": "deja que se llene y suelta. tres veces.",
+      "hold too long and the light tightens. feel it.": "sostén de más y la luz se tensa. siéntelo.",
+      "that is the edge. breathe before it.": "ese es el límite. respira antes de él.",
+      "THE SKY RESPONDS": "EL CIELO RESPONDE",
+      "flow state": "estado de flujo",
+      "light rises": "la luz asciende",
+      "luminous rhythm": "ritmo luminoso",
+      "resilience": "resiliencia",
+      "the sky answers": "el cielo responde",
+      "the shelter broke": "el amparo se rompió",
+      "eternity holds you": "la eternidad te sostiene",
+      "the image would not form": "la imagen no se formó",
+      "the poem is yours": "el poema es tuyo"
     },
 
     'de': {  // alemao
@@ -2159,7 +2198,24 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Constellation · Ursa": "Sternbild · Bär",
       "Constellation · Orion": "Sternbild · Orion",
       "Constellation · Aries": "Sternbild · Widder",
-      "Apex · Zenith": "Gipfel · Zenit"
+      "Apex · Zenith": "Gipfel · Zenit",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "halte. lass das Licht sich sammeln.",
+      "the light is full. release it now.": "das Licht ist voll. lass jetzt los.",
+      "let it fill, then release. three times.": "füllen lassen, dann loslassen. dreimal.",
+      "hold too long and the light tightens. feel it.": "hältst du zu lang, verspannt sich das Licht. spüre es.",
+      "that is the edge. breathe before it.": "das ist die Grenze. atme davor.",
+      "THE SKY RESPONDS": "DER HIMMEL ANTWORTET",
+      "flow state": "Flow-Zustand",
+      "light rises": "das Licht steigt",
+      "luminous rhythm": "leuchtender Rhythmus",
+      "resilience": "Widerstandskraft",
+      "the sky answers": "der Himmel antwortet",
+      "the shelter broke": "die Obhut zerbrach",
+      "eternity holds you": "die Ewigkeit hält dich",
+      "the image would not form": "das Bild entstand nicht",
+      "the poem is yours": "das Gedicht gehört dir"
     },
 
     'fr': {  // frances
@@ -2426,7 +2482,24 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Constellation · Ursa": "Constellation · Ourse",
       "Constellation · Orion": "Constellation · Orion",
       "Constellation · Aries": "Constellation · Bélier",
-      "Apex · Zenith": "Apogée · Zénith"
+      "Apex · Zenith": "Apogée · Zénith",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "tiens. laisse la lumière se rassembler.",
+      "the light is full. release it now.": "la lumière est pleine. relâche maintenant.",
+      "let it fill, then release. three times.": "laisse emplir, puis relâche. trois fois.",
+      "hold too long and the light tightens. feel it.": "tiens trop longtemps et la lumière se crispe. sens-le.",
+      "that is the edge. breathe before it.": "c'est la limite. respire avant elle.",
+      "THE SKY RESPONDS": "LE CIEL RÉPOND",
+      "flow state": "état de flux",
+      "light rises": "la lumière monte",
+      "luminous rhythm": "rythme lumineux",
+      "resilience": "résilience",
+      "the sky answers": "le ciel répond",
+      "the shelter broke": "l’abri s’est rompu",
+      "eternity holds you": "l’éternité te retient",
+      "the image would not form": "l’image ne s’est pas formée",
+      "the poem is yours": "le poème est à toi"
     },
 
     'ru': {  // russo
@@ -2693,7 +2766,24 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Constellation · Ursa": "Созвездие · Медведица",
       "Constellation · Orion": "Созвездие · Орион",
       "Constellation · Aries": "Созвездие · Овен",
-      "Apex · Zenith": "Пик · Зенит"
+      "Apex · Zenith": "Пик · Зенит",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "держи. дай свету собраться.",
+      "the light is full. release it now.": "свет полон. отпусти сейчас.",
+      "let it fill, then release. three times.": "дай наполниться и отпусти. трижды.",
+      "hold too long and the light tightens. feel it.": "передержишь — свет напрягается. почувствуй.",
+      "that is the edge. breathe before it.": "вот предел. дыши до него.",
+      "THE SKY RESPONDS": "НЕБО ОТВЕЧАЕТ",
+      "flow state": "состояние потока",
+      "light rises": "свет поднимается",
+      "luminous rhythm": "светящийся ритм",
+      "resilience": "стойкость",
+      "the sky answers": "небо отвечает",
+      "the shelter broke": "приют разрушен",
+      "eternity holds you": "вечность держит тебя",
+      "the image would not form": "изображение не сложилось",
+      "the poem is yours": "стихи твои"
     },
 
     'it': {  // italiano
@@ -2960,7 +3050,24 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Constellation · Ursa": "Costellazione · Orsa",
       "Constellation · Orion": "Costellazione · Orione",
       "Constellation · Aries": "Costellazione · Ariete",
-      "Apex · Zenith": "Apice · Zenit"
+      "Apex · Zenith": "Apice · Zenit",
+
+      // ciclo da respiração e falas que chegavam ao t() por dentro de setTut/showFloating
+      "hold. let the light gather.": "tieni. lascia che la luce si raccolga.",
+      "the light is full. release it now.": "la luce è piena. lasciala andare ora.",
+      "let it fill, then release. three times.": "lascia riempire, poi lascia andare. tre volte.",
+      "hold too long and the light tightens. feel it.": "tieni troppo e la luce si irrigidisce. sentilo.",
+      "that is the edge. breathe before it.": "quello è il limite. respira prima.",
+      "THE SKY RESPONDS": "IL CIELO RISPONDE",
+      "flow state": "stato di flusso",
+      "light rises": "la luce sale",
+      "luminous rhythm": "ritmo luminoso",
+      "resilience": "resilienza",
+      "the sky answers": "il cielo risponde",
+      "the shelter broke": "il riparo si è rotto",
+      "eternity holds you": "l’eternità ti sostiene",
+      "the image would not form": "l’immagine non si è formata",
+      "the poem is yours": "la poesia è tua"
     }
   };
 
@@ -3026,24 +3133,33 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     const match = Object.keys(LOCALES).find(k => k.split('-')[0] === base);
     return match || 'en';
   }
+  // --- A CONSTANTE DE TEMPO DO JOGO ---
+  // O LUMA é o avesso do Flappy Bird: desafiar sem estressar. Isso é uma decisão de
+  // FREQUÊNCIA, não de dificuldade. Os números antigos — queda a 710px/s, cooldown de
+  // 0,14s, ~1,9 pulsos por segundo sustentáveis — rodavam na frequência do dedo, a mesma
+  // ordem de grandeza do Flappy Bird. Estes rodam na frequência da respiração: um gesto a
+  // cada ~5s, ~12 por minuto, que é a faixa onde a sincronia cardiorrespiratória acontece.
+  // Mexa nisto como conjunto: queda, impulso e custo do pulso formam um ciclo só.
   const tune = {
-    maxFall: 710,
-    clickImpulseBase: 300,
-    clickImpulsePerfect: 350,
+    maxFall: 240,
+    clickImpulseBase: 170,
+    clickImpulsePerfect: 210,
     damping: 0.985,
     influenceRadius: 145,
-    clickCooldown: 0.14,
-    antiSpamWindow: 0.22,
+    // Um gesto por respiração: o custo do pulso já impede repetir antes de ~4s. O cooldown
+    // sobrou só para matar o toque duplo acidental.
+    clickCooldown: 0.35,
+    antiSpamWindow: 0.5,
     antiSpamMult: 0.78,
     nearFailBand: 115,
-    windForce: 300
+    windForce: 110
   };
 
   const gravityConfig = {
-    base: 850,
-    max: 1140,
+    base: 190,
+    max: 270,
     progression: 1.08,
-    entropy: 240
+    entropy: 90
   };
 
   function getCurrentGravity(difficulty, entropy) {
@@ -3053,14 +3169,40 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   }
 
   const sustainConfig = {
-    liftForce: 790,
-    // Sustentar é a única fonte real de energia: ~2,1s no ponto perfeito enchem a barra vazia.
-    energyRecovery: 0.42,
+    // Segurar tem que VENCER a gravidade com folga, inclusive no estado near_fail, onde
+    // gravityMul chega a 1,12. Com 215 a margem era de 7% no estado calmo e negativa em
+    // pânico: o sol afundava justamente quando o jogador tentava salvá-lo, e a corrida
+    // morria em ~3,5s. Num jogo que quer acalmar, o pânico precisa ter saída.
+    liftForce: 260,
+    // Inspirar: a barra vazia enche em ~4,5s. Esse é o tempo do gesto.
+    energyRecovery: 0.22,
     stabilityGain: 0.08
   };
 
-  // Um pulso é racionado pela energia. Barra cheia paga ~4,5 pulsos.
-  const pulseEnergyCost = 0.22;
+  // Um gesto é uma expiração inteira: esvazia o peito, tenha enchido ou não. Encher de
+  // novo leva ~4,5s, e é isso — não uma trava de cooldown — que dá o compasso ao jogo.
+  // Mantido como constante porque a economia de fôlego e as graças se referem a ele.
+  const pulseEnergyCost = 0.85;
+
+  // Teto de fôlego, descontado o desgaste acumulado na corrida.
+  function maxBreath() { return 1 - state.sun.wear * 0.5; }
+
+  // --- O PONTO ÓTIMO QUE SE PODE PASSAR ---
+  // Antes, segurar era monotônico: somava energia até travar no teto, e segurar demais
+  // nunca era pior que segurar o certo. Sem penalidade nas duas pontas não existe compasso,
+  // e a estratégia degenerava em "encher tudo, esvaziar o mais rápido possível".
+  // Agora, passar do ponto cheio é prender a respiração: tensiona em vez de acumular.
+  const breathConfig = {
+    // Abaixo disto não há ar para soltar: é a única recusa que sobrou.
+    minBreath: 0.12,
+    // Segundos segurando além do cheio até a tensão chegar ao máximo.
+    strainTime: 2.6,
+    // Soltar alivia mais rápido do que tensionar, para o erro não virar castigo.
+    strainRelease: 1.1,
+    // Quanto a tensão máxima rouba do impulso do pulso e da estabilidade.
+    strainImpulsePenalty: 0.55,
+    strainStabilityDrain: 0.22
+  };
 
   const influenceZones = {
     perfect: 0.15,
@@ -3286,6 +3428,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       lastPress: -999,
       lastClick: -999,
       lastEmptyPulse: -999,
+      lastRefusal: -999,
       keyboardHold: false
     },
 
@@ -3301,6 +3444,12 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       wear: 0, 
       breath: 0,
       breathStrength: 0.18,
+      // Respiração presa: 0 = fôlego no ponto, 1 = segurou muito além do cheio.
+      strain: 0,
+      // Dica de alcance: acende quando um toque cai fora do raio de influência.
+      reachHint: 0,
+      reachHintX: 0,
+      reachHintY: 0,
       haloPulse: 0,
       nearFail: false,
       breakthrough: false,
@@ -3393,56 +3542,56 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   ];
 
   const HOLD_THE_SUN_MISSIONS = [
-    { id: 'm1', title: 'Still Night', subtitle: 'Reach 200m.', kind: MissionKind.REACH_ALTITUDE, target: 200, perfectText: 'zero near-fails', toast: 'The sky waits', nodeMeta: 'Ritual · Forest', biome: 'forest' },
+    { id: 'm1', title: 'Still Night', subtitle: 'Reach 210m.', kind: MissionKind.REACH_ALTITUDE, target: 210, perfectText: 'zero near-fails', toast: 'The sky waits', nodeMeta: 'Ritual · Forest', biome: 'forest' },
     { id: 'm2', title: 'Neon Dusk', subtitle: 'Hold Dawn Line for 15s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 15, perfectText: 'zero near-fails', toast: 'City hums', nodeMeta: 'Ritual · City', biome: 'city' },
-    { id: 'm3', title: 'Autumn Winds', subtitle: 'Reach Combo x5.', kind: MissionKind.COMBO_TARGET, target: 5, perfectText: 'score 350m', toast: 'Leaves dance', nodeMeta: 'Ritual · Autumn', biome: 'autumn' },
-    { id: 'm4', title: 'Fragile Balance', subtitle: 'Reach 400m.', kind: MissionKind.REACH_ALTITUDE, target: 400, perfectText: 'combo x6', toast: 'Balance found', nodeMeta: 'Ritual · Snow', biome: 'snow' },
+    { id: 'm3', title: 'Autumn Winds', subtitle: 'Reach Combo x5.', kind: MissionKind.COMBO_TARGET, target: 5, perfectText: 'score 220m', toast: 'Leaves dance', nodeMeta: 'Ritual · Autumn', biome: 'autumn' },
+    { id: 'm4', title: 'Fragile Balance', subtitle: 'Reach 220m.', kind: MissionKind.REACH_ALTITUDE, target: 220, perfectText: 'combo x6', toast: 'Balance found', nodeMeta: 'Ritual · Snow', biome: 'snow' },
     { id: 'm5', title: 'Sakura Fall', subtitle: '80% Precision for 8s.', kind: MissionKind.STABILITY_TIME, target: 8, perfectText: 'zero near-fails', toast: 'Petals drift', nodeMeta: 'Ritual · Blossom', biome: 'sakura' },
-    { id: 'm6', title: 'Rising Sky', subtitle: 'Reach 600m.', kind: MissionKind.REACH_ALTITUDE, target: 600, perfectText: 'zero near-fails', toast: 'The sky answered', nodeMeta: 'Ritual · Sea', biome: 'sea' },
+    { id: 'm6', title: 'Rising Sky', subtitle: 'Reach 230m.', kind: MissionKind.REACH_ALTITUDE, target: 230, perfectText: 'zero near-fails', toast: 'The sky answered', nodeMeta: 'Ritual · Sea', biome: 'sea' },
     { id: 'm7', title: 'Whispering Mire', subtitle: 'Awaken 3 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 3, perfectText: 'Max Combo x5', toast: 'Fog clears', nodeMeta: 'Ritual · Swamp', biome: 'swamp' },
-    { id: 'm8', title: 'Scorched Sands', subtitle: 'Reach 800m.', kind: MissionKind.REACH_ALTITUDE, target: 800, perfectText: 'reach 900m', toast: 'Heat endured', nodeMeta: 'Ritual · Desert', biome: 'desert' },
+    { id: 'm8', title: 'Scorched Sands', subtitle: 'Reach 240m.', kind: MissionKind.REACH_ALTITUDE, target: 240, perfectText: 'reach 240m', toast: 'Heat endured', nodeMeta: 'Ritual · Desert', biome: 'desert' },
     { id: 'm9', title: 'Crimson Divide', subtitle: 'Hold Dawn Line for 20s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 20, perfectText: 'Max Combo x6', toast: 'Canyons glow', nodeMeta: 'Ritual · Canyon', biome: 'canyon' },
-    { id: 'm10', title: 'Storm Front', subtitle: 'Reach 1000m.', kind: MissionKind.REACH_ALTITUDE, target: 1000, perfectText: 'Max Combo x6', toast: 'Clouds pierced', nodeMeta: 'Ritual · Storm', biome: 'storm' },
+    { id: 'm10', title: 'Storm Front', subtitle: 'Reach 250m.', kind: MissionKind.REACH_ALTITUDE, target: 250, perfectText: 'Max Combo x6', toast: 'Clouds pierced', nodeMeta: 'Ritual · Storm', biome: 'storm' },
     { id: 'm11', title: 'Ancient Echoes', subtitle: 'Reach Combo x7.', kind: MissionKind.COMBO_TARGET, target: 7, perfectText: 'Zero near-fails', toast: 'Ruins awaken', nodeMeta: 'Ritual · Ruins', biome: 'ruins' },
     { id: 'm12', title: 'First Dawn', subtitle: '80% Precision for 12s.', kind: MissionKind.STABILITY_TIME, target: 12, perfectText: 'Clean run', toast: 'Dawn remembered', nodeMeta: 'Ritual · Volcano', biome: 'volcano' },
-    { id: 'm13', title: 'Midnight Depths', subtitle: 'Reach 1200m.', kind: MissionKind.REACH_ALTITUDE, target: 1200, perfectText: 'Max Combo x8', toast: 'Abyss illuminated', nodeMeta: 'Ritual · Abyss', biome: 'abyss' },
+    { id: 'm13', title: 'Midnight Depths', subtitle: 'Reach 310m.', kind: MissionKind.REACH_ALTITUDE, target: 310, perfectText: 'Max Combo x8', toast: 'Abyss illuminated', nodeMeta: 'Ritual · Abyss', biome: 'abyss' },
     { id: 'm14', title: 'Luminous Flow', subtitle: 'Awaken 5 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 5, perfectText: 'Flawless run', toast: 'Care becomes rhythm', nodeMeta: 'Ritual · Aether', biome: 'aether' },
-    { id: 'm15', title: 'Neon Grid', subtitle: 'Hold Dawn Line for 25s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 25, perfectText: 'Reach 1400m', toast: 'Grid overridden', nodeMeta: 'Ritual · Cyber', biome: 'cyber' },
-    { id: 'm16', title: 'Crystal Echoes', subtitle: 'Reach 1400m.', kind: MissionKind.REACH_ALTITUDE, target: 1400, perfectText: 'Max Combo x9', toast: 'Light fractured', nodeMeta: 'Ritual · Crystal', biome: 'crystal' },
+    { id: 'm15', title: 'Neon Grid', subtitle: 'Hold Dawn Line for 25s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 25, perfectText: 'Reach 320m', toast: 'Grid overridden', nodeMeta: 'Ritual · Cyber', biome: 'cyber' },
+    { id: 'm16', title: 'Crystal Echoes', subtitle: 'Reach 320m.', kind: MissionKind.REACH_ALTITUDE, target: 320, perfectText: 'Max Combo x9', toast: 'Light fractured', nodeMeta: 'Ritual · Crystal', biome: 'crystal' },
     { id: 'm17', title: 'Fractured Realm', subtitle: 'Reach Combo x8.', kind: MissionKind.COMBO_TARGET, target: 8, perfectText: 'Zero near-fails', toast: 'Reality mended', nodeMeta: 'Ritual · Shattered', biome: 'shattered' },
-    { id: 'm18', title: 'Stellar Nursery', subtitle: '80% Precision for 16s.', kind: MissionKind.STABILITY_TIME, target: 16, perfectText: 'Reach 1600m', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
-    { id: 'm19', title: 'Cosmic Echo', subtitle: 'Reach 1600m.', kind: MissionKind.REACH_ALTITUDE, target: 1600, perfectText: 'reach 1700m', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
+    { id: 'm18', title: 'Stellar Nursery', subtitle: '80% Precision for 16s.', kind: MissionKind.STABILITY_TIME, target: 16, perfectText: 'Reach 330m', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
+    { id: 'm19', title: 'Cosmic Echo', subtitle: 'Reach 330m.', kind: MissionKind.REACH_ALTITUDE, target: 330, perfectText: 'reach 370m', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
     { id: 'm20', title: 'Emerald Canopy', subtitle: 'Awaken 7 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 7, perfectText: 'Zero near-fails', toast: 'Stars aligned', nodeMeta: 'Ritual · Forest', biome: 'forest' },
     { id: 'm21', title: 'Concrete Horizon', subtitle: 'Hold Dawn Line for 30s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 30, perfectText: 'Clean run', toast: 'City hums', nodeMeta: 'Ritual · City', biome: 'city' },
-    { id: 'm22', title: 'Amber Leaves', subtitle: 'Reach 1800m.', kind: MissionKind.REACH_ALTITUDE, target: 1800, perfectText: 'Reach 1900m', toast: 'Leaves dance', nodeMeta: 'Ritual · Autumn', biome: 'autumn' },
+    { id: 'm22', title: 'Amber Leaves', subtitle: 'Reach 410m.', kind: MissionKind.REACH_ALTITUDE, target: 410, perfectText: 'Reach 420m', toast: 'Leaves dance', nodeMeta: 'Ritual · Autumn', biome: 'autumn' },
     { id: 'm23', title: 'Frostbound Peak', subtitle: 'Reach Combo x9.', kind: MissionKind.COMBO_TARGET, target: 9, perfectText: 'Flawless run', toast: 'Balance found', nodeMeta: 'Ritual · Snow', biome: 'snow' },
     { id: 'm24', title: 'Petal Dance', subtitle: '80% Precision for 20s.', kind: MissionKind.STABILITY_TIME, target: 20, perfectText: 'Clean run', toast: 'Petals drift', nodeMeta: 'Ritual · Sakura', biome: 'sakura' },
-    { id: 'm25', title: 'Ocean Mirror', subtitle: 'Reach 2000m.', kind: MissionKind.REACH_ALTITUDE, target: 2000, perfectText: 'Flawless run', toast: 'The sky answered', nodeMeta: 'Ritual · Sea', biome: 'sea' },
+    { id: 'm25', title: 'Ocean Mirror', subtitle: 'Reach 420m.', kind: MissionKind.REACH_ALTITUDE, target: 420, perfectText: 'Flawless run', toast: 'The sky answered', nodeMeta: 'Ritual · Sea', biome: 'sea' },
     { id: 'm26', title: 'Tangled Roots', subtitle: 'Awaken 9 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 9, perfectText: 'Max Combo x9', toast: 'Fog clears', nodeMeta: 'Ritual · Swamp', biome: 'swamp' },
-    { id: 'm27', title: 'Sunbaked Dunes', subtitle: 'Hold Dawn Line for 35s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 35, perfectText: 'Reach 2100m', toast: 'Heat endured', nodeMeta: 'Ritual · Desert', biome: 'desert' },
-    { id: 'm28', title: 'Echoing Gorge', subtitle: 'Reach 2200m.', kind: MissionKind.REACH_ALTITUDE, target: 2200, perfectText: 'Max Combo x10', toast: 'Canyons glow', nodeMeta: 'Ritual · Canyon', biome: 'canyon' },
+    { id: 'm27', title: 'Sunbaked Dunes', subtitle: 'Hold Dawn Line for 35s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 35, perfectText: 'Reach 420m', toast: 'Heat endured', nodeMeta: 'Ritual · Desert', biome: 'desert' },
+    { id: 'm28', title: 'Echoing Gorge', subtitle: 'Reach 430m.', kind: MissionKind.REACH_ALTITUDE, target: 430, perfectText: 'Max Combo x10', toast: 'Canyons glow', nodeMeta: 'Ritual · Canyon', biome: 'canyon' },
     { id: 'm29', title: 'Thunders Roar', subtitle: 'Reach Combo x10.', kind: MissionKind.COMBO_TARGET, target: 10, perfectText: 'Zero near-fails', toast: 'Clouds pierced', nodeMeta: 'Ritual · Storm', biome: 'storm' },
     { id: 'm30', title: 'Forgotten Temple', subtitle: '80% Precision for 24s.', kind: MissionKind.STABILITY_TIME, target: 24, perfectText: 'Clean run', toast: 'Ruins awaken', nodeMeta: 'Ritual · Ruins', biome: 'ruins' },
-    { id: 'm31', title: 'Magma Core', subtitle: 'Reach 2400m.', kind: MissionKind.REACH_ALTITUDE, target: 2400, perfectText: 'Max Combo x11', toast: 'Dawn remembered', nodeMeta: 'Ritual · Volcano', biome: 'volcano' },
+    { id: 'm31', title: 'Magma Core', subtitle: 'Reach 520m.', kind: MissionKind.REACH_ALTITUDE, target: 520, perfectText: 'Max Combo x11', toast: 'Dawn remembered', nodeMeta: 'Ritual · Volcano', biome: 'volcano' },
     { id: 'm32', title: 'Silent Trench', subtitle: 'Awaken 12 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 12, perfectText: 'Zero near-fails', toast: 'Abyss illuminated', nodeMeta: 'Ritual · Abyss', biome: 'abyss' },
-    { id: 'm33', title: 'Astral Stream', subtitle: 'Hold Dawn Line for 40s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 40, perfectText: 'Reach 2500m', toast: 'Care becomes rhythm', nodeMeta: 'Ritual · Aether', biome: 'aether' },
-    { id: 'm34', title: 'Digital Dream', subtitle: 'Reach 2500m.', kind: MissionKind.REACH_ALTITUDE, target: 2500, perfectText: 'Flawless run', toast: 'Grid overridden', nodeMeta: 'Ritual · Cyber', biome: 'cyber' },
+    { id: 'm33', title: 'Astral Stream', subtitle: 'Hold Dawn Line for 40s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 40, perfectText: 'Reach 530m', toast: 'Care becomes rhythm', nodeMeta: 'Ritual · Aether', biome: 'aether' },
+    { id: 'm34', title: 'Digital Dream', subtitle: 'Reach 530m.', kind: MissionKind.REACH_ALTITUDE, target: 530, perfectText: 'Flawless run', toast: 'Grid overridden', nodeMeta: 'Ritual · Cyber', biome: 'cyber' },
     { id: 'm35', title: 'Prism Cavern', subtitle: 'Reach Combo x11.', kind: MissionKind.COMBO_TARGET, target: 11, perfectText: 'Zero near-fails', toast: 'Light fractured', nodeMeta: 'Ritual · Crystal', biome: 'crystal' },
     { id: 'm36', title: 'Mirror Dimension', subtitle: '80% Precision for 28s.', kind: MissionKind.STABILITY_TIME, target: 28, perfectText: 'Clean run', toast: 'Reality mended', nodeMeta: 'Ritual · Shattered', biome: 'shattered' },
-    { id: 'm37', title: 'Purple Dust', subtitle: 'Reach 2600m.', kind: MissionKind.REACH_ALTITUDE, target: 2600, perfectText: 'Max Combo x12', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
+    { id: 'm37', title: 'Purple Dust', subtitle: 'Reach 550m.', kind: MissionKind.REACH_ALTITUDE, target: 550, perfectText: 'Max Combo x12', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
     { id: 'm38', title: 'Voids Edge', subtitle: 'Awaken 15 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 15, perfectText: 'Flawless run', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
-    { id: 'm39', title: 'Cassiopeia', subtitle: 'Hold Dawn Line for 45s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 45, perfectText: 'Reach 2700m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
-    { id: 'm40', title: 'Cygnus', subtitle: 'Reach 2700m.', kind: MissionKind.REACH_ALTITUDE, target: 2700, perfectText: 'Zero near-fails', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
+    { id: 'm39', title: 'Cassiopeia', subtitle: 'Hold Dawn Line for 45s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 45, perfectText: 'Reach 560m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
+    { id: 'm40', title: 'Cygnus', subtitle: 'Reach 560m.', kind: MissionKind.REACH_ALTITUDE, target: 560, perfectText: 'Zero near-fails', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
     { id: 'm41', title: 'Lyra', subtitle: 'Reach Combo x12.', kind: MissionKind.COMBO_TARGET, target: 12, perfectText: 'Clean run', toast: 'Golden fleece', nodeMeta: 'Constellation · Aries', biome: 'aries' },
-    { id: 'm42', title: 'Draco', subtitle: '80% Precision for 34s.', kind: MissionKind.STABILITY_TIME, target: 34, perfectText: 'Reach 2800m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
-    { id: 'm43', title: 'Pegasus', subtitle: 'Reach 2800m.', kind: MissionKind.REACH_ALTITUDE, target: 2800, perfectText: 'Max Combo x12', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
+    { id: 'm42', title: 'Draco', subtitle: '80% Precision for 34s.', kind: MissionKind.STABILITY_TIME, target: 34, perfectText: 'Reach 660m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
+    { id: 'm43', title: 'Pegasus', subtitle: 'Reach 660m.', kind: MissionKind.REACH_ALTITUDE, target: 660, perfectText: 'Max Combo x12', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
     { id: 'm44', title: 'Phoenix', subtitle: 'Awaken 18 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 18, perfectText: 'Zero near-fails', toast: 'Golden fleece', nodeMeta: 'Constellation · Aries', biome: 'aries' },
-    { id: 'm45', title: 'Andromeda', subtitle: 'Hold Dawn Line for 50s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 50, perfectText: 'Reach 2900m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
-    { id: 'm46', title: 'Perseus', subtitle: 'Reach 2900m.', kind: MissionKind.REACH_ALTITUDE, target: 2900, perfectText: 'Flawless run', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
+    { id: 'm45', title: 'Andromeda', subtitle: 'Hold Dawn Line for 50s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 50, perfectText: 'Reach 670m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
+    { id: 'm46', title: 'Perseus', subtitle: 'Reach 670m.', kind: MissionKind.REACH_ALTITUDE, target: 670, perfectText: 'Flawless run', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
     { id: 'm47', title: 'Hercules', subtitle: 'Reach Combo x14.', kind: MissionKind.COMBO_TARGET, target: 14, perfectText: 'Zero near-fails', toast: 'Golden fleece', nodeMeta: 'Constellation · Aries', biome: 'aries' },
     { id: 'm48', title: 'Galactic Core', subtitle: '80% Precision for 40s.', kind: MissionKind.STABILITY_TIME, target: 40, perfectText: 'Clean run', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
-    { id: 'm49', title: 'Eternity Gate', subtitle: 'Awaken 20 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 20, perfectText: 'Reach 3000m', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
-    { id: 'm50', title: 'The Zenith', subtitle: 'Reach 3000m into pure light.', kind: MissionKind.REACH_ALTITUDE, target: 3000, perfectText: 'Flawless run', toast: 'Transcendence', nodeMeta: 'Apex · Zenith', biome: 'zenith' }
+    { id: 'm49', title: 'Eternity Gate', subtitle: 'Awaken 20 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 20, perfectText: 'Reach 690m', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
+    { id: 'm50', title: 'The Zenith', subtitle: 'Reach 690m into pure light.', kind: MissionKind.REACH_ALTITUDE, target: 690, perfectText: 'Flawless run', toast: 'Transcendence', nodeMeta: 'Apex · Zenith', biome: 'zenith' }
   ];
 
   const JOURNEY_SAVE_KEY = "luma_journey_progress_v3";
@@ -4268,11 +4417,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     };
     state.draft = { radiance: 0, count: 0, pending: 0, thresholds: [10, 25, 45, 70], max: 4, lastAltitudeMilestone: 0, sustainTimer: 0 };
     
-    state.input.lastClick = -999; state.input.lastPress = -999; state.input.lastEmptyPulse = -999; state.input.keyboardHold = false; state.input.holding = false; state.input.inside = false; state.input.x = W * .5; state.input.y = H * .42;
+    state.input.lastClick = -999; state.input.lastPress = -999; state.input.lastEmptyPulse = -999; state.input.lastRefusal = -999; state.input.keyboardHold = false; state.input.holding = false; state.input.inside = false; state.input.x = W * .5; state.input.y = H * .42;
     state.entropy = .12;
     state.sun.x = W * .5; state.sun.y = H * .38; state.sun.vx = 0; state.sun.vy = 0; state.sun.stability = .22; state.sun.energy = .92; state.sun.wear = 0;
     state.sun.breath = 0;
     state.sun.breathStrength = .18;
+    state.sun.strain = 0;
+    state.sun.reachHint = 0;
     state.sun.errorTremor = 0;
     state.sun.glowFail = 0;
     state.sun.haloPulse = 0;
@@ -4732,8 +4883,11 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
 
       if (state.tutorial.delay > 0) { state.tutorial.delay -= dt; return; }
 
-      if (state.tutorial.chapter === 1) { // CHAPTER 1: SUSTAIN
-          state.entropy = 0; state.sun.energy = 1; 
+      if (state.tutorial.chapter === 1) { // CAPÍTULO 1: INSPIRAR
+          // A energia NÃO é mais fixada em 1. Fixá-la ensinava o gesto num mundo onde
+          // segurar não custava nada, e o jogador saía do tutorial sem nunca ter sentido
+          // o fôlego encher — que é a única coisa que o jogo pede dele.
+          state.entropy = 0;
           if (state.tutorial.step === 1) {
               setTut("☼", "the sun waits. touch near it to hold it up.", true);
               if (state.input.holding && isNear) { state.tutorial.step = 2; state.tutorial.delay = 1.0; showFloating("like that. the sun responds.", true); }
@@ -4746,18 +4900,33 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
                   if (ui.tutContainer) ui.tutContainer.classList.add('hidden');
               }
           }
-      } else if (state.tutorial.chapter === 2) { // CHAPTER 2: RHYTHM
+      } else if (state.tutorial.chapter === 2) { // CAPÍTULO 2: SOLTAR NO PONTO
           state.entropy = 0;
           if (state.tutorial.step === 1) {
-              setTut("⌖", "tap the core to pulse.", true);
-              if (state.tutorial.perfects >= 3) { state.tutorial.step = 2; state.tutorial.delay = 1.5; showFloating("perfect. the rhythm begins.", true); }
+              // Espera o peito encher antes de pedir o gesto, para que o primeiro toque
+              // do jogador aconteça exatamente no ponto e ele sinta a diferença.
+              const cheio = state.sun.energy >= maxBreath() - 0.02;
+              setTut(cheio ? "◉" : "◌",
+                     cheio ? "the light is full. release it now." : "hold. let the light gather.",
+                     cheio);
+              if (state.tutorial.perfects >= 2) { state.tutorial.step = 2; state.tutorial.delay = 1.5; showFloating("perfect. the rhythm begins.", true); }
           } else if (state.tutorial.step === 2) {
-              setTut("∿", "pulses in sequence build rhythm. reach combo x3.", false);
+              setTut("∿", "let it fill, then release. three times.", false);
               if (state.combo >= 3) {
-                  state.tutorial.chapter = 3; state.tutorial.step = 1; state.tutorial.delay = 2.0;
+                  state.tutorial.chapter = 2.5; state.tutorial.step = 1; state.tutorial.delay = 2.0;
                   showFloating("the world begins to wake.", true);
                   if (ui.tutContainer) ui.tutContainer.classList.add('hidden');
               }
+          }
+      } else if (state.tutorial.chapter === 2.5) { // CAPÍTULO 2.5: SEGURAR DEMAIS
+          // O jogador precisa SENTIR a outra ponta do erro, não só a pressa. Este capítulo
+          // só sai quando ele deixa a respiração prender uma vez e vê a luz endurecer.
+          state.entropy = 0;
+          setTut("◍", "hold too long and the light tightens. feel it.", false);
+          if (state.sun.strain > 0.75) {
+              state.tutorial.chapter = 3; state.tutorial.step = 1; state.tutorial.delay = 2.0;
+              showFloating("that is the edge. breathe before it.", true);
+              if (ui.tutContainer) ui.tutContainer.classList.add('hidden');
           }
       } else if (state.tutorial.chapter === 3) { // CHAPTER 3: CARE
           if (state.tutorial.step === 1) {
@@ -4895,16 +5064,37 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     const currentInfluenceRadius = tune.influenceRadius * (state.mods.areaSustain ? 1.8 : 1) * sensMult;
     
     const dx = state.input.x - state.sun.x, dy = state.input.y - sunScreenY, dist = Math.hypot(dx, dy);
-    if (dist > currentInfluenceRadius) return;
-    // FIX: Fallback seguro caso o mod.cooldown seja undefined (evita NaN e rate-limit quebrado)
-    if (now - state.input.lastClick < tune.clickCooldown * (state.mods.cooldown || 1)) return;
 
-    // Sem fôlego: o pulso é recusado antes de gastar energia ou creditar combo.
-    if (state.sun.energy < pulseEnergyCost) {
+    // As três recusas abaixo existiam e eram mudas: o jogador tocava e nada acontecia, sem
+    // saber qual das regras tinha quebrado. Cada uma agora responde com um gesto físico
+    // distinto — sem texto, para não competir com a atenção no sol.
+    if (dist > currentInfluenceRadius) {
+      // Longe demais: o halo se encolhe na direção do dedo, mostrando onde é o alcance.
+      if (now - state.input.lastRefusal > 0.35) {
+        state.input.lastRefusal = now;
+        state.sun.reachHint = 1;
+        state.sun.reachHintX = dx; state.sun.reachHintY = dy;
+      }
+      return;
+    }
+    // FIX: Fallback seguro caso o mod.cooldown seja undefined (evita NaN e rate-limit quebrado)
+    if (now - state.input.lastClick < tune.clickCooldown * (state.mods.cooldown || 1)) {
+      // Rápido demais: o sol engasga — um recuo curto, legível como "ainda não".
+      state.sun.tapScale = Math.min(state.sun.tapScale, 0.94);
+      return;
+    }
+
+    // Sem fôlego nenhum: recusa. Acima disso o gesto SEMPRE sai — o que muda é a força.
+    // Um portão duro ("só pulsa com a barra cheia") premiava quem martelava, porque
+    // disparava sozinho no instante em que ficava disponível e nunca deixava a tensão
+    // acumular: medido, martelar rendia 98m contra 53m de quem respirava. Agora soltar
+    // cedo é permitido e desperdiça o fôlego, então a pressa se pune sozinha.
+    if (state.sun.energy < breathConfig.minBreath) {
       if (now - state.input.lastEmptyPulse > 0.4) {
         state.input.lastEmptyPulse = now;
-        triggerScreenFlash('rgba(120,140,170,0.06)');
-        state.sun.tapScale = 0.96;
+        state.sun.errorTremor = Math.max(state.sun.errorTremor, 0.55);
+        state.sun.tapScale = 0.92;
+        emitAudioEvent('error_muffle', 1, 0);
       }
       return;
     }
@@ -4922,10 +5112,20 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     let dynamicPulseMult = state.mods.pulseMult;
     if (perfect && state.mods.cometStacks > 0) dynamicPulseMult += Math.min(0.5, state.mods.consecutivePulses * 0.1);
 
-    const impulse = baseImpulse * dynamicPulseMult * influence * antiSpam * state.sun.impulseEfficiency * state.feedbackLoops.recoveryAssist * (1 - (1 - state.sun.energy) * .25) * state.emotion.runtime.physics.assistMul;
+    // A força do gesto é a qualidade da respiração, e a curva tem um pico nítido:
+    // ao quadrado, meio fôlego rende só um quarto do impulso. É o que separa julgar a
+    // duração de apertar depressa — e é a única "dificuldade" que o LUMA quer ter.
+    const fullness = clamp(state.sun.energy / maxBreath(), 0, 1);
+    // Guardado antes de zerar abaixo: a qualidade do gesto é a do instante em que soltou.
+    const strainAoSoltar = state.sun.strain;
+    const breathQuality = fullness * fullness * (1 - strainAoSoltar * breathConfig.strainImpulsePenalty);
+
+    const impulse = baseImpulse * dynamicPulseMult * influence * antiSpam * state.sun.impulseEfficiency * state.feedbackLoops.recoveryAssist * state.emotion.runtime.physics.assistMul * breathQuality;
 
     state.sun.vy -= impulse;
-    state.sun.energy = clamp(state.sun.energy - pulseEnergyCost, 0, 1);
+    // Expirar esvazia o peito, tenha ele enchido ou não: soltar cedo custa o fôlego inteiro.
+    state.sun.energy = 0;
+    state.sun.strain = 0;
 
     state.sun.stability = clamp(state.sun.stability + (perfect ? .09 : .05), 0, 1);
     state.sun.haloPulse = 1; state.sun.tapScale = 1.08; state.input.lastClick = now;
@@ -4934,8 +5134,10 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     
     if (perfect) {
       const oldCombo = state.combo;
-      // Combo é mestria, não velocidade: pulsos dentro da janela de anti-spam não constroem combo.
-      if (antiSpam === 1) {
+      // Combo mede consistência de ritmo, não velocidade: só conta o gesto solto perto do
+      // ponto cheio. Com o pulso custando quase todo o fôlego, a janela do anti-spam nunca
+      // dispara sozinha — quem separa um bom gesto de um gesto apressado é a tensão.
+      if (antiSpam === 1 && fullness > 0.9 && strainAoSoltar < 0.3) {
         state.combo = Math.min(20, state.combo + 1);
         state.maxComboThisRun = Math.max(state.maxComboThisRun, state.combo);
         state.mods.consecutivePulses++;
@@ -5070,18 +5272,28 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     state.sun.impulseEfficiency = lerp(state.sun.impulseEfficiency, 1, dt * 5);
 
     state.sun.errorTremor = lerp(state.sun.errorTremor, 0, dt * 15);
+    state.sun.reachHint = Math.max(0, state.sun.reachHint - dt * 1.6);
     state.sun.glowFail = lerp(state.sun.glowFail, 0, dt * 12);
 
     // --- SISTEMA BIOLÓGICO: RESPIRAÇÃO v2.0 ---
-    let breathFreq = 2.5;
+    // A pulsação do sol é o metrônomo da respiração do jogador, então ela DESACELERA
+    // conforme ele acerta: 1,26 rad/s ≈ 5s por ciclo, o tempo de um gesto inteiro.
+    // Antes acelerava com o combo, o que premiava o acerto fazendo respirar mais rápido —
+    // o oposto do efeito que o jogo busca.
+    let breathFreq = 1.5;
     let breathAmp = 0.04;
-    if (state.sun.stability > 0.7) { breathAmp *= 1.5; breathFreq *= 1.2; }
-    if (state.combo > 0) { breathFreq *= 1.3; } // Flow state acelera
-    
+    if (state.sun.stability > 0.7) { breathAmp *= 1.5; breathFreq *= 0.9; }
+    if (state.combo > 0) { breathFreq *= 0.84; }
+    // Prender a respiração aperta e acelera: a tensão é visível antes de ser explicada.
+    if (state.sun.strain > 0) {
+      breathFreq *= 1 + state.sun.strain * 1.6;
+      breathAmp *= 1 - state.sun.strain * 0.6;
+    }
+
     state.sun.breath += dt * breathFreq;
     state.sun.breathStrength = breathAmp;
 
-    let maxEnergy = 1 - state.sun.wear * 0.5;
+    let maxEnergy = maxBreath();
 
     let newPhase = 1,
         phaseName = "Phase I: Awakening";
@@ -5121,11 +5333,24 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
             dist = Math.hypot(dx, dy);
       if (dist <= currentInfluenceRadius) {
         const influence = getInteractionStrength(dist, currentInfluenceRadius);
-        const lift = sustainConfig.liftForce * state.mods.liftMult * influence * state.emotion.runtime.physics.assistMul;
+        // A tensão mata a sustentação. Sem isto, segurar para sempre seria a estratégia
+        // ótima e o ciclo não fecharia: o jogo precisa que soltar seja necessário, não
+        // apenas recomendado. É o que transforma o gesto numa duração com fim.
+        const lift = sustainConfig.liftForce * state.mods.liftMult * influence
+                   * state.emotion.runtime.physics.assistMul * (1 - state.sun.strain * 0.6);
         state.sun.vy -= lift * dt;
         state.sun.stability = clamp(state.sun.stability + sustainConfig.stabilityGain * state.mods.stabGainMult * influence * dt, 0, 1);
         state.sun.energy = clamp(state.sun.energy + sustainConfig.energyRecovery * state.mods.energyRecMult * influence * dt, 0, maxEnergy);
         holdIntensity = influence;
+
+        // Inspirou até encher e continuou segurando: a partir daqui tensiona, não acumula.
+        // É o que dá ao gesto um fim — e é o que transforma "segurar" numa duração a julgar
+        // em vez de um botão a manter apertado.
+        if (state.sun.energy >= maxEnergy - 0.001) {
+          state.sun.strain = Math.min(1, state.sun.strain + dt / breathConfig.strainTime);
+          state.sun.stability = clamp(
+            state.sun.stability - breathConfig.strainStabilityDrain * state.sun.strain * dt, 0, 1);
+        }
         if (influence > .74) state.sun.stableTimer += dt;
         else state.sun.stableTimer = Math.max(0, state.sun.stableTimer - dt * 1.4);
         
@@ -5140,6 +5365,11 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     } else {
       state.sun.stability = clamp(state.sun.stability - .08 * dt, 0, 1);
       state.sun.stableTimer = Math.max(0, state.sun.stableTimer - dt * 1.3);
+    }
+
+    // Fora do ponto cheio — soltando, ou ainda enchendo — a tensão cede sozinha.
+    if (!(state.input.holding && state.input.inside && state.sun.energy >= maxEnergy - 0.001)) {
+      state.sun.strain = Math.max(0, state.sun.strain - dt / breathConfig.strainRelease);
     }
 
     if (state.sun.stableTimer > 2.2) {
@@ -5199,7 +5429,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     // --- CÁLCULO CORRETO DE ALTITUDE (BASEADO NA SUBIDA DA CÂMERA E DO SOL) ---
     const startY = H * 0.38;
     const pixelsAboveStart = Math.max(0, startY - state.sun.y);
-    const METERS_PER_PIXEL = 0.025; // Reduzido drasticamente para garantir que a missão demore e possa ser apreciada
+    const METERS_PER_PIXEL = 0.07; // Reescalado junto com o tempo respiratório: ver tools/sim-breath.cjs
     state.scoreMeters = Math.max(state.scoreMeters, Math.floor(pixelsAboveStart * METERS_PER_PIXEL));
     
     const altNorm = clamp(state.scoreMeters / 3000, 0, 1);
@@ -5210,7 +5440,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     } else {
       state.sun.wear *= 0.95; // Decai lentamente
     }
-    maxEnergy = 1 - state.sun.wear * 0.5;
+    maxEnergy = maxBreath();
 
     // DYNAMIC WEATHER: Frente fria se o sol cair
     let targetRain = 0;
@@ -5285,7 +5515,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
           state.sun.nearFail = false;
           state.sun.vy = -400; // Impulso massivo pra cima
           spawnSpark(state.sun.x, state.sun.y, false, 20);
-          showFloating("escudo quebrado", true);
+          showFloating("the shelter broke", true);
       } else {
           let baseGrace = settings.gameplay.difficulty === 'easy' ? 0.30 : (settings.gameplay.difficulty === 'hard' ? 0.18 : 0.22);
           state.graceTime = baseGrace + state.mods.graceTimeBonus;
@@ -5471,7 +5701,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         state.sun.energy = 0.2;
         state.sun.stability = 0.5;
         state.sun.vy = -800;
-        showFloating("eternidade", true);
+        showFloating("eternity holds you", true);
       } else {
         state.sun.y = HORIZON_Y + 6;
         endRun(false);
@@ -6945,6 +7175,37 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     ctx.scale(1, fatigueSquash);
     const grad = ctx.createRadialGradient(0,0,10,0,0,haloR);
     
+    // --- ANEL DE ALCANCE ---
+    // O raio de influência governa todo toque e nunca era desenhado: o jogador só descobria
+    // o alcance errando. Aparece de leve enquanto o dedo está na tela e acende quando um
+    // toque é recusado por distância — resposta espacial, sem uma palavra.
+    if (state.mode === 'gameplay' && (state.input.holding || state.sun.reachHint > 0.01)) {
+      const sens = 0.5 + (settings.gameplay.sensitivity / 100);
+      const reachR = tune.influenceRadius * (state.mods.areaSustain ? 1.8 : 1) * sens;
+      const held = state.input.holding ? 0.05 : 0;
+      const alpha = (held + state.sun.reachHint * 0.22) * visuals.haloIntensity * 2;
+      if (alpha > 0.004) {
+        ctx.save();
+        ctx.globalAlpha = Math.min(0.3, alpha);
+        ctx.strokeStyle = `rgba(${cEdge.join(',')}, 1)`;
+        ctx.lineWidth = 1 + state.sun.reachHint * 1.5;
+        ctx.beginPath();
+        ctx.arc(0, 0, reachR * (1 - state.sun.reachHint * 0.06), 0, Math.PI * 2);
+        ctx.stroke();
+        // Na recusa por distância, um arco mais forte no lado onde o dedo tocou: diz
+        // "o alcance é aqui" apontando, em vez de só mostrar o círculo inteiro.
+        if (state.sun.reachHint > 0.01) {
+          const ang = Math.atan2(state.sun.reachHintY, state.sun.reachHintX);
+          ctx.globalAlpha = Math.min(0.42, state.sun.reachHint * 0.42);
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(0, 0, reachR * (1 - state.sun.reachHint * 0.06), ang - 0.5, ang + 0.5);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    }
+
     const haloOpacityDrop = 1 - (state.sun.glowFail * 0.4);
     grad.addColorStop(0, `rgba(${cCore.join(',')}, ${0.35 * haloOpacityDrop})`);
     grad.addColorStop(.4, `rgba(${cMid.join(',')}, 0.12)`);
@@ -7507,7 +7768,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
             preview.appendChild(cachedShareCanvas);
             modal.classList.remove('hidden');
         } catch(e) {
-            showFloating("erro ao gerar imagem", false);
+            showFloating("the image would not form", false);
         } finally {
             card.remove();
         }
@@ -7523,7 +7784,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   if (copyTextBtn) {
       copyTextBtn.addEventListener('click', () => {
           navigator.clipboard.writeText(cachedShareText + " " + window.location.href);
-          showFloating("poesia copiada", true);
+          showFloating("the poem is yours", true);
       });
   }
   
