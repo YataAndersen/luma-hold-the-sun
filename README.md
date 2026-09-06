@@ -6,7 +6,7 @@ Um arcade contemplativo em retrato. Você sustenta um sol frágil contra a gravi
 
 A fantasia não é controlar um astro. É: **sou pequeno, mas minha persistência muda o amanhecer.**
 
-**[Jogar](#)** · HTML5, um arquivo só, sem instalação.
+**[Jogar no itch.io](https://yata-andersen.itch.io/luma-hold-the-sun)** · HTML5, um arquivo só, sem instalação.
 
 ---
 
