@@ -1,0 +1,10 @@
+# Cópias de segurança feitas antes de mudanças grandes — histórico local, não vão para o repo
+*.backup.html
+
+# Pacotes gerados para publicação
+dist/
+*.zip
+
+node_modules/
+.DS_Store
+Thumbs.db

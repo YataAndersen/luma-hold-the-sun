@@ -1,0 +1,116 @@
+# Página do itch.io — LUMA: Hold the Sun
+
+Conteúdo pronto para colar em `itch.io/game/new`. Escrito em inglês para alcance; o jogo tem inglês e português embutidos.
+
+---
+
+## Título
+
+```
+LUMA: Hold the Sun
+```
+
+Mantém o prefixo de `LUMA: Between`, que já está publicado. Duas peças com o mesmo prefixo começam a ler como **série**, e isso faz o segundo título carregar o primeiro nas buscas.
+
+## URL
+
+```
+yata-andersen.itch.io/luma-hold-the-sun
+```
+
+## Short description (tagline)
+
+> **É o campo mais importante de todos.** É ele que aparece na busca do itch.io, nos cards de listagem e como a meta-descrição no Google. Precisa conter a promessa e as palavras que as pessoas realmente digitam.
+
+```
+A calm one-touch arcade about holding a falling sun. Hold to gather light, pulse to rise — and watch the world wake up.
+```
+
+118 caracteres. Entrega em ordem: **tom** (calm), **controle** (one-touch), **gênero** (arcade), **ação central** (holding a falling sun), **regra** (hold / pulse) e **recompensa** (the world wakes up).
+
+## Descrição da página
+
+```
+The sun always falls. Your touch is the only thing holding it up.
+
+Hold near the sun to sustain it and gather light. Pulse to push it higher — but every pulse spends what you gathered, and the wind never stops pushing. You cannot do both forever. That choice is the whole game.
+
+You are small. Your persistence changes the dawn.
+
+── HOW IT PLAYS ──
+
+☼  One touch. Hold to sustain, tap to pulse. That's all.
+∿  Rhythm beats speed — hammering the screen builds nothing.
+◈  The world answers. Birds return, windows light, auroras open.
+✧  50 rituals across constellations, three stars each.
+◒  Fall, and you're back in under two seconds.
+
+── MADE FOR SHORT SESSIONS ──
+
+A run lasts about a minute. It fits a bus stop, a coffee, a pause between two heavier things. Nothing is lost when you stop — the world remembers the light you left.
+
+── NOTES ──
+
+Plays in the browser, no download. Portrait, built for touch first — works with mouse and keyboard too.
+Every sound is generated live in your browser. There are no audio files.
+English and Português.
+
+Part of Playing For a Better World.
+```
+
+## Tags
+
+Máximo de 10 no itch.io. A descoberta lá é movida a tag, então a regra é: **use as tags que as pessoas navegam, não as que descrevem seu jogo com precisão.** Uma tag que ninguém filtra é uma tag desperdiçada.
+
+```
+relaxing, atmospheric, minimalist, casual, one-button, short, ambient, meditative, arcade, mobile-friendly
+```
+
+Por quê essas:
+
+| tag | motivo |
+|---|---|
+| `relaxing`, `atmospheric` | as duas maiores portas de entrada para jogo contemplativo no itch |
+| `minimalist` | descreve a arte e é muito navegada |
+| `casual`, `short` | filtros de quem tem cinco minutos — o formato exato deste jogo |
+| `one-button` | nicho pequeno, mas quem procura por ele **converte muito** |
+| `ambient`, `meditative` | reforço de tom, alcançam público de Journey/Monument Valley |
+| `arcade` | ancora o gênero e evita que pareça só "experiência" |
+| `mobile-friendly` | o jogo é retrato e touch-first; é filtro de verdade no itch |
+
+Deixei de fora `pixel-art` (não é), `2d` (genérico demais para trazer alguém) e `chill` (redundante com `relaxing`, e `relaxing` é a mais navegada das duas).
+
+## Configuração do projeto
+
+| campo | valor |
+|---|---|
+| Classification | Game |
+| Kind of project | HTML |
+| Release status | Released |
+| Pricing | Free / com doação opcional |
+| Uploads | `luma-hold-the-sun.zip` marcado como **"This file will be played in the browser"** |
+| Embed | Manual: **444 × 900** · com **fullscreen** ligado |
+| Mobile friendly | Sim · orientação **portrait** |
+| Genre | Action (o mais próximo; não existe "contemplativo") |
+| Inputs | Mouse, Touchscreen, Keyboard |
+| Accessibility | Configurable difficulty, one-button controls, subtitles off |
+
+**Sobre o tamanho do embed:** o jogo é desenhado em retrato 444×900. Deixar o itch escolher corta a tela.
+
+## O que ainda falta (e vale mais que o texto)
+
+A página depende de imagens que eu não posso gerar aqui:
+
+1. **Cover image 630×500** — é o que aparece em toda listagem. Sem uma boa, o texto não é lido. Sugestão: o sol no centro alto, horizonte baixo, muito espaço negativo escuro, e o título pequeno. O contraste do sol contra o azul profundo é a assinatura visual do jogo — use isso.
+2. **Screenshots (3 a 5)** — priorize: o sol acima da linha do amanhecer com aurora, o mapa da jornada com as constelações, e um momento de combo alto. Evite screenshot de menu.
+3. **GIF curto** — o itch dá muito peso a movimento na listagem. Um loop de 3s mostrando segurar → pulsar → o mundo respondendo vale mais que qualquer parágrafo desta página.
+
+## Nota honesta sobre "performance de busca"
+
+O itch.io não é o Google: quase toda a descoberta vem de **tags, da capa e das listas de "recentes/populares"**, não de texto longo. Por isso a ordem de esforço que recomendo é:
+
+1. capa e GIF
+2. tagline e tags
+3. corpo da descrição
+
+O texto acima está otimizado, mas ele é o terceiro fator, não o primeiro. Investir uma tarde na capa rende mais que reescrever a descrição dez vezes.

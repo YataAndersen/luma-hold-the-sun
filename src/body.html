@@ -1,0 +1,448 @@
+<div id="app">
+  <canvas id="gameCanvas" width="444" height="900"></canvas>
+  <div class="vignette"></div>
+
+  <div class="splash-screen" id="splashScreen">
+    <div class="splash-orb"></div>
+    <div class="splash-logo">luma</div>
+    <div class="splash-sub">playing for a better world</div>
+  </div>
+
+  <div id="storyScreen" class="story-screen hidden">
+    <div class="story-line" id="story1" data-i18n>the world almost lost its light.</div>
+    <div class="story-line" id="story2" data-i18n>you are the hand that keeps dawn alive.</div>
+  </div>
+
+  <div class="top-actions" id="topActions">
+    <button id="pendingDraftBtn" class="grace-inventory-btn hidden-ui" title="a grace awaits" data-i18n-title>
+        <span class="grace-inv-icon">✧</span>
+        <span id="pendingDraftBadge" class="grace-inv-badge">1</span>
+    </button>
+    <button class="icon-btn" id="audioToggle" aria-label="toggle audio">♪</button>
+    <button class="icon-btn" id="pauseBtn" aria-label="pause">‖</button>
+  </div>
+
+
+
+  <div class="combo-label" id="comboLabel">SOLAR FLOW x3</div>
+  <div class="floating-message" id="floatingMessage">✨</div>
+  <div class="reward-badge" id="rewardBadge">FLOW STATE</div>
+
+  <div id="liveMissionTracker" class="live-mission-tracker hidden">
+      <div class="tracker-title" id="tTitle">autumn winds</div>
+      <div class="tracker-item" id="tItemMain"><span class="t-icon" id="tIconMain">∘</span><span id="tTextMain">reach combo x3</span></div>
+      <div class="tracker-item" id="tItemSub1"><span class="t-icon" id="tIconSub1">∘</span><span id="tTextSub1">survive 30s</span></div>
+      <div class="tracker-item" id="tItemSub2"><span class="t-icon" id="tIconSub2">∘</span><span id="tTextSub2">flow state</span></div>
+      <div class="tracker-item" id="tItemPerf"><span class="t-icon" id="tIconPerf">✧</span><span id="tTextPerf">perfect: score 350m</span></div>
+  </div>
+
+  <!-- Objetivo principal fixo. O CSS e a lógica de esconder já existiam; faltavam o
+       elemento e o código que o preenche. -->
+  <div class="top-persistent-goal hidden" id="topPersistentGoal"></div>
+
+  <!-- Painel do tutorial. O CSS .tutorial-panel sempre existiu, mas o markup havia sumido
+       do arquivo: o tutorial rodava invisível e nenhum jogador novo era ensinado. -->
+  <div class="tutorial-panel hidden" id="tutorialContainer">
+      <div class="tut-icon" id="tutIcon">☼</div>
+      <div class="tut-text" id="tutText">the sun is waiting.</div>
+      <div class="tut-hand" id="tutHand"><span class="tut-hand-ring"></span><span class="tut-hand-dot"></span></div>
+      <button class="tut-skip" id="skipTutorialBtn" data-i18n>skip ritual</button>
+  </div>
+
+  <!-- Fim do tutorial. Sem esta tela, endTutorial(true) trocava o modo e estourava logo em
+       seguida, deixando quem concluía o tutorial preso sem nada na tela. -->
+  <div id="tutorialCompleteScreen" class="screen hidden" style="z-index: 60;">
+    <div class="panel" style="width: 88%; max-width: 380px;">
+      <div class="panel-header">
+        <div class="eyebrow" data-i18n>First Dawn</div>
+        <div class="title" data-i18n>you learned to hold</div>
+        <div class="subtitle" data-i18n>the gesture is yours now. the sky waits for the rest.</div>
+      </div>
+      <div class="panel-footer" style="margin-top: 24px;">
+        <div class="luma-actions">
+          <button class="luma-btn luma-btn-primary" id="completeProceedBtn" data-i18n>begin the journey</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="celestial-hud" id="celestialHUD">
+      <div class="celestial-ring" id="missionRingHUD">
+          <svg class="ring-svg" viewBox="0 0 60 60">
+              <circle class="ring-bg" cx="30" cy="30" r="26"></circle>
+              <circle class="ring-fill" id="missionRingFill" cx="30" cy="30" r="26"></circle>
+          </svg>
+          <div class="ring-content" id="missionRingText">--</div>
+      </div>
+      <div class="celestial-altitude" id="altitudeDisplay">0m</div>
+  </div>
+
+  <div id="missionToast" class="mission-toast">Dawn remembered</div>
+
+  <div class="tutorial-panel hidden" id="tutorialPanel">
+    <div class="tutorial-title" id="tutorialTitle">move your light toward the sun</div>
+    <div class="tutorial-sub" id="tutorialSub">stay close to sustain the light</div>
+  </div>
+
+  <div id="menuScreen" class="screen menu-screen">
+    <div class="altar-wrapper">
+      <div class="eyebrow" style="margin-bottom: 6vh;">luma</div>
+      
+      <div class="menu-sun-orb breathe" id="menuOrb" style="margin: 0 auto 3vh;"></div>
+      
+      <div class="title-large" data-i18n>hold the sun</div>
+      <div class="subtitle" data-i18n>a light waiting to rise</div>
+      
+      <div class="altar-progress">
+        <div class="progress-text" id="menuWorldLightText">0% restored</div>
+        <div class="altar-line"><div class="altar-line-fill" id="menuWorldLightFill"></div></div>
+      </div>
+      
+      <div class="luma-actions">
+        <button class="luma-btn luma-btn-primary" id="startBtn" data-i18n>awaken</button>
+        <div class="luma-secondary-actions">
+          <button class="luma-btn luma-btn-secondary" id="returnMapMenuBtn" data-i18n>journey</button>
+          <button class="luma-btn luma-btn-secondary" id="openHarmonyBtn" data-i18n>harmony</button>
+          <button class="luma-btn luma-btn-secondary" id="openMemoriesBtn" data-i18n>memories</button>
+        </div>
+      </div>
+      <div class="caption" style="position:absolute; bottom:24px;" data-i18n>developed with care</div>
+    </div>
+  </div>
+
+  <div id="harmonyScreen" class="screen hidden">
+    <div class="settings-container">
+        <div class="settings-header">
+            <div class="settings-icon">⚙️</div>
+            <div class="settings-title" data-i18n>settings</div>
+            <div class="settings-subtitle" data-i18n>calibrate your experience</div>
+        </div>
+        
+        <div class="settings-categories">
+            <div class="settings-category">
+                <div class="category-header"><span class="category-icon">🌐</span><span class="category-title" data-i18n>language</span></div>
+                <div class="category-content">
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>language</div>
+                        <div class="setting-control">
+                            <select id="setLang" class="setting-select"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-category">
+                <div class="category-header"><span class="category-icon">🔊</span><span class="category-title" data-i18n>audio</span></div>
+                <div class="category-content">
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>music</div>
+                        <div class="setting-control"><input type="range" id="setMus" min="0" max="100" value="100" class="volume-slider"><span class="setting-value" id="valMus">100%</span></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>sound effects</div>
+                        <div class="setting-control"><input type="range" id="setSfx" min="0" max="100" value="100" class="volume-slider"><span class="setting-value" id="valSfx">100%</span></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>ambience &amp; wind</div>
+                        <div class="setting-control"><input type="range" id="setAmb" min="0" max="100" value="100" class="volume-slider"><span class="setting-value" id="valAmb">100%</span></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>master volume</div>
+                        <div class="setting-control"><input type="range" id="setMas" min="0" max="100" value="100" class="volume-slider"><span class="setting-value" id="valMas">100%</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-category">
+                <div class="category-header"><span class="category-icon">🎮</span><span class="category-title" data-i18n>gameplay</span></div>
+                <div class="category-content">
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>difficulty</div>
+                        <div class="setting-control">
+                            <select id="setDiff" class="setting-select">
+                                <option value="easy" data-i18n>gentle</option>
+                                <option value="normal" selected data-i18n>standard</option>
+                                <option value="hard" data-i18n>challenge</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>touch sensitivity</div>
+                        <div class="setting-control"><input type="range" id="setSens" min="0" max="100" value="50" class="sensitivity-slider"><span class="setting-value" id="valSens">50%</span></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>haptics (vibration)</div>
+                        <div class="setting-control"><label class="toggle-switch"><input type="checkbox" id="setHap" checked><span class="toggle-slider"></span></label><span class="setting-status" id="valHap">on</span></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>visual feedback</div>
+                        <div class="setting-control">
+                            <select id="setVisFb" class="setting-select">
+                                <option value="full" selected data-i18n>full</option>
+                                <option value="reduced" data-i18n>reduced</option>
+                                <option value="minimal" data-i18n>minimal</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-item" style="justify-content: center; margin-top: 10px;">
+                        <button class="luma-btn luma-btn-secondary" id="replayTutorialBtn" data-i18n>replay the first ritual</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-category">
+                <div class="category-header"><span class="category-icon">👁️</span><span class="category-title" data-i18n>visual</span></div>
+                <div class="category-content">
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>brightness</div>
+                        <div class="setting-control"><input type="range" id="setBri" min="20" max="100" value="100" class="brightness-slider"><span class="setting-value" id="valBri">100%</span></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>particles</div>
+                        <div class="setting-control">
+                            <select id="setPart" class="setting-select">
+                                <option value="full" selected data-i18n>full</option>
+                                <option value="reduced" data-i18n>reduced</option>
+                                <option value="off" data-i18n>off</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>reduced motion</div>
+                        <div class="setting-control"><label class="toggle-switch"><input type="checkbox" id="setRedMot"><span class="toggle-slider"></span></label><span class="setting-status" id="valRedMot">off</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-category">
+                <div class="category-header"><span class="category-icon">♿</span><span class="category-title" data-i18n>accessibility</span></div>
+                <div class="category-content">
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>high contrast</div>
+                        <div class="setting-control"><label class="toggle-switch"><input type="checkbox" id="setHighCont"><span class="toggle-slider"></span></label><span class="setting-status" id="valHighCont">off</span></div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>text size</div>
+                        <div class="setting-control">
+                            <select id="setTextSz" class="setting-select">
+                                <option value="small" data-i18n>small</option>
+                                <option value="medium" selected data-i18n>medium</option>
+                                <option value="large" data-i18n>large</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="setting-item">
+                        <div class="setting-label" data-i18n>color blind mode</div>
+                        <div class="setting-control">
+                            <select id="setColorBl" class="setting-select">
+                                <option value="off" selected data-i18n>off</option>
+                                <option value="deuteranopia" data-i18n>deuteranopia (green-red)</option>
+                                <option value="protanopia" data-i18n>protanopia (red-green)</option>
+                                <option value="tritanopia" data-i18n>tritanopia (blue-yellow)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="settings-category">
+                <div class="category-header"><span class="category-icon">💾</span><span class="category-title" data-i18n>data</span></div>
+                <div class="category-content">
+                    <div class="setting-actions">
+                        <button class="luma-btn luma-btn-secondary" id="btnResetProg" data-i18n>reset progress</button>
+                        <button class="luma-btn luma-btn-secondary" id="btnExportSave" data-i18n>export save</button>
+                        <button class="luma-btn luma-btn-secondary" id="btnImportSave" data-i18n>import save</button>
+                        <input type="file" id="fileImportSave" style="display:none" accept=".json">
+                    </div>
+                    <div class="setting-info">
+                        <div class="info-line"><span class="info-label" data-i18n>version</span><span class="info-value">1.0.0</span></div>
+                        <div class="info-line"><span class="info-label" data-i18n>world light</span><span class="info-value" id="settingsWorldLightText">0%</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="settings-actions">
+            <button class="luma-btn luma-btn-primary" id="closeHarmonyBtn" data-i18n>save &amp; return</button>
+        </div>
+    </div>
+  </div>
+
+  <div id="memoriesScreen" class="screen hidden">
+    <div class="panel" style="width: 90%; max-width: 400px; height: 80%; display: flex; flex-direction: column;">
+      <div class="panel-header">
+        <div class="eyebrow" data-i18n>Dawn Archive</div>
+        <div class="title" data-i18n>Memories of Light</div>
+        <div class="subtitle" data-i18n>fragments of past suns and recovered worlds.</div>
+      </div>
+      <div class="panel-content" id="memoriesContent" style="flex-grow: 1; overflow-y: auto; text-align: left; padding: 10px; font-family: var(--font-ui); font-size: 14px; color: var(--luma-paper-soft);">
+        <!-- Estrutura que showMemories() preenche. Faltava por inteiro: a função retornava
+             na primeira guarda e a tela nem chegava a abrir. -->
+        <div class="altar-wrapper">
+          <div class="altar-light">
+            <div class="altar-light-sphere" id="altarLightSphere"></div>
+            <div class="altar-light-value" id="altarLightValue">0%</div>
+            <div class="altar-light-label" data-i18n>world light</div>
+          </div>
+          <div class="altar-progress">
+            <div class="altar-line"><div class="altar-line-fill" id="altarLightFill"></div></div>
+          </div>
+          <div class="altar-stats">
+            <div class="altar-stat"><div class="altar-stat-value" id="altarStatSeals">0</div><div class="altar-stat-label" data-i18n>seals</div></div>
+            <div class="altar-stat"><div class="altar-stat-value" id="altarStatBirds">0</div><div class="altar-stat-label" data-i18n>birds</div></div>
+            <div class="altar-stat"><div class="altar-stat-value" id="altarStatMeters">0k</div><div class="altar-stat-label" data-i18n>meters</div></div>
+          </div>
+          <div class="altar-section-title" data-i18n>seals</div>
+          <div class="seals-grid" id="sealsGrid"></div>
+          <div class="altar-section-title" data-i18n>biomes</div>
+          <div class="biomes-grid" id="biomesGrid"></div>
+        </div>
+      </div>
+      <div class="panel-footer" style="margin-top: 20px;">
+        <div class="luma-actions">
+          <button class="luma-btn luma-btn-text" id="closeMemoriesBtn" data-i18n>return</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pauseScreen" class="screen hidden menu-screen">
+    <div class="altar-wrapper">
+      <div class="eyebrow" style="margin-bottom: 4vh;" data-i18n>the sky will wait</div>
+      <div class="logo-mark" style="font-size:46px; color:rgba(255,249,236,.6); margin:0 auto 3vh;">||</div>
+      <div class="title-large" style="margin-bottom: 1vh;" data-i18n>paused</div>
+      <div class="subtitle" style="margin-bottom: 8vh;" data-i18n>breathe. the light remains.</div>
+      
+      <div class="luma-actions">
+        <button class="luma-btn luma-btn-primary" id="resumeBtn" data-i18n>return</button>
+        <div class="luma-secondary-actions">
+          <button class="luma-btn luma-btn-secondary" id="pauseRestartBtn" data-i18n>rise again</button>
+          <button class="luma-btn luma-btn-secondary" id="returnMapPauseBtn" data-i18n>journey</button>
+          <button class="luma-btn luma-btn-secondary" id="homePauseBtn" data-i18n>home</button>
+          <button class="luma-btn luma-btn-secondary" id="pauseHarmonyBtn" data-i18n>harmony</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<div class="fade-screen" id="fade"></div>
+
+<div id="mapScreen" class="map-screen hidden">
+  <div id="scrollArea" style="position: absolute; inset: 0; overflow-y: auto; overflow-x: hidden; z-index: 1; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; touch-action: pan-y;">
+    <canvas id="mapCanvas"></canvas>
+  </div>
+  
+  <div class="map-header">
+    <div class="map-eyebrow" data-i18n>Luma Constellation</div>
+    <div class="map-title" data-i18n>Journey Map</div>
+  </div>
+  <div class="map-stats">
+    <div class="map-stat-val" id="totalDawnsMap">0</div>
+    <div class="map-stat-lbl" data-i18n>Dawns Awakened</div>
+  </div>
+  <div class="chapter-nav">
+    <button class="chapter-btn" data-chapter="1">I</button>
+    <button class="chapter-btn" data-chapter="2">II</button>
+    <button class="chapter-btn" data-chapter="3">III</button>
+    <button class="chapter-btn" data-chapter="4">IV</button>
+    <button class="chapter-btn" data-chapter="5">V</button>
+  </div>
+  <div class="map-toast" id="mapToast">world progressed</div>
+  <div class="map-bottom-panel" id="mapPanel">
+    <div class="map-node-header">
+      <div class="map-node-title" id="nodeTitle">still night</div>
+      <div class="map-node-subtitle" id="nodeSubtitle">a quiet sky waits</div>
+      <div class="map-node-state-badge" id="nodeState">CURRENT</div>
+    </div>
+    <div class="map-mission-block" id="missionBlock">
+      <div class="map-m-main" id="mMain">Hold the light above the dawn line</div>
+      <div class="map-m-subs" id="mSubs"></div>
+      <div class="map-m-perf" id="mPerfContainer">perfect: complete without near-fail</div>
+    </div>
+    <div class="luma-actions">
+      <button class="luma-btn luma-btn-primary" id="btnPlayNode" data-i18n>start</button>
+      <div class="luma-secondary-actions">
+        <button class="luma-btn luma-btn-secondary" id="btnHomeFromMap" data-i18n>home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen hidden menu-screen" id="result" style="z-index: 50;">
+  <div class="altar-wrapper">
+    <div class="eyebrow" style="margin-bottom: 3vh;">dawn remembered</div>
+    <div class="title-large" id="resultTitle" style="margin-bottom: 1vh;">you held the light</div>
+    <div class="subtitle" id="resultText" style="white-space: pre-line; margin-bottom: 2vh;"></div>
+    
+    <div class="result-stars-container" id="resultStars"></div>
+
+    <div class="result-stats" id="resultStats" style="color: var(--sun-glow); white-space: pre-line; font-weight: 600; text-shadow: 0 0 12px rgba(255,196,107,0.4); margin-bottom: 6vh;"></div>
+    
+    <div class="luma-actions" id="resultActions" style="opacity:0; pointer-events:none; transition:opacity 1s;">
+      <button class="luma-btn luma-btn-primary" id="restartBtn" data-i18n>rise again</button>
+      <div class="luma-secondary-actions">
+        <button class="luma-btn luma-btn-secondary" id="nextNodeBtn" data-i18n>next node</button>
+        <button class="luma-btn luma-btn-secondary" id="returnMapResultBtn" data-i18n>journey</button>
+        <button class="luma-btn luma-btn-secondary" id="shareBtn" data-i18n>share</button>
+      </div>
+      <div style="margin-top: 12px;">
+         <button class="luma-btn luma-btn-text" id="homeResultBtn" data-i18n>home</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <div id="draftScreen" class="screen hidden">
+    <div class="panel">
+      <div class="panel-header">
+        <div class="eyebrow" style="color:var(--sun-pure);border-color:var(--line-strong);" data-i18n>A GRACE IS OFFERED</div>
+        <div class="title" style="font-size:34px;" data-i18n>Choose a Blessing</div>
+        <div class="subtitle" data-i18n>It will shape the light until this journey ends.</div>
+      </div>
+      <div class="panel-content">
+        <div class="draft-cards">
+          <div class="draft-card" id="draft-card-1">
+            <div class="draft-icon"></div>
+            <div class="draft-title"></div>
+            <div class="draft-desc"></div>
+            <div class="draft-flavor"></div>
+          </div>
+          <div class="draft-card" id="draft-card-2">
+            <div class="draft-icon"></div>
+            <div class="draft-title"></div>
+            <div class="draft-desc"></div>
+            <div class="draft-flavor"></div>
+          </div>
+          <div class="draft-card" id="draft-card-3">
+            <div class="draft-icon"></div>
+            <div class="draft-title"></div>
+            <div class="draft-desc"></div>
+            <div class="draft-flavor"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="active-graces-ui" class="active-graces-ui"></div>
+</div>
+
+<!-- SHARE MODAL v1.0 -->
+<div class="share-modal hidden" id="shareModal">
+    <div class="settings-container" style="max-width: 480px; text-align: center;">
+        <div class="settings-header" style="margin-bottom: 16px;">
+            <div class="settings-icon" style="filter: drop-shadow(0 0 12px var(--sun-glow));">✧</div>
+            <div class="settings-title" data-i18n>share the light</div>
+            <div class="settings-subtitle" data-i18n>your journey in verse</div>
+        </div>
+        <div class="share-preview" id="sharePreview"></div>
+        <div class="luma-actions">
+            <button class="luma-btn luma-btn-primary" id="shareActionBtn" data-i18n>share card</button>
+            <div class="luma-secondary-actions">
+                <button class="luma-btn luma-btn-secondary" id="saveImageBtn" data-i18n>save image</button>
+                <button class="luma-btn luma-btn-secondary" id="copyTextBtn" data-i18n>copy text</button>
+            </div>
+            <button class="luma-btn luma-btn-text" id="closeShareModal" style="margin-top: 12px;" data-i18n>close</button>
+        </div>
+    </div>
+</div>
+

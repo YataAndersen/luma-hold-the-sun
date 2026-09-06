@@ -1,0 +1,127 @@
+[
+  {
+    "file": "00-shell.js",
+    "desc": "canvas, contexto e o pacto de engenharia",
+    "linhas": 12
+  },
+  {
+    "file": "01-analytics.js",
+    "desc": "telemetria opt-in",
+    "linhas": 89
+  },
+  {
+    "file": "02-settings.js",
+    "desc": "preferências, refs de UI, dimensões e helpers de matemática",
+    "linhas": 63
+  },
+  {
+    "file": "02b-i18n.js",
+    "desc": "idiomas: dicionarios, t() e aplicacao no DOM",
+    "linhas": 0
+  },
+  {
+    "file": "03-tuning.js",
+    "desc": "constantes de física, energia, vento, zonas e estados emocionais",
+    "linhas": 165
+  },
+  {
+    "file": "04-state.js",
+    "desc": "estado da partida e constantes musicais",
+    "linhas": 143
+  },
+  {
+    "file": "05-missions.js",
+    "desc": "graças, raridade, as 50 missões e os nós do mapa",
+    "linhas": 200
+  },
+  {
+    "file": "06-audio.js",
+    "desc": "motor de áudio e efeitos sonoros",
+    "linhas": 262
+  },
+  {
+    "file": "07-persistence.js",
+    "desc": "salvar, carregar e sincronizar progresso",
+    "linhas": 104
+  },
+  {
+    "file": "08-world-init.js",
+    "desc": "geração do cenário e decoração do mundo",
+    "linhas": 148
+  },
+  {
+    "file": "09-mission-flow.js",
+    "desc": "ciclo da missão: início, tarefas, conclusão",
+    "linhas": 160
+  },
+  {
+    "file": "10-run-lifecycle.js",
+    "desc": "começar, pausar, encerrar corrida, resultado e graças",
+    "linhas": 443
+  },
+  {
+    "file": "11-tutorial.js",
+    "desc": "tutorial em três capítulos",
+    "linhas": 85
+  },
+  {
+    "file": "12-particles.js",
+    "desc": "faíscas, poeira, anéis de pulso e aves",
+    "linhas": 70
+  },
+  {
+    "file": "13-input.js",
+    "desc": "ponteiro, teclado e o pulso",
+    "linhas": 128
+  },
+  {
+    "file": "14-gameplay.js",
+    "desc": "física do sol, entropia, resposta do mundo e HUD",
+    "linhas": 686
+  },
+  {
+    "file": "15-music.js",
+    "desc": "trilha dinâmica por estado emocional",
+    "linhas": 122
+  },
+  {
+    "file": "16-render-world.js",
+    "desc": "céu, montanhas, nuvens, cidade e vegetação",
+    "linhas": 876
+  },
+  {
+    "file": "17-render-entities.js",
+    "desc": "sol, aves, partículas, aurora e cutscene",
+    "linhas": 457
+  },
+  {
+    "file": "18-loop.js",
+    "desc": "utilidades, resize e o laço principal",
+    "linhas": 109
+  },
+  {
+    "file": "19-ui-bindings.js",
+    "desc": "botões, configurações e gerenciamento de dados",
+    "linhas": 192
+  },
+  {
+    "file": "20-share.js",
+    "desc": "cartão de compartilhamento",
+    "linhas": 120
+  },
+  {
+    "file": "21-splash.js",
+    "desc": "abertura, história e consentimento",
+    "linhas": 65
+  },
+  {
+    "file": "22-map.js",
+    "desc": "Journey Map: nós, estrelas, scroll e painel",
+    "linhas": 589
+  },
+  {
+    "file": "23-boot.js",
+    "desc": "sons de UI, transição de entrada e service worker",
+    "linhas": 49
+  }
+]
