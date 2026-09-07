@@ -427,12 +427,45 @@
 
     if (state.biome === 'storm') corBase = mixColor(corBase, [20, 25, 30], state.weather.rainIntensity);
 
-    // A escada de ar. Os degraus sao desiguais de proposito: a atmosfera se acumula rapido
-    // no comeco e satura no fim, entao dobrar a distancia nao dobra a bruma.
+    // --- AGRUPAMENTO DE VALOR ---
+    // A escada de ar era regular: 0 / 0,26 / 0,48 / 0,68 / 0,86. Cinco planos igualmente
+    // espacados produzem cinco valores distintos, e medindo a cena isso deu ONZE massas de
+    // valor sem nenhuma dominante — o valor esfumacado, sem grupo. E por isso que mais
+    // variedade de forma nao fazia a cena parecer mais desenhada: sem agrupamento, nada le
+    // como massa.
+    //
+    // Agora sao TRES grupos com vao entre eles, que e o que o teste de 3 a 5 valores pede:
+    //   perto  (bg1 + bg2)  quase o mesmo valor, escuro    -> uma massa so
+    //   meio   (bg3)        sozinho, no meio do vao        -> a massa de transicao
+    //   longe  (bg4 + bg5)  quase o mesmo valor, claro     -> a massa de atmosfera
+    // Os vaos (0,10 -> 0,44 e 0,50 -> 0,80) sao o que separa um grupo do outro. Perspectiva
+    // aerea continua correta: longe e mais claro. So parou de ser um degrade continuo.
+    // Misturar com a atmosfera NAO basta. Posterizando a cena em 4 valores planos — o
+    // teste que separa estrutura de decoracao — os cinco planos colapsavam numa massa
+    // cinza unica: a noite, corBase e a cor do ar sao ambas escuras, entao a rampa inteira
+    // percorria uma faixa de luminancia estreita demais para sobreviver ao agrupamento.
+    //
+    // Entao o valor passa a ser IMPOSTO, nao herdado. Cada grupo tem um alvo de luminancia
+    // e a cor e escalada ate ele, preservando o matiz — a identidade cromatica do bioma
+    // continua, o que muda e onde cada plano cai na escala de cinza.
+    const lumDe = c => 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+    const comValor = (cor, alvo) => {
+      const L = lumDe(cor);
+      if (L < 1) return [alvo, alvo, alvo];
+      const k = alvo / L;
+      return [Math.min(255, cor[0] * k), Math.min(255, cor[1] * k), Math.min(255, cor[2] * k)];
+    };
     const arNoPlano = ar => mixColor(corBase, horizonAtmosphereColor, ar);
-    const backColor1 = corBase;          // rocha, sem ar
-    const backColor2 = arNoPlano(0.26);
-    const backColor3 = arNoPlano(0.48);
+
+    // Alvos de valor por grupo. Abrem com o amanhecer, mas a DISTANCIA entre eles e o que
+    // importa: e ela que sobrevive ao teste de 4 valores.
+    const vPerto = 16 + d * 26;
+    const vMeio  = 52 + d * 58;
+    const vLonge = 104 + d * 96;
+
+    const backColor1 = comValor(corBase, vPerto);
+    const backColor2 = comValor(arNoPlano(0.14), vPerto * 1.35);
+    const backColor3 = comValor(arNoPlano(0.47), vMeio);
 
     // A serra de bruma vai antes de tudo e quase nao se move: parallax lento e o que o
     // olho le como "muito longe". A cor puxa para a atmosfera do horizonte, nao para a
@@ -440,8 +473,8 @@
     // PERSPECTIVA AEREA EM DEGRAUS. Cada plano recua um passo a mais na direcao da cor do
     // ar, e nao apenas escurece: e a proporcao de ATMOSFERA na mistura que o olho le como
     // distancia. bg5 esta a 85% de ar — sobra so o suficiente para nao sumir.
-    const limiteDoMundo = arNoPlano(0.86);
-    const brumaLonge = arNoPlano(0.68);
+    const limiteDoMundo = comValor(arNoPlano(0.88), vLonge);
+    const brumaLonge = comValor(arNoPlano(0.80), vLonge * 0.82);
     drawLayer('bg5', limiteDoMundo, state.camera.y * 0.03, 300);
     drawLayer('bg4', brumaLonge, state.camera.y * 0.07, 260);
     drawLayer('bg3', backColor3, state.camera.y * 0.15, 220); 
