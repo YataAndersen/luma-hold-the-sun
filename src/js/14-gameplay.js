@@ -169,7 +169,12 @@
           state.sun.stability = clamp(
             state.sun.stability - breathConfig.strainStabilityDrain * state.sun.strain * dt, 0, 1);
         }
-        if (influence > .74) state.sun.stableTimer += dt;
+        // "Estar em fluxo" media POSICAO: exigia influence > .74, ou seja, o dedo perto do
+        // nucleo. Com o toque valendo em qualquer lugar a influencia e sempre 1, entao o
+        // contador passou a subir sozinho — 2 a 4 aves a cada 1,4s e um aviso na tela na
+        // mesma cadencia. As missoes de aves viraram tramite e a tela virou barulho.
+        // Fluxo agora mede o que de fato sobrou de pericia: respirar sem prender.
+        if (state.sun.strain < 0.25) state.sun.stableTimer += dt;
         else state.sun.stableTimer = Math.max(0, state.sun.stableTimer - dt * 1.4);
         
         state.draft.sustainTimer += dt;
@@ -192,12 +197,19 @@
 
     if (state.sun.stableTimer > 2.2) {
       state.sun.flowTimer += dt;
-      if (state.sun.flowTimer > 1.4) {
+      // Uma revoada por respiracao, nao a cada 1,4s: o premio tem que custar um ciclo
+      // inteiro para significar alguma coisa.
+      if (state.sun.flowTimer > 3.6) {
         state.sun.flowTimer = 0;
         spawnBirdRing();
-        showReward("THE SKY RESPONDS");
+        // O aviso so aparece ao ENTRAR em fluxo. Repeti-lo a cada revoada transformava
+        // uma recompensa em ruido, e ruido no centro da tela e o oposto do que o jogo quer.
+        if (!state.sun.emFluxo) { state.sun.emFluxo = true; showReward("THE SKY RESPONDS"); }
       }
-    } else state.sun.flowTimer = Math.max(0, state.sun.flowTimer - dt * 2);
+    } else {
+      state.sun.flowTimer = Math.max(0, state.sun.flowTimer - dt * 2);
+      if (state.sun.stableTimer < 0.8) state.sun.emFluxo = false;
+    }
 
     // --- MOTOR DE ENTROPIA v2.0 ---
     if (!state.tutorial.active || state.tutorial.chapter >= 3) {

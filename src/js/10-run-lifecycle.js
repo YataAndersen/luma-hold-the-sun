@@ -37,6 +37,7 @@
     state.sun.mood = "serene";
     state.sun.stableTimer = 0;
     state.sun.flowTimer = 0;
+    state.sun.emFluxo = false;
     state.sun.impulseEfficiency = 1;
     state.sun.tapScale = 1;
     state.sun.continuousTimeAboveLine = 0;

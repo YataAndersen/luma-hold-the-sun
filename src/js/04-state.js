@@ -116,6 +116,7 @@
       mood: "serene",
       stableTimer: 0,
       flowTimer: 0,
+      emFluxo: false,
       impulseEfficiency: 1,
       tapScale: 1,
       continuousTimeAboveLine: 0,
