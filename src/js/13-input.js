@@ -47,8 +47,9 @@
 
     // O gesto vale de qualquer ponto da tela: ver o comentário em 14-gameplay.js. Não há
     // mais recusa por distância, e por isso não há mais o que "acertar" — só quando soltar.
-    const influence = 1;
-    const perfect = true;
+    // Com isso o gesto e SEMPRE "perfeito" no eixo espacial, e todo o ramo que tratava do
+    // toque impreciso virou inalcancavel. Ele saiu: um else que nao pode rodar e ruido que
+    // a proxima pessoa vai ler como se fosse comportamento real.
 
     // FIX: Fallback seguro caso o mod.cooldown seja undefined (evita NaN e rate-limit quebrado)
     if (now - state.input.lastClick < tune.clickCooldown * (state.mods.cooldown || 1)) {
@@ -72,15 +73,15 @@
       return;
     }
 
-    let antiSpam = 1;
-    const dynamicSpamWindow = tune.antiSpamWindow * (1 - state.mods.antiSpamReduc);
-    if (now - state.input.lastClick < dynamicSpamWindow) antiSpam = tune.antiSpamMult;
+    // O anti-spam media toques em rajada. Com o gesto custando quase todo o folego, o
+    // intervalo minimo real entre dois gestos e ~3,9s contra uma janela de 0,5s: ela nao
+    // tinha como disparar. Saiu junto com a graca que a reduzia, que era uma recompensa
+    // que nao fazia nada.
 
-    const distanceRatio = 0;
     const baseImpulse = tune.clickImpulsePerfect;
-    
+
     let dynamicPulseMult = state.mods.pulseMult;
-    if (perfect && state.mods.cometStacks > 0) dynamicPulseMult += Math.min(0.5, state.mods.consecutivePulses * 0.1);
+    if (state.mods.cometStacks > 0) dynamicPulseMult += Math.min(0.5, state.mods.consecutivePulses * 0.1);
 
     // A força do gesto é a qualidade da respiração, e a curva tem um pico nítido:
     // ao quadrado, meio fôlego rende só um quarto do impulso. É o que separa julgar a
@@ -90,24 +91,24 @@
     const strainAoSoltar = state.sun.strain;
     const breathQuality = fullness * fullness * (1 - strainAoSoltar * breathConfig.strainImpulsePenalty);
 
-    const impulse = baseImpulse * dynamicPulseMult * influence * antiSpam * state.sun.impulseEfficiency * state.feedbackLoops.recoveryAssist * state.emotion.runtime.physics.assistMul * breathQuality;
+    const impulse = baseImpulse * dynamicPulseMult * state.sun.impulseEfficiency * state.feedbackLoops.recoveryAssist * state.emotion.runtime.physics.assistMul * breathQuality;
 
     state.sun.vy -= impulse;
     // Expirar esvazia o peito, tenha ele enchido ou não: soltar cedo custa o fôlego inteiro.
     state.sun.energy = 0;
     state.sun.strain = 0;
 
-    state.sun.stability = clamp(state.sun.stability + (perfect ? .09 : .05), 0, 1);
+    state.sun.stability = clamp(state.sun.stability + .09, 0, 1);
     state.sun.haloPulse = 1; state.sun.tapScale = 1.08; state.input.lastClick = now;
 
-    triggerScreenFlash(perfect ? 'rgba(255,249,236,0.12)' : 'rgba(255,249,236,0.05)');
-    
-    if (perfect) {
+    triggerScreenFlash('rgba(255,249,236,0.12)');
+
+    {
       const oldCombo = state.combo;
       // Combo mede consistência de ritmo, não velocidade: só conta o gesto solto perto do
       // ponto cheio. Com o pulso custando quase todo o fôlego, a janela do anti-spam nunca
       // dispara sozinha — quem separa um bom gesto de um gesto apressado é a tensão.
-      if (antiSpam === 1 && fullness > 0.9 && strainAoSoltar < 0.3) {
+      if (fullness > 0.9 && strainAoSoltar < 0.3) {
         state.combo = Math.min(20, state.combo + 1);
         state.maxComboThisRun = Math.max(state.maxComboThisRun, state.combo);
         state.mods.consecutivePulses++;
@@ -119,34 +120,20 @@
       if (state.mods.ascendBonus > 0) { state.sun.vy -= 150; }
       if (state.mods.transcendActive) { state.entropy = Math.max(0, state.entropy - 0.10); }
       
-      emitAudioEvent('tap_perfect', distanceRatio, state.combo);
+      emitAudioEvent('tap_perfect', 0, state.combo);
       triggerCameraShake(0.8);
       if (navigator.vibrate && settings.haptics) navigator.vibrate(15); 
       if (state.tutorial.active && state.tutorial.chapter === 2) state.tutorial.perfects++;
       
       const comboThreshold1 = Math.max(1, 3 - Math.floor(state.totalRunMemory.totalBirds / 10));
       const comboThreshold2 = Math.max(comboThreshold1 + 1, 6 - Math.floor(state.totalRunMemory.totalBirds / 5));
-      analytics.track(EVENT_TYPES.PERFECT_TAP, { distanceToCore: distanceRatio, combo: state.combo, altitude: state.scoreMeters });
+      analytics.track(EVENT_TYPES.PERFECT_TAP, { combo: state.combo, altitude: state.scoreMeters, fullness: +fullness.toFixed(2) });
 
       if (oldCombo < comboThreshold1 && state.combo >= comboThreshold1) { spawnBirdRing(); showReward("flow state"); }
       if (oldCombo < comboThreshold2 && state.combo >= comboThreshold2) { spawnBirdRing(); showReward("luminous rhythm"); }
-    } else {
-      state.mods.consecutivePulses = 0;
-      showFloating("light rises", true);
-      spawnSpark(state.sun.x, state.sun.y, false, 6);
-      emitAudioEvent('tap_good', distanceRatio, state.combo);
-      if (navigator.vibrate && settings.haptics) navigator.vibrate(5);
-      triggerCameraShake(0.3);
-      
-      // MICROINTERAÇÃO: Erro leve / Hesitação
-      state.sun.errorTremor = 1.0; 
-      state.sun.glowFail = 1.0;
-      emitAudioEvent('error_muffle');
-      
-      analytics.track(EVENT_TYPES.TAP, { distanceToCore: distanceRatio, combo: state.combo, altitude: state.scoreMeters });
     }
 
     spawnPulse(state.sun.x, state.sun.y);
-    spawnDust(state.sun.x, state.sun.y, perfect ? 6 : 4);
+    spawnDust(state.sun.x, state.sun.y, 6);
   }
 

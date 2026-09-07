@@ -165,7 +165,7 @@
         // É o que dá ao gesto um fim — e é o que transforma "segurar" numa duração a julgar
         // em vez de um botão a manter apertado.
         if (state.sun.energy >= maxEnergy - 0.001) {
-          state.sun.strain = Math.min(1, state.sun.strain + dt / breathConfig.strainTime);
+          state.sun.strain = Math.min(1, state.sun.strain + dt / (breathConfig.strainTime * state.mods.janelaMult));
           state.sun.stability = clamp(
             state.sun.stability - breathConfig.strainStabilityDrain * state.sun.strain * dt, 0, 1);
         }

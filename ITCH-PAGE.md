@@ -23,24 +23,26 @@ yata-andersen.itch.io/luma-hold-the-sun
 > **É o campo mais importante de todos.** É ele que aparece na busca do itch.io, nos cards de listagem e como a meta-descrição no Google. Precisa conter a promessa e as palavras que as pessoas realmente digitam.
 
 ```
-A calm one-touch arcade about holding a falling sun. Hold to gather light, pulse to rise — and watch the world wake up.
+A calm one-touch game about holding a falling sun. Breathe in to gather light, let go to rise.
 ```
 
-118 caracteres. Entrega em ordem: **tom** (calm), **controle** (one-touch), **gênero** (arcade), **ação central** (holding a falling sun), **regra** (hold / pulse) e **recompensa** (the world wakes up).
+94 caracteres. Entrega em ordem: **tom** (calm), **controle** (one-touch), **ação central** (holding a falling sun) e **a regra de verdade** (breathe in / let go).
+
+A versão anterior dizia "pulse to rise" e "hold NEAR the sun". Nenhuma das duas era mais verdade: o gesto virou segurar e soltar, e o toque vale em qualquer ponto da tela. Página de loja que descreve mecânica que não existe faz o jogador chegar esperando outro jogo.
 
 ## Descrição da página
 
 ```
 The sun always falls. Your touch is the only thing holding it up.
 
-Hold near the sun to sustain it and gather light. Pulse to push it higher — but every pulse spends what you gathered, and the wind never stops pushing. You cannot do both forever. That choice is the whole game.
+Touch anywhere and hold: a ring closes around the sun as the light gathers. Let go when it closes and the sun rises. Let go early and you waste the breath; hold past the close and the ring tightens and gives you less. The whole game is knowing when.
 
-You are small. Your persistence changes the dawn.
+It is one gesture, about five seconds long, roughly the pace of a calm breath. You are small. Your persistence changes the dawn.
 
 ── HOW IT PLAYS ──
 
-☼  One touch. Hold to sustain, tap to pulse. That's all.
-∿  Rhythm beats speed — hammering the screen builds nothing.
+☼  Touch anywhere and hold. Let go when the ring closes. That's all.
+∿  Timing beats speed — hammering the screen builds nothing.
 ◈  The world answers. Birds return, windows light, auroras open.
 ✧  50 rituals across constellations, three stars each.
 ◒  Fall, and you're back in under two seconds.
@@ -53,7 +55,7 @@ A run lasts about a minute. It fits a bus stop, a coffee, a pause between two he
 
 Plays in the browser, no download. Portrait, built for touch first — works with mouse and keyboard too.
 Every sound is generated live in your browser. There are no audio files.
-English and Português.
+English, Português, Español, Deutsch, Français, Русский, Italiano.
 
 Part of Playing For a Better World.
 ```

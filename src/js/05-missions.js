@@ -36,12 +36,12 @@
     { id: 'g_coracao', title: 'Heart of the Sun', icon: '♡', rarity: 'epic', desc: 'Your radius of care doubles in size.', flavor: 'your care expands', apply: (s) => s.mods.areaSustain = true },
     
     // IMPULSO (Brilliance)
-    { id: 'g_esforco', title: 'Grace of Effort', icon: '☼', rarity: 'common', desc: 'Pulses gain +25% impulse.', flavor: 'your touch gains strength', apply: (s) => s.mods.pulseMult += 0.25 },
-    { id: 'g_ritmo', title: 'Quickened Rhythm', icon: '♩', rarity: 'common', desc: 'Rapid-tap penalty reduced by 30%.', flavor: 'your rhythm intensifies', apply: (s) => s.mods.antiSpamReduc += 0.30 },
-    { id: 'g_fagulhas', title: 'Embers', icon: '✧', rarity: 'uncommon', desc: 'Perfect pulses give double light and radiance.', flavor: 'sparks multiply', apply: (s) => s.mods.sparkMult += 1 },
-    { id: 'g_ascensao', title: 'Ascension', icon: '⇡', rarity: 'uncommon', desc: 'Each perfect pulse lifts slightly higher.', flavor: 'you rise with every gesture', apply: (s) => s.mods.ascendBonus += 5 },
-    { id: 'g_cometa', title: 'Comet', icon: '⤑', rarity: 'rare', desc: 'Consecutive perfect pulses build strength.', flavor: 'your light accelerates', apply: (s) => s.mods.cometStacks = 1 },
-    { id: 'g_transcendencia', title: 'Transcendence', icon: '∾', rarity: 'epic', desc: 'Perfect pulses clear the entropy of the world.', flavor: 'your light purifies the void', apply: (s) => s.mods.transcendActive = true },
+    { id: 'g_esforco', title: 'Grace of Effort', icon: '☼', rarity: 'common', desc: 'Each release gains +25% lift.', flavor: 'your touch gains strength', apply: (s) => s.mods.pulseMult += 0.25 },
+    { id: 'g_ritmo', title: 'Long Measure', icon: '♩', rarity: 'common', desc: 'The window before the ring tightens grows by 60%.', flavor: 'the moment stretches for you', apply: (s) => s.mods.janelaMult += 0.60 },
+    { id: 'g_fagulhas', title: 'Embers', icon: '✧', rarity: 'uncommon', desc: 'A full breath gives double light and radiance.', flavor: 'sparks multiply', apply: (s) => s.mods.sparkMult += 1 },
+    { id: 'g_ascensao', title: 'Ascension', icon: '⇡', rarity: 'uncommon', desc: 'Each full breath lifts slightly higher.', flavor: 'you rise with every gesture', apply: (s) => s.mods.ascendBonus += 5 },
+    { id: 'g_cometa', title: 'Comet', icon: '⤑', rarity: 'rare', desc: 'Breaths in a row build strength.', flavor: 'your light accelerates', apply: (s) => s.mods.cometStacks = 1 },
+    { id: 'g_transcendencia', title: 'Transcendence', icon: '∾', rarity: 'epic', desc: 'A full breath clears the entropy of the world.', flavor: 'your light purifies the void', apply: (s) => s.mods.transcendActive = true },
     
     // RESILIÊNCIA (Serenity)
     { id: 'g_calma', title: 'Grace of Calm', icon: '☾', rarity: 'common', desc: 'Entropy grows 20% slower.', flavor: 'the void respects your presence', apply: (s) => s.mods.entropyGrowthMult -= 0.20 },

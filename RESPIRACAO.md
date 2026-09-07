@@ -58,10 +58,10 @@ Soltar cedo é **permitido** e desperdiça o fôlego inteiro. Como a curva é qu
 
 Três regras recusavam o toque **em silêncio**: distância, cooldown e falta de fôlego. O jogador tocava e nada acontecia, sem saber qual regra havia quebrado. O raio de influência, que governa todo toque, **nunca era desenhado**.
 
-Cada recusa agora tem resposta física, sem texto:
+Cada recusa ganhou resposta física, sem texto. **Duas delas depois deixaram de existir**
+quando o toque passou a valer em qualquer lugar da tela: a recusa por distância saiu junto
+com o raio de influência, e o anti-spam ficou inalcançável. Sobrou uma:
 
-- **longe demais** → o anel de alcance acende e um arco mais forte aponta o lado do dedo
-- **rápido demais** → o sol engasga, um micro-recuo
 - **sem fôlego** → tremor e som abafado (`error_muffle`, que já existia e não era usado)
 
 ## O texto saiu de cima do sol
@@ -74,7 +74,7 @@ O capítulo 1 executava `state.sun.energy = 1` a cada quadro. **Energia infinita
 
 Agora o capítulo 1 usa a economia real, e o capítulo 2 vira um metrônomo que alterna conforme o fôlego:
 
-> *hold. let the light gather.* ⟷ *the light is full. release it now.*
+> *hold. the ring fills with light.* ⟷ *the ring closed. let go now.*
 
 O capítulo 2.5 é novo e ensina a **outra ponta do erro**: só termina quando o jogador deixa a respiração prender uma vez e vê a luz endurecer. Sentir os dois limites é o que ensina o meio.
 
@@ -102,6 +102,58 @@ Trava: um fôlego compra um gesto só; soltar cedo é permitido e rende menos de
 
 ## Pendências conhecidas
 
-- As demais famílias de missão (combo, estabilidade, aves) **não** foram reescaladas para o novo tempo. Só a de altitude tinha teste de alcançabilidade; as outras precisam do mesmo tratamento.
+- ~~As demais famílias de missão não foram reescaladas.~~ **Feito:** combo, estabilidade e linha do amanhecer foram checadas contra o ciclo de 5,8s e cabem. Aves precisaram de correção — ver o fluxo, abaixo.
 - O combo ainda é o mesmo número de antes, mas agora significa outra coisa — consistência de ritmo, não velocidade. Os textos que falam dele podem estar prometendo a leitura antiga.
 - A decisão "respiração livre × guiada" ficou em **guiada no tutorial, livre depois**. Um metrônomo opcional no jogo inteiro é uma escolha em aberto.
+
+---
+
+# O que mudou depois da primeira versão deste documento
+
+Tudo acima continua valendo. O que segue são as correções que vieram de jogar — quase todas apontadas pelo Yata antes de mim.
+
+## O gesto estava invertido
+
+O impulso saía no **pointerDown**. Ou seja: o tutorial dizia *"a luz está cheia, solte agora"*, o jogador soltava, e **nada acontecia** — o sol simplesmente caía. Todo o design deste documento diz que encostar é inspirar e soltar é expirar; a camada de entrada dizia o contrário.
+
+Agora o gesto sai em `pointerUp` e em `keyup`. Encostar só segura.
+
+## Duas coisas matavam a corrida em segundos
+
+- **`pointerleave` derrubava o sustain.** Deslizar o dedo até a borda encerrava a respiração no meio, sem explicação. Só soltar de verdade termina agora.
+- **A entropia ficou desproporcional.** A gravidade base caiu de 850 para 190, mas o termo de entropia só de 240 para 90 — de 28% para 47% da gravidade. Saturada, empatava **exatamente** com a sustentação: o sol pairava, sem subir e sem morrer. Restaurada à proporção original (50).
+
+## Tocar em qualquer lugar
+
+Ideia do Yata, e melhor que o que existia. **Mirar é uma perícia espacial sem relação com respirar** — e o sol deriva com o vento, então exigir proximidade obrigava a perseguir um alvo móvel com o dedo, o oposto de relaxar. A zona "perfeita" tinha raio de 21px, menor que a ponta de um dedo.
+
+A influência agora é sempre plena. **Só o tempo separa um gesto bom de um ruim.**
+
+Consequências que isso teve, e que não eram óbvias:
+
+- Todo o ramo de "toque impreciso" em `tryClickImpulse` virou inalcançável e foi removido.
+- O **anti-spam morreu**: a janela é 0,5s e o intervalo mínimo real entre gestos é 3,9s. Junto com ele saiu a graça *Quickened Rhythm*, que reduzia essa penalidade — uma recompensa que não fazia nada, oferecida ao jogador. Foi substituída por *Long Measure*, que amplia a janela antes da tensão em 60%: age sobre a perícia que de fato existe.
+- **"Estar em fluxo" media posição** (`influence > .74`), e passou a subir sozinho: 2 a 4 aves a cada 1,4s e um aviso na tela na mesma cadência. As missões de aves viraram trâmite e a tela virou ruído. Fluxo agora mede respirar sem prender, e uma revoada custa um ciclo inteiro.
+
+## O anel: a mecânica central era invisível
+
+O furo mais grave, e levou o Yata dizendo **"eu não sei o que deveria encher"** para eu enxergar. O jogo inteiro gira em torno de juntar o fôlego e soltar no ponto — e **nada na tela enchia**. A mecânica existia na física e nas palavras, em mais nada.
+
+Agora um anel cerca o sol: trilho apagado sempre visível, arco fechando no sentido horário conforme o fôlego enche, pulso ao fechar. Fica **no sol e não numa barra de HUD** porque o olho e o dedo já estão ali; um medidor na borda puxaria a atenção para longe do único lugar que o jogo pede para olhar.
+
+Prender além do fecho **esfria e apaga** o anel. A primeira versão avermelhava — cor de alarme está errada num jogo cujo propósito é acalmar; o erro tem que ler como luz se recolhendo.
+
+E a cópia passou a **nomear o anel**. Copy que nomeia algo visível ensina; copy que nomeia uma quantidade invisível só pede fé.
+
+## Regra de ouro que ficou
+
+Toda vez que uma mudança de mecânica passou, ela deixou para trás: texto que descrevia a regra antiga, código que não podia mais rodar, e recompensas que não recompensavam nada. Ao mexer no núcleo, varra também:
+
+```bash
+node tools/sweep-i18n.cjs        # texto que vai para a tela sem tradução ou fora do t()
+node tools/check-color-script.cjs # o arco cromático ainda tem quebras?
+node tools/sim-breath.cjs         # o ciclo ainda está na faixa respiratória?
+node --test tests/gameplay.test.cjs tests/locales.test.cjs
+```
+
+E depois **abra o jogo e jogue**. Nenhuma dessas ferramentas pegou o gesto invertido, o anel ausente ou o card em cima do sol. Quem pegou foi o Yata, jogando.

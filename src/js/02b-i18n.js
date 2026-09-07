@@ -321,7 +321,17 @@
       "hold. the ring fills with light.": "segure. o anel se enche de luz.",
       "the ring closed. let go now.": "o anel fechou. solte agora.",
       "let the ring close, then let go. three times.": "deixe o anel fechar, então solte. três vezes.",
-      "hold past the close and the ring tightens. feel it.": "segure além do fecho e o anel aperta. sinta."
+      "hold past the close and the ring tightens. feel it.": "segure além do fecho e o anel aperta. sinta.",
+
+      // graças no vocabulário da respiração
+      "Long Measure": "Compasso Longo",
+      "The window before the ring tightens grows by 60%.": "A janela antes de o anel apertar cresce 60%.",
+      "the moment stretches for you": "o instante se alonga para você",
+      "Each release gains +25% lift.": "Cada gesto ganha +25% de sustentação.",
+      "A full breath gives double light and radiance.": "Um fôlego cheio dá o dobro de luz e brilho.",
+      "Each full breath lifts slightly higher.": "Cada fôlego cheio eleva um pouco mais.",
+      "Breaths in a row build strength.": "Fôlegos em sequência acumulam força.",
+      "A full breath clears the entropy of the world.": "Um fôlego cheio limpa a entropia do mundo."
     },
 
     'es': {  // espanhol
@@ -616,7 +626,17 @@
       "hold. the ring fills with light.": "sostén. el anillo se llena de luz.",
       "the ring closed. let go now.": "el anillo se cerró. suelta ahora.",
       "let the ring close, then let go. three times.": "deja que el anillo se cierre y suelta. tres veces.",
-      "hold past the close and the ring tightens. feel it.": "sostén más allá del cierre y el anillo se tensa. siéntelo."
+      "hold past the close and the ring tightens. feel it.": "sostén más allá del cierre y el anillo se tensa. siéntelo.",
+
+      // graças no vocabulário da respiração
+      "Long Measure": "Compás Largo",
+      "The window before the ring tightens grows by 60%.": "La ventana antes de que el anillo se tense crece un 60%.",
+      "the moment stretches for you": "el instante se alarga para ti",
+      "Each release gains +25% lift.": "Cada gesto gana +25% de sustentación.",
+      "A full breath gives double light and radiance.": "Un aliento lleno da el doble de luz y resplandor.",
+      "Each full breath lifts slightly higher.": "Cada aliento lleno eleva un poco más.",
+      "Breaths in a row build strength.": "Alientos seguidos acumulan fuerza.",
+      "A full breath clears the entropy of the world.": "Un aliento lleno limpia la entropía del mundo."
     },
 
     'de': {  // alemao
@@ -911,7 +931,17 @@
       "hold. the ring fills with light.": "halte. der Ring füllt sich mit Licht.",
       "the ring closed. let go now.": "der Ring hat sich geschlossen. lass jetzt los.",
       "let the ring close, then let go. three times.": "lass den Ring sich schließen, dann los. dreimal.",
-      "hold past the close and the ring tightens. feel it.": "halte über den Schluss hinaus und der Ring spannt sich. spüre es."
+      "hold past the close and the ring tightens. feel it.": "halte über den Schluss hinaus und der Ring spannt sich. spüre es.",
+
+      // graças no vocabulário da respiração
+      "Long Measure": "Langes Maß",
+      "The window before the ring tightens grows by 60%.": "Das Fenster, bevor der Ring sich spannt, wächst um 60%.",
+      "the moment stretches for you": "der Augenblick dehnt sich für dich",
+      "Each release gains +25% lift.": "Jedes Loslassen gewinnt +25% Auftrieb.",
+      "A full breath gives double light and radiance.": "Ein voller Atem gibt doppeltes Licht und Glanz.",
+      "Each full breath lifts slightly higher.": "Jeder volle Atem hebt etwas höher.",
+      "Breaths in a row build strength.": "Atemzüge in Folge sammeln Kraft.",
+      "A full breath clears the entropy of the world.": "Ein voller Atem klärt die Entropie der Welt."
     },
 
     'fr': {  // frances
@@ -1206,7 +1236,17 @@
       "hold. the ring fills with light.": "tiens. l'anneau se remplit de lumière.",
       "the ring closed. let go now.": "l'anneau s'est fermé. relâche maintenant.",
       "let the ring close, then let go. three times.": "laisse l'anneau se fermer, puis relâche. trois fois.",
-      "hold past the close and the ring tightens. feel it.": "tiens au-delà de la fermeture et l'anneau se resserre. sens-le."
+      "hold past the close and the ring tightens. feel it.": "tiens au-delà de la fermeture et l'anneau se resserre. sens-le.",
+
+      // graças no vocabulário da respiração
+      "Long Measure": "Mesure Longue",
+      "The window before the ring tightens grows by 60%.": "La fenêtre avant que l'anneau se resserre grandit de 60%.",
+      "the moment stretches for you": "l'instant s'étire pour toi",
+      "Each release gains +25% lift.": "Chaque relâchement gagne +25% de portance.",
+      "A full breath gives double light and radiance.": "Un souffle plein donne double lumière et éclat.",
+      "Each full breath lifts slightly higher.": "Chaque souffle plein élève un peu plus.",
+      "Breaths in a row build strength.": "Des souffles enchaînés accumulent de la force.",
+      "A full breath clears the entropy of the world.": "Un souffle plein dissipe l'entropie du monde."
     },
 
     'ru': {  // russo
@@ -1501,7 +1541,17 @@
       "hold. the ring fills with light.": "держи. кольцо наполняется светом.",
       "the ring closed. let go now.": "кольцо замкнулось. отпусти сейчас.",
       "let the ring close, then let go. three times.": "дай кольцу замкнуться и отпусти. трижды.",
-      "hold past the close and the ring tightens. feel it.": "передержишь после замыкания — кольцо сжимается. почувствуй."
+      "hold past the close and the ring tightens. feel it.": "передержишь после замыкания — кольцо сжимается. почувствуй.",
+
+      // graças no vocabulário da respiração
+      "Long Measure": "Долгая Мера",
+      "The window before the ring tightens grows by 60%.": "Окно до сжатия кольца растёт на 60%.",
+      "the moment stretches for you": "миг растягивается для тебя",
+      "Each release gains +25% lift.": "Каждый выдох даёт +25% подъёма.",
+      "A full breath gives double light and radiance.": "Полный вдох даёт вдвое больше света и сияния.",
+      "Each full breath lifts slightly higher.": "Каждый полный вдох поднимает чуть выше.",
+      "Breaths in a row build strength.": "Вдохи подряд копят силу.",
+      "A full breath clears the entropy of the world.": "Полный вдох очищает энтропию мира."
     },
 
     'it': {  // italiano
@@ -1796,7 +1846,17 @@
       "hold. the ring fills with light.": "tieni. l’anello si riempie di luce.",
       "the ring closed. let go now.": "l’anello si è chiuso. lascia andare ora.",
       "let the ring close, then let go. three times.": "lascia chiudere l’anello, poi lascia andare. tre volte.",
-      "hold past the close and the ring tightens. feel it.": "tieni oltre la chiusura e l’anello si stringe. sentilo."
+      "hold past the close and the ring tightens. feel it.": "tieni oltre la chiusura e l’anello si stringe. sentilo.",
+
+      // graças no vocabulário da respiração
+      "Long Measure": "Misura Lunga",
+      "The window before the ring tightens grows by 60%.": "La finestra prima che l’anello si stringa cresce del 60%.",
+      "the moment stretches for you": "l’istante si allunga per te",
+      "Each release gains +25% lift.": "Ogni rilascio guadagna +25% di portanza.",
+      "A full breath gives double light and radiance.": "Un respiro pieno dà doppia luce e splendore.",
+      "Each full breath lifts slightly higher.": "Ogni respiro pieno solleva un po’ più in alto.",
+      "Breaths in a row build strength.": "Respiri di fila accumulano forza.",
+      "A full breath clears the entropy of the world.": "Un respiro pieno dissolve l’entropia del mondo."
     }
   };
 

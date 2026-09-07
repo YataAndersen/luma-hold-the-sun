@@ -17,7 +17,7 @@
 
     state.mods = { 
       liftMult: 1, energyRecMult: 1, stabGainMult: 1, entropyDrainMult: 1, shield: 0, areaSustain: false,
-      pulseMult: 1, antiSpamReduc: 0, sparkMult: 1, ascendBonus: 0, cometStacks: 0, transcendActive: false,
+      pulseMult: 1, janelaMult: 1, sparkMult: 1, ascendBonus: 0, cometStacks: 0, transcendActive: false,
       entropyGrowthMult: 1, graceTimeBonus: 0, phoenixRes: false, cycleActive: false, lunarActive: false, eternityRes: false,
       consecutivePulses: 0, gravityFactor: 1
     };
