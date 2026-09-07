@@ -46,21 +46,102 @@
     //
     // O ritmo tambem mudou. Espacamento constante apaga a silhueta; o que da cadencia e
     // GRUPO-VAO-GRUPO — picos encostados formando uma massa, depois um respiro de ceu.
+    // --- IDENTIDADE GEOLOGICA ---
+    // Num vale real todas as montanhas nasceram do MESMO processo: mesma rocha, mesma
+    // erosao, mesma tectonica. Por isso tem ar de familia. Sortear forma a forma de modo
+    // independente produzia uma agulha ao lado de uma mesa ao lado de um domo — tres
+    // lugares geologicamente distintos colados num quadro so.
+    //
+    // Agora o bioma escolhe um RELEVO, e ele governa toda a serra:
+    //   antiga      erodida, arredondada. Domos e cristas baixas, nada de agulha.
+    //   jovem       tectonica/glacial. Picos e agulhas, encostas ingremes, sem mesa.
+    //   sedimentar  estratos horizontais. Mesas e domos baixos, sem pico.
+    //   vulcanica   cones. Picos regulares e escudos largos.
+    //   eterea      quase sem materia. So domos, muito baixos.
+    const RELEVOS = {
+      antiga:     { formas: [['domo', 0.7], ['serra', 1.0]],                 steep: [0.42, 0.68], altura: 0.85 },
+      jovem:      { formas: [['pico', 0.58], ['agulha', 0.74], ['serra', 1.0]], steep: [0.12, 0.3],  altura: 1.15 },
+      sedimentar: { formas: [['mesa', 0.62], ['domo', 0.92], ['serra', 1.0]], steep: [0.2, 0.4],   altura: 0.8 },
+      vulcanica:  { formas: [['pico', 0.66], ['domo', 1.0]],                 steep: [0.24, 0.42], altura: 1.0 },
+      eterea:     { formas: [['domo', 1.0]],                                 steep: [0.5, 0.8],   altura: 0.7 }
+    };
+    const GEOLOGIA_DO_BIOMA = {
+      snow: 'jovem', crystal: 'jovem', shattered: 'jovem', zenith: 'jovem', hills: 'antiga',
+      desert: 'sedimentar', canyon: 'sedimentar', volcano: 'vulcanica',
+      cosmos: 'eterea', nebula: 'eterea', aether: 'eterea', abyss: 'eterea',
+      ursa: 'eterea', orion: 'eterea', aries: 'eterea'
+    };
+    const relevo = RELEVOS[GEOLOGIA_DO_BIOMA[state.biome] || 'antiga'];
+
+    // Uma serra inteira empurrada pela mesma forca se inclina para o MESMO lado. A
+    // assimetria deixa de ser sorteada por montanha e passa a ser a direcao do vale,
+    // com pequena variacao — e o detalhe que faz a cordilheira parecer uma so.
+    const direcaoDoVale = 1; // definida abaixo pela semente do lugar
+
+    // --- FORMA DO TERRENO (macro) ---
+    // Ate aqui a variedade era toda no nivel da montanha individual. Faltava a escala
+    // acima: o LUGAR. Um canion nao e um monte de picos, e duas paredes e um vao; uma
+    // planicie nao e montanha baixa, e ceu com um acento longe. Cada perfil multiplica a
+    // altura conforme a posicao horizontal, e e isso que faz a cena ser um lugar.
+    //
+    // O vale merece nota: bordas altas e centro baixo formam um funil que conduz o olho
+    // para o meio, onde o sol nasce. Era o que faltava — a cena nao tinha linha de conducao.
+    const PERFIS = {
+      cordilheira: () => 1,
+      vale:        t => 0.3 + 1.25 * Math.pow(Math.abs(t - 0.5) * 2, 1.5),
+      canion:      t => (Math.abs(t - 0.5) < 0.16 ? 0.12 : 0.75 + 0.6 * Math.abs(t - 0.5)),
+      planicie:    t => 0.34 + 0.3 * Math.sin(t * Math.PI),
+      platô:       t => (t > 0.3 && t < 0.78 ? 0.95 : 0.42)
+    };
+    // O perfil vem do NOME da missao, nao do sorteio: voltar a "Still Night" tem que
+    // devolver Still Night. Antes cada corrida inventava uma paisagem nova para o mesmo
+    // ritual, e nenhum dos 50 lugares tinha identidade.
+    // initWorldDecor roda tambem no boot, antes de qualquer missao existir — e este modulo
+    // e avaliado antes de quem define experienceState. Ler a variavel direto aqui derruba
+    // o IIFE inteiro na zona morta temporal, e o jogo nem chega a iniciar o laco. Mesmo
+    // erro que ja custou caro neste projeto com state.tutorial; mesma guarda.
+    const missaoAtual = (typeof experienceState !== 'undefined' && experienceState && experienceState.mission) || null;
+    const nomeDoLugar = (missaoAtual && missaoAtual.id) || state.biome || 'm1';
+    let semente = 0;
+    for (let i = 0; i < nomeDoLugar.length; i++) semente = (semente * 31 + nomeDoLugar.charCodeAt(i)) >>> 0;
+    const inclinacaoDoVale = (semente & 1) ? 1 : -1;
+    const nomesPerfil = Object.keys(PERFIS);
+    const perfil = PERFIS[nomesPerfil[semente % nomesPerfil.length]];
+
+    // Pesos como pares [forma, teto acumulado].
+    const sortearForma = (pesos) => {
+      const r = Math.random();
+      for (const [nome, teto] of pesos) if (r <= teto) return nome;
+      return 'domo';
+    };
+
     const gerarSerra = (layer, cfg) => {
       let x = -120;
+      let ultimaForma = '';
       while (x < W + 120) {
         const noGrupo = Math.round(rand(cfg.grupo[0], cfg.grupo[1]));
         for (let i = 0; i < noGrupo && x < W + 120; i++) {
           const sorte = Math.random();
           const faixa = sorte < cfg.mix[0] ? cfg.alto : (sorte < cfg.mix[1] ? cfg.medio : cfg.baixo);
-          const h = rand(faixa[0], faixa[1]);
+          // A largura vem ANTES da altura: o perfil do terreno precisa do centro da
+          // montanha para saber onde ela cai no vale, e o centro depende da largura.
           const w = rand(faixa[2], faixa[3]);
+          const h = rand(faixa[0], faixa[1]) * relevo.altura * perfil((x + w / 2) / W);
+          // Sorteia a forma pelos pesos do plano, mas NUNCA repete a anterior. Duas formas
+          // iguais lado a lado viram padrao, e padrao e o que o olho para de olhar.
+          let forma = sortearForma(relevo.formas);
+          let tentativas = 0;
+          while (forma === ultimaForma && tentativas++ < 4) forma = sortearForma(cfg.formas);
+          ultimaForma = forma;
+
           state.world.mountains.push({
             x: x + w / 2, w: w, h: h,
             wobble: Math.random() * Math.PI * 2,
             layer: layer,
-            peak: rand(-cfg.assimetria, cfg.assimetria),
-            steep: rand(cfg.steep[0], cfg.steep[1])
+            forma: forma,
+            // inclina para o lado do vale, com folga para nao ficar mecanico
+            peak: inclinacaoDoVale * rand(cfg.assimetria * 0.25, cfg.assimetria),
+            steep: rand(relevo.steep[0], relevo.steep[1])
           });
           x += w * rand(0.32, 0.5); // dentro do grupo os picos se encostam
         }
@@ -73,6 +154,7 @@
     // levada ao extremo — a esta distancia o ar venceu a rocha e so resta um degrau de
     // valor. Nao serve para ser vista, serve para o olho saber que ha mundo alem.
     gerarSerra('bg5', {
+      formas: [['domo', 1.0]],
       mix: [0.9, 1.0], grupo: [5, 9], vao: [0, 20], assimetria: 0.06, steep: [0.6, 0.85],
       alto:  [60, 95, 420, 620], medio: [45, 60, 340, 420], baixo: [35, 45, 280, 340]
     });
@@ -81,19 +163,26 @@
     // vaos das outras. Existe so para a bruma ter em que se agarrar — e o que transforma
     // "tres camadas" em "distancia". Sem ela o horizonte termina abruptamente na bg3.
     gerarSerra('bg4', {
+      formas: [['domo', 0.85], ['serra', 1.0]],
       mix: [0.8, 1.0], grupo: [4, 7], vao: [10, 40], assimetria: 0.1, steep: [0.5, 0.75],
       alto:  [95, 140, 320, 460], medio: [70, 95, 250, 320], baixo: [55, 70, 200, 250]
     });
 
+    // COMPOSICAO EM TRES TEMPOS: descanso, drama, descanso. O fundo e calmo para nao
+    // competir; o meio concentra o conflito de formas; a frente volta a ser horizontal,
+    // dando ao olho onde pousar antes de subir. Uma cena so de picos cansa em dez segundos.
     gerarSerra('bg3', {
+      formas: [['domo', 0.78], ['serra', 0.95], ['pico', 1.0]],
       mix: [0.75, 0.95], grupo: [3, 5], vao: [30, 90], assimetria: 0.18, steep: [0.4, 0.65],
       alto:  [150, 240, 260, 380], medio: [110, 150, 200, 260], baixo: [80, 110, 150, 200]
     });
     gerarSerra('bg2', {
+      formas: [['domo', 0.46], ['pico', 0.68], ['serra', 0.86], ['mesa', 0.97], ['agulha', 1.0]],
       mix: [0.5, 0.85], grupo: [2, 4], vao: [50, 130], assimetria: 0.42, steep: [0.2, 0.55],
       alto:  [120, 185, 170, 250], medio: [75, 120, 120, 175], baixo: [40, 75, 80, 125]
     });
     gerarSerra('bg1', {
+      formas: [['domo', 0.62], ['mesa', 0.9], ['serra', 1.0]],
       mix: [0.4, 0.75], grupo: [3, 6], vao: [40, 110], assimetria: 0.5, steep: [0.12, 0.38],
       alto:  [70, 120, 110, 165], medio: [45, 70, 75, 115], baixo: [22, 45, 45, 80]
     });
@@ -106,8 +195,12 @@
       w: rand(200, 260), h: rand(215, 275),
       wobble: Math.random() * Math.PI * 2,
       layer: 'bg2',
-      peak: rand(-0.3, 0.3),
-      steep: rand(0.18, 0.3) // mais ingreme que a media do plano: le como "o pico"
+      // Journey mantem UMA montanha dominando o horizonte a jornada inteira. O marco aqui
+      // e sempre um pico — nunca um domo maior — porque o que ancora a composicao e a
+      // FORMA distinta, nao o tamanho. Um domo grande e so mais paisagem.
+      forma: relevo.formas[0][0],
+      peak: inclinacaoDoVale * rand(0.1, 0.3),
+      steep: rand(0.18, 0.3)
     });
 
     // --- PRIMEIRO PLANO: BORDA INFERIOR ---
@@ -125,7 +218,7 @@
     while (fx < W + 60) {
       // 1-2-3: um tufo dominante, um medio de apoio, e os pequenos que costuram os dois.
       const papel = Math.random();
-      const dom = papel < 0.18 ? 1.0 : (papel < 0.48 ? 0.62 : 0.34);
+      const dom = papel < 0.18 ? 1.0 : (papel < 0.48 ? 0.68 : 0.46);
       state.world.fgProps.push({
         x: fx,
         escala: dom * rand(0.85, 1.15),

@@ -327,8 +327,49 @@
             ctx.lineTo(m.x + hw * 0.3, HORIZON_Y - h * 0.6);
             ctx.lineTo(m.x - hw * 0.3, HORIZON_Y - h * 0.6);
         } else {
+        // --- VOCABULARIO DE RELEVO ---
+        // Antes toda montanha era a MESMA curva bezier com altura sorteada. Variar so a
+        // altura de uma forma unica nao produz variedade: produz a mesma nota tocada mais
+        // alto e mais baixo. Journey resolve isso por OPOSICAO — dunas de curva ampla ao
+        // lado de rocha angular — e mantendo as massas simples, quase low poly, sem ruido.
+        //
+        // Cinco formas, cada uma com um papel na composicao:
+        //   domo    curva pura, larga e baixa. E o descanso do olho.
+        //   pico    reto e ingreme. E o drama.
+        //   serra   varias cristas dentro de uma massa so. E o ritmo.
+        //   mesa    topo plano. E a horizontal que segura a cena.
+        //   agulha  estreita e altissima. E o acento, e por isso e rara.
+        if (m.forma === 'pico') {
+            // Um flanco RETO e o outro CURVO. Dois lados retos fazem um triangulo, e
+            // triangulo le como sinal de transito, nao como montanha. A oposicao dentro da
+            // propria forma e o que a torna natural — e e a regra que eu tinha enunciado
+            // antes sem aplicar de fato.
+            ctx.lineTo(m.x - hw * 0.5, HORIZON_Y - h * 0.46);
+            ctx.lineTo(px, HORIZON_Y - h);
+            ctx.bezierCurveTo(px + hw * 0.34, HORIZON_Y - h * 0.72,
+                              m.x + hw * 0.62, HORIZON_Y - h * 0.24,
+                              m.x + hw, HORIZON_Y);
+        } else if (m.forma === 'agulha') {
+            ctx.lineTo(m.x - hw * 0.3, HORIZON_Y - h * 0.55);
+            ctx.lineTo(px, HORIZON_Y - h * 1.15);
+            ctx.lineTo(m.x + hw * 0.26, HORIZON_Y - h * 0.5);
+        } else if (m.forma === 'mesa') {
+            // Sobe reto, corta plano, desce em curva de um lado so. Reta contra curva
+            // dentro da mesma forma: e o que a faz ler como rocha e nao como caixa.
+            ctx.lineTo(m.x - hw * 0.78, HORIZON_Y - h);
+            ctx.lineTo(m.x + hw * 0.34, HORIZON_Y - h * 0.96);
+            ctx.quadraticCurveTo(m.x + hw * 0.85, HORIZON_Y - h * 0.5, m.x + hw, HORIZON_Y);
+        } else if (m.forma === 'serra') {
+            // Duas cristas, nao tres: grande e media. A terceira crista virava ruido na
+            // silhueta e enchia o horizonte de dentes. Grande-media ja e hierarquia.
+            ctx.quadraticCurveTo(m.x - hw * 0.72, HORIZON_Y - h * 0.7, m.x - hw * 0.3, HORIZON_Y - h);
+            ctx.quadraticCurveTo(m.x - hw * 0.05, HORIZON_Y - h * 0.52, m.x + hw * 0.18, HORIZON_Y - h * 0.66);
+            ctx.quadraticCurveTo(m.x + hw * 0.62, HORIZON_Y - h * 0.44, m.x + hw, HORIZON_Y);
+        } else {
+            // domo: a curva ampla e limpa. Sem ombro, sem quebra — o contraponto calmo.
             ctx.bezierCurveTo(m.x - hw + hw * st, HORIZON_Y, px - hw * st, HORIZON_Y - h, px, HORIZON_Y - h);
             ctx.bezierCurveTo(px + hw * st, HORIZON_Y - h, m.x + hw - hw * st, HORIZON_Y, m.x + hw, HORIZON_Y);
+        }
         }
         ctx.lineTo(m.x + hw, HORIZON_Y + 50);
         ctx.closePath();
@@ -920,15 +961,26 @@
       } else if (p.tipo === 'capim') {
         // Big / medium / small dentro do proprio tufo: uma lamina domina, duas acompanham,
         // o resto e detalhe. Tres alturas iguais nao formam grupo, formam cerca.
-        for (let i = 0; i < 11; i++) {
-          const dom = i === 3 ? 1.0 : (i === 6 || i === 1 ? 0.72 : 0.42);
-          const alt = (300 * e) * dom;
-          const bx = (i - 5) * 17 * e;
-          const curva = Math.sin(p.semente + i) * 40 * e;
+        // A base do tufo e uma massa continua, e as laminas saem dela. Antes eram 11
+        // laminas soltas: nas escalas pequenas viravam espetos finos e o olho lia defeito,
+        // nao capim. Massa primeiro, silhueta depois — a regra da forma grande antes do
+        // detalhe pequeno vale aqui como vale na montanha.
+        g.beginPath();
+        g.moveTo(-110 * e, 60 * e);
+        g.quadraticCurveTo(-40 * e, -46 * e, 0, -52 * e);
+        g.quadraticCurveTo(50 * e, -44 * e, 110 * e, 60 * e);
+        g.closePath(); g.fill();
+
+        for (let i = 0; i < 7; i++) {
+          const dom = i === 2 ? 1.0 : (i === 5 ? 0.74 : 0.5);
+          const alt = (215 * e) * dom;
+          const bx = (i - 3) * 26 * e;
+          const curva = Math.sin(p.semente + i * 1.7) * 34 * e;
+          const grossura = 13 * e * (0.6 + dom * 0.5); // lamina larga na base, nunca espeto
           g.beginPath();
-          g.moveTo(bx - 7 * e, 40 * e);
-          g.quadraticCurveTo(bx + curva * 0.4, -alt * 0.6, bx + curva, -alt);
-          g.quadraticCurveTo(bx + curva * 0.4, -alt * 0.6, bx + 7 * e, 40 * e);
+          g.moveTo(bx - grossura, 30 * e);
+          g.quadraticCurveTo(bx + curva * 0.35, -alt * 0.55, bx + curva, -alt);
+          g.quadraticCurveTo(bx + curva * 0.35, -alt * 0.5, bx + grossura, 30 * e);
           g.closePath(); g.fill();
         }
       } else {
