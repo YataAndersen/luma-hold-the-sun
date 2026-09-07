@@ -55,6 +55,11 @@
       if (ui.topGoal) ui.topGoal.classList.toggle('hidden', !missaoViva || isTutorialActive());
       // O anel de tempo e a altitude não significam nada no menu, no mapa ou nas memórias.
       if (ui.celestialHUD) ui.celestialHUD.classList.toggle('hidden', !missaoViva);
+      // O tracker de estrelas caía na MESMA armadilha do objetivo fixo: sua visibilidade
+      // morava dentro de updateHUD, que só roda em gameplay. Ao sair da partida a função
+      // parava de rodar e o elemento congelava visível — o tracker aparecia por cima do
+      // menu. Regra de visibilidade de HUD pertence ao laço, não ao update de gameplay.
+      if (ui.tracker && !emPartida) ui.tracker.classList.add('hidden');
     }
     
     if (state.mode === "map") {
