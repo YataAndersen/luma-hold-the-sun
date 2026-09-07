@@ -109,7 +109,14 @@
       // ponto cheio. Com o pulso custando quase todo o fôlego, a janela do anti-spam nunca
       // dispara sozinha — quem separa um bom gesto de um gesto apressado é a tensão.
       if (fullness > 0.9 && strainAoSoltar < 0.3) {
-        state.combo = Math.min(20, state.combo + 1);
+        // O combo DECAI continuamente (14-gameplay.js: `state.combo - dt * .8`), então
+        // somar 1 a ele produzia número quebrado: a tela de resultado chegou a mostrar
+        // "Max Combo: x2.95992000000000007". E era pior que feio — como o decaimento comia
+        // frações entre um gesto e outro, seis gestos no ritmo certo podiam somar 5,2 e uma
+        // missão de "combo x6" pedia sete gestos sem dizer.
+        // Arredondando para baixo ANTES de somar, n gestos no ritmo valem exatamente n, e o
+        // decaimento volta a ser o que devia ser: o que se perde ao parar de respirar.
+        state.combo = Math.min(20, Math.floor(state.combo) + 1);
         state.maxComboThisRun = Math.max(state.maxComboThisRun, state.combo);
         state.mods.consecutivePulses++;
       }

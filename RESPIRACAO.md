@@ -245,3 +245,53 @@ não anda para trás — a primeira tentativa deixou m31 pedindo menos que m28).
 projeto que uma medição inválida escondeu um problema real — as primeiras corridas de
 benchmark, o teste de histograma, e agora esta. O critério que ficou: **um número só vale
 depois de bater com o jogo rodando.**
+
+## O topo da tela: três informações disputando o mesmo espaço
+
+O Yata jogou e disse: *"muita informação truncada, sobreposta, misturada... no topo da tela
+uma confusão"*. Medindo, era literal.
+
+**O painel de objetivos passava por cima do anel do tempo.** Ele tinha largura fixa de 183px
+e borda direita em 207px. O anel é centrado: começa em 184px numa tela de 420 e em 154px
+numa de 360. Invasão de **23px no desktop e 53px no celular** — onde o painel cobria o
+mostrador inteiro. E como o painel tem `z-index: 45` contra 40 do anel, quem sumia era o
+anel. O teto agora é geométrico: `max-width: calc(50vw - 62px)`, que é meia tela menos o
+recuo, menos o meio-anel, menos 20px de folga. Não alcança o anel em largura nenhuma, e o
+texto **quebra linha em vez de ser cortado** — informação truncada é pior que informação alta.
+
+**O painel vivia meio apagado.** Ele desvanecia por combo e parava em 0,1 ou 0,15: legível o
+bastante para puxar o olho, ilegível o bastante para não ser lido. E o gatilho era o combo,
+que depois da mudança respiratória passou a medir outra coisa. Agora ele é um **aviso**:
+acende inteiro na abertura da corrida e toda vez que um objetivo muda de estado, e apaga por
+completo depois. Ou está lá para ser lido, ou não está.
+
+**Quatro linhas piscando fora de fase.** Havia uma animação `taskWave` fazendo cada item
+pulsar escala e cor num ciclo de 4s, com atrasos de 0s, 1s, 2s e 3s — movimento periférico
+contínuo num jogo cujo propósito é concentração. Removida.
+
+**`.hidden` não escondia nada.** A classe zera a opacidade pelo CSS, mas o ramo de gameplay
+escreve `style.opacity` inline, e inline vence classe. Bastava a partida ter começado uma vez
+para o painel continuar aceso por cima do tutorial e atrás da tela de resultado, com a classe
+dizendo o contrário. Quem esconde agora zera o mesmo canal que quem mostra escreve.
+
+**Na pausa, o aviso atravessava o painel.** "o céu vai esperar" cruzava a linha "perfeito:
+zero quase-quedas". Uma tela cheia é dona da tela: o aviso é da partida, e só dela.
+
+## E dois números que mentiam na tela de resultado
+
+**`Max Combo: x2.95992000000000007`.** O combo decai continuamente quando o jogador sai do
+ritmo, então somar 1 a um valor já corroído produzia fração. Era pior que feio: como o
+decaimento comia frações entre um gesto e outro, seis gestos no ritmo certo podiam somar 5,2
+e uma missão de "combo x6" exigia sete gestos sem dizer. Arredondando para baixo **antes** de
+somar, n gestos valem exatamente n.
+
+**Três rótulos em inglês no meio do português.** `Altitude:`, `Dawns Awakened:` e
+`Max Combo:` estavam escritos direto no código, sem `t()`. "Dawns Awakened" até já estava
+traduzido nos seis dicionários — só nunca era pedido. E o separador " | " deixava a barra
+pendurada sozinha quando o português quebrava a linha; agora é uma linha por número.
+
+Quatro testes novos travam isso: o painel não alcança o anel em nenhuma largura de 320 a
+1440; o aviso não tem opacidade fantasma; esconder e mostrar escrevem o mesmo canal; e o
+combo é sempre inteiro. **O varredor de i18n não pegou os rótulos** porque ele procura chaves
+pedidas a `t()` e ausentes do dicionário — texto que nunca passa por `t()` é invisível para
+ele. Vale ampliar.

@@ -50,6 +50,10 @@
   // Um gesto é uma expiração inteira: esvazia o peito, tenha enchido ou não. Encher de
   // novo leva ~4,5s, e é isso — não uma trava de cooldown — que dá o compasso ao jogo.
   // Mantido como constante porque a economia de fôlego e as graças se referem a ele.
+  // Quanto tempo o aviso de objetivos fica na tela depois de aparecer ou de mudar.
+  // Curto o bastante para não virar painel, longo o bastante para caber uma leitura.
+  const HUD_AVISO_SEGUNDOS = 5;
+
   const pulseEnergyCost = 0.85;
 
   // Teto de fôlego, descontado o desgaste acumulado na corrida.

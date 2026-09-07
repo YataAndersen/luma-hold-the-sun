@@ -454,37 +454,46 @@
     .live-mission-tracker {
         position: absolute;
         top: max(24px, env(safe-area-inset-top));
-        left: max(24px, env(safe-area-inset-left));
+        left: max(16px, env(safe-area-inset-left));
         z-index: 45;
         pointer-events: none;
-        transition: opacity 0.4s ease;
+        transition: opacity 0.6s ease;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 7px;
         background: linear-gradient(90deg, rgba(10,26,42,0.3), transparent);
-        padding: 12px 24px 12px 16px;
+        padding: 10px 14px 10px 12px;
         border-left: 2px solid rgba(255,216,147,0.3);
         border-radius: 4px;
+
+        /* O painel media 183px de largura fixa e a borda direita chegava a 207px. O anel do
+           tempo fica centrado: começa em 184px numa tela de 420 e em 154px numa de 360. Ou
+           seja, o painel passava POR CIMA do anel — 23px de invasão no desktop e 53px no
+           celular, onde ele cobria o mostrador inteiro. E como o tracker tem z-index 45
+           contra 40 do anel, era o anel que sumia.
+           O teto abaixo é geométrico, não um chute: metade da tela menos o recuo da esquerda
+           (16px), menos o meio-anel (26px), menos uma folga de 20px. Assim a borda direita
+           não alcança o anel em largura nenhuma. */
+        max-width: calc(50vw - 62px);
+        box-sizing: border-box;
     }
     .live-mission-tracker.hidden { opacity: 0; }
-    .tracker-title { font: 600 11px/1 var(--font-display); color: var(--sun-glow); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 4px; text-shadow: 0 0 8px rgba(255,216,147,0.3); }
-    .tracker-item { font: 300 12px/1.4 var(--font-display); color: rgba(255,249,236,0.6); display: flex; align-items: center; gap: 8px; text-transform: lowercase; transform-origin: left center; transition: color 0.3s, transform 0.3s; will-change: transform; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+    .tracker-title { font: 600 10px/1.2 var(--font-display); color: var(--sun-glow); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 2px; text-shadow: 0 0 8px rgba(255,216,147,0.3); overflow-wrap: anywhere; }
+    /* align-items:flex-start para que o ícone fique na PRIMEIRA linha quando o texto quebra;
+       centrado, ele descia para o meio do bloco e a lista perdia o alinhamento.
+       O texto quebra em vez de ser cortado: informação truncada é pior que informação alta. */
+    .tracker-item { font: 300 11px/1.45 var(--font-display); color: rgba(255,249,236,0.62); display: flex; align-items: flex-start; gap: 7px; text-transform: lowercase; transition: color 0.3s; text-shadow: 0 1px 4px rgba(0,0,0,0.5); overflow-wrap: anywhere; }
     
-    @keyframes taskWave {
-        0%, 100% { transform: scale(1); color: rgba(255,249,236,0.6); }
-        50% { transform: scale(1.06); color: var(--sun-glow); text-shadow: 0 0 8px rgba(255,216,147,0.4); }
-    }
-    
-    .tracker-item:not(.done):not(.failed) { animation: taskWave 4s infinite ease-in-out; }
-    #tItemMain { animation-delay: 0s; }
-    #tItemSub1 { animation-delay: 1s; }
-    #tItemSub2 { animation-delay: 2s; }
-    #tItemPerf { animation-delay: 3s; }
+    /* Havia aqui uma animação `taskWave`: cada item pulsava escala e cor num ciclo de 4s,
+       com atrasos de 0s, 1s, 2s e 3s. Quatro linhas piscando fora de fase, permanentemente,
+       no canto do olho — num jogo cujo objetivo declarado é concentração pela respiração.
+       Movimento periférico contínuo é exatamente o que quebra concentração; o tracker não
+       precisa chamar atenção, precisa estar lá quando o olho procurar. */
 
     .tracker-item.done { color: rgba(255,249,236,1); }
     .tracker-item.done .t-icon { color: var(--sun-glow); text-shadow: 0 0 8px var(--sun-glow); }
     .tracker-item.failed { color: var(--danger-warn); opacity: 0.6; text-decoration: line-through; }
-    .t-icon { font-size: 14px; width: 14px; text-align: center; }
+    .t-icon { font-size: 12px; width: 12px; flex: 0 0 12px; text-align: center; line-height: 1.45; }
 
     /* ===== TOP PERSISTENT GOAL (MINIMALIST) ===== */
     .top-persistent-goal {

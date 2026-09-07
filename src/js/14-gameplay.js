@@ -550,7 +550,7 @@
       }
     }
 
-    updateHUD();
+    updateHUD(dt);
   }
 
   function updateParticles(dt) {
@@ -617,7 +617,7 @@
     }
   }
 
-  function updateHUD() {
+  function updateHUD(dt = 0) {
     const altitude = document.getElementById('altitudeDisplay');
     if (altitude) {
       altitude.textContent = `${Math.floor(state.scoreMeters)}m`;
@@ -634,12 +634,18 @@
     const topActions = document.getElementById('topActions');
     if (topActions) topActions.style.opacity = hideAll ? "0" : iconsOpacity;
 
-    // FOCUS MODE: Fades out UI when player reaches Flow State
-    let focusAlpha = 1.0;
-    if (state.sun.breakthrough) focusAlpha = 0.0;
-    else if (state.sun.nearFail) focusAlpha = 0.1;
-    else if (state.combo >= 6) focusAlpha = 0.15;
-    else if (state.combo >= 3) focusAlpha = 1.0 - ((state.combo - 3) / 3) * 0.85;
+    // O tracker de objetivos deixou de ser um painel permanente e virou um AVISO.
+    //
+    // Antes ele desvanecia por combo e parava em 0,1 ou 0,15: legível o bastante para puxar
+    // o olho, ilegível o bastante para não ser lido. Três linhas de texto fantasma no canto
+    // é o que dá a impressão de informação truncada e misturada — e o gatilho era o combo,
+    // que depois da mudança respiratória passou a medir outra coisa.
+    //
+    // Agora ele aparece inteiro quando tem algo a dizer (início da corrida, e toda vez que
+    // um objetivo muda de estado) e some por completo depois. Nunca fica no meio: ou está
+    // lá para ser lido, ou não está.
+    const avisoVisivel = state.hud.trackerTimer > 0;
+    state.hud.trackerTimer = Math.max(0, state.hud.trackerTimer - dt);
 
     // PENDING DRAFT UI UPDATE
     const pendingBtn = document.getElementById("pendingDraftBtn");
@@ -647,7 +653,8 @@
     if (pendingBtn && pendingBadge) {
         if (state.draft && state.draft.pending > 0 && (state.mode === 'gameplay' || state.mode === 'paused')) {
             pendingBtn.classList.remove('hidden-ui');
-            pendingBtn.style.opacity = hideAll ? '0' : focusAlpha.toString();
+            // Botão que o jogador precisa TOCAR: não desvanece com o aviso.
+            pendingBtn.style.opacity = hideAll ? '0' : '0.9';
             pendingBadge.textContent = state.draft.pending;
         } else {
             pendingBtn.classList.add('hidden-ui');
@@ -658,11 +665,20 @@
     if (ui.tracker && state.mode !== 'map' && state.mode !== 'menu') {
         // Durante o tutorial o painel de ensino ocupa esse mesmo canto, e os objetivos da
         // missão são ruído para quem ainda está aprendendo os verbos do jogo.
+        // .hidden zera a opacidade pelo CSS, mas o ramo de gameplay escreve `style.opacity`
+        // inline — e inline vence classe. Bastava a partida ter começado uma vez para o
+        // painel continuar aceso em cima do tutorial e atrás da tela de resultado, com a
+        // classe dizendo o contrário. Quem esconde tem que zerar o mesmo canal que quem
+        // mostra escreve.
+        const esconderTracker = () => { ui.tracker.classList.add('hidden'); ui.tracker.style.opacity = '0'; };
         if (isTutorialActive()) {
-            ui.tracker.classList.add('hidden');
+            esconderTracker();
         } else if (state.mode === 'gameplay' || state.mode === 'paused') {
             ui.tracker.classList.remove('hidden');
-            ui.tracker.style.opacity = hideAll ? '0' : focusAlpha.toString();
+            // Na pausa o aviso ficava por cima do cabeçalho do painel — "o céu vai esperar"
+            // atravessava a linha "perfeito: zero quase-quedas". Uma tela cheia é dona da
+            // tela: nada de HUD flutuando em cima dela. O aviso é da partida, e só dela.
+            ui.tracker.style.opacity = (hideAll || state.mode !== 'gameplay' || !avisoVisivel) ? '0' : '1';
 
             const m = experienceState.mission;
             const node = experienceState.node; // resolvido na troca de missão, não a cada frame
@@ -697,9 +713,17 @@
                 updateItem(ui.tItemSub1, ui.tIconSub1, sub1Done);
                 updateItem(ui.tItemSub2, ui.tIconSub2, sub2Done);
                 updateItem(ui.tItemPerf, ui.tIconPerf, perfDone, perfFailed, '✧');
+
+                // Reacende o aviso quando algo de fato mudou. Sem esta assinatura o painel
+                // ou ficaria para sempre, ou sumiria antes de contar que uma estrela caiu.
+                const assinatura = `${mainDone}|${sub1Done}|${sub2Done}|${perfDone}|${perfFailed}|${node.title}`;
+                if (assinatura !== state.hud.trackerSig) {
+                  state.hud.trackerSig = assinatura;
+                  state.hud.trackerTimer = HUD_AVISO_SEGUNDOS;
+                }
             }
         } else {
-            ui.tracker.classList.add('hidden');
+            esconderTracker();
         }
     }
 

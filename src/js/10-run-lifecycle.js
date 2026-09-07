@@ -25,6 +25,10 @@
     
     state.input.lastClick = -999; state.input.lastPress = -999; state.input.lastEmptyPulse = -999; state.input.keyboardHold = false; state.input.holding = false; state.input.inside = false; state.input.x = W * .5; state.input.y = H * .42;
     state.entropy = .12;
+    // O aviso de objetivos abre a corrida: é quando o jogador de fato quer saber o que a
+    // missão pede. Depois disso ele só volta quando um objetivo muda.
+    state.hud.trackerTimer = HUD_AVISO_SEGUNDOS + 2;
+    state.hud.trackerSig = '';
     state.sun.x = W * .5; state.sun.y = H * .38; state.sun.vx = 0; state.sun.vy = 0; state.sun.stability = .22; state.sun.energy = .25; state.sun.wear = 0;  // comeca quase vazio: a primeira respiracao tem que ser respirada
     state.sun.breath = 0;
     state.sun.breathStrength = .18;
@@ -253,10 +257,22 @@
         i++;
         setTimeout(reveal, 1200);
         } else {
-            // Preenche os dados da corrida quando a poesia terminar
-            let statsString = `Altitude: ${Math.floor(state.scoreMeters)}m\nDawns Awakened: ${state.runDawns} | Max Combo: x${state.maxComboThisRun}`;
-            if (isNewRecord) statsString = "✨ NEW RECORD ✨\n" + statsString;
-            statsText.innerText = statsString;
+            // Preenche os dados da corrida quando a poesia terminar.
+            //
+            // Os três rótulos estavam escritos em inglês direto no código, sem passar por
+            // t(). Num jogo com sete idiomas, a tela de resultado — a última coisa que o
+            // jogador lê a cada corrida — misturava dois idiomas. "Dawns Awakened" até já
+            // estava traduzido nos seis dicionários: só nunca era pedido.
+            //
+            // E uma linha por número, em vez de " | " no meio: em português a linha quebrava
+            // e deixava a barra pendurada sozinha no fim.
+            const linhasStats = [
+              `${t("Altitude")}: ${Math.floor(state.scoreMeters)}m`,
+              `${t("Dawns Awakened")}: ${state.runDawns}`,
+              `${t("Max Combo")}: x${Math.floor(state.maxComboThisRun)}`,
+            ];
+            if (isNewRecord) linhasStats.unshift(`\u2728 ${t("NEW RECORD")} \u2728`);
+            statsText.innerText = linhasStats.join("\n");
             
             // Animação de Estrelas de Conclusão
             if (isSuccess && starsContainer && experienceState.mission) {

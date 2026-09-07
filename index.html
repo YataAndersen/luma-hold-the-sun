@@ -465,37 +465,46 @@
     .live-mission-tracker {
         position: absolute;
         top: max(24px, env(safe-area-inset-top));
-        left: max(24px, env(safe-area-inset-left));
+        left: max(16px, env(safe-area-inset-left));
         z-index: 45;
         pointer-events: none;
-        transition: opacity 0.4s ease;
+        transition: opacity 0.6s ease;
         display: flex;
         flex-direction: column;
-        gap: 8px;
+        gap: 7px;
         background: linear-gradient(90deg, rgba(10,26,42,0.3), transparent);
-        padding: 12px 24px 12px 16px;
+        padding: 10px 14px 10px 12px;
         border-left: 2px solid rgba(255,216,147,0.3);
         border-radius: 4px;
+
+        /* O painel media 183px de largura fixa e a borda direita chegava a 207px. O anel do
+           tempo fica centrado: começa em 184px numa tela de 420 e em 154px numa de 360. Ou
+           seja, o painel passava POR CIMA do anel — 23px de invasão no desktop e 53px no
+           celular, onde ele cobria o mostrador inteiro. E como o tracker tem z-index 45
+           contra 40 do anel, era o anel que sumia.
+           O teto abaixo é geométrico, não um chute: metade da tela menos o recuo da esquerda
+           (16px), menos o meio-anel (26px), menos uma folga de 20px. Assim a borda direita
+           não alcança o anel em largura nenhuma. */
+        max-width: calc(50vw - 62px);
+        box-sizing: border-box;
     }
     .live-mission-tracker.hidden { opacity: 0; }
-    .tracker-title { font: 600 11px/1 var(--font-display); color: var(--sun-glow); text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 4px; text-shadow: 0 0 8px rgba(255,216,147,0.3); }
-    .tracker-item { font: 300 12px/1.4 var(--font-display); color: rgba(255,249,236,0.6); display: flex; align-items: center; gap: 8px; text-transform: lowercase; transform-origin: left center; transition: color 0.3s, transform 0.3s; will-change: transform; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+    .tracker-title { font: 600 10px/1.2 var(--font-display); color: var(--sun-glow); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 2px; text-shadow: 0 0 8px rgba(255,216,147,0.3); overflow-wrap: anywhere; }
+    /* align-items:flex-start para que o ícone fique na PRIMEIRA linha quando o texto quebra;
+       centrado, ele descia para o meio do bloco e a lista perdia o alinhamento.
+       O texto quebra em vez de ser cortado: informação truncada é pior que informação alta. */
+    .tracker-item { font: 300 11px/1.45 var(--font-display); color: rgba(255,249,236,0.62); display: flex; align-items: flex-start; gap: 7px; text-transform: lowercase; transition: color 0.3s; text-shadow: 0 1px 4px rgba(0,0,0,0.5); overflow-wrap: anywhere; }
     
-    @keyframes taskWave {
-        0%, 100% { transform: scale(1); color: rgba(255,249,236,0.6); }
-        50% { transform: scale(1.06); color: var(--sun-glow); text-shadow: 0 0 8px rgba(255,216,147,0.4); }
-    }
-    
-    .tracker-item:not(.done):not(.failed) { animation: taskWave 4s infinite ease-in-out; }
-    #tItemMain { animation-delay: 0s; }
-    #tItemSub1 { animation-delay: 1s; }
-    #tItemSub2 { animation-delay: 2s; }
-    #tItemPerf { animation-delay: 3s; }
+    /* Havia aqui uma animação `taskWave`: cada item pulsava escala e cor num ciclo de 4s,
+       com atrasos de 0s, 1s, 2s e 3s. Quatro linhas piscando fora de fase, permanentemente,
+       no canto do olho — num jogo cujo objetivo declarado é concentração pela respiração.
+       Movimento periférico contínuo é exatamente o que quebra concentração; o tracker não
+       precisa chamar atenção, precisa estar lá quando o olho procurar. */
 
     .tracker-item.done { color: rgba(255,249,236,1); }
     .tracker-item.done .t-icon { color: var(--sun-glow); text-shadow: 0 0 8px var(--sun-glow); }
     .tracker-item.failed { color: var(--danger-warn); opacity: 0.6; text-decoration: line-through; }
-    .t-icon { font-size: 14px; width: 14px; text-align: center; }
+    .t-icon { font-size: 12px; width: 12px; flex: 0 0 12px; text-align: center; line-height: 1.45; }
 
     /* ===== TOP PERSISTENT GOAL (MINIMALIST) ===== */
     .top-persistent-goal {
@@ -1578,6 +1587,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       'Luma Constellation': 'Constelação Luma',
       'Journey Map': 'Mapa da Jornada',
       'Dawns Awakened': 'Amanheceres Despertos',
+      'Altitude': 'Altitude',
+      'Max Combo': 'Combo Máximo',
+      'NEW RECORD': 'NOVO RECORDE',
       'you are here': 'você está aqui',
       'A GRACE IS OFFERED': 'UMA GRAÇA É OFERECIDA',
       'Choose a Blessing': 'Escolha uma Bênção',
@@ -1883,6 +1895,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Luma Constellation": "Constelación Luma",
       "Journey Map": "Mapa del Viaje",
       "Dawns Awakened": "Amaneceres Despertados",
+      "Altitude": "Altitud",
+      "Max Combo": "Combo Máximo",
+      "NEW RECORD": "NUEVO RÉCORD",
       "you are here": "estás aquí",
       "A GRACE IS OFFERED": "SE TE OFRECE UNA GRACIA",
       "Choose a Blessing": "Elige una Bendición",
@@ -2188,6 +2203,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Luma Constellation": "Luma-Konstellation",
       "Journey Map": "Reisekarte",
       "Dawns Awakened": "Erweckte Morgen",
+      "Altitude": "Höhe",
+      "Max Combo": "Max. Combo",
+      "NEW RECORD": "NEUER REKORD",
       "you are here": "du bist hier",
       "A GRACE IS OFFERED": "EINE GNADE WIRD GEWÄHRT",
       "Choose a Blessing": "Wähle einen Segen",
@@ -2493,6 +2511,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Luma Constellation": "Constellation Luma",
       "Journey Map": "Carte du Voyage",
       "Dawns Awakened": "Aubes Éveillées",
+      "Altitude": "Altitude",
+      "Max Combo": "Combo Max",
+      "NEW RECORD": "NOUVEAU RECORD",
       "you are here": "tu es ici",
       "A GRACE IS OFFERED": "UNE GRÂCE EST OFFERTE",
       "Choose a Blessing": "Choisis une Bénédiction",
@@ -2798,6 +2819,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Luma Constellation": "Созвездие Лума",
       "Journey Map": "Карта Пути",
       "Dawns Awakened": "Пробуждённых Рассветов",
+      "Altitude": "Высота",
+      "Max Combo": "Макс. комбо",
+      "NEW RECORD": "НОВЫЙ РЕКОРД",
       "you are here": "ты здесь",
       "A GRACE IS OFFERED": "ТЕБЕ ДАРОВАНА БЛАГОДАТЬ",
       "Choose a Blessing": "Выбери Благословение",
@@ -3103,6 +3127,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "Luma Constellation": "Costellazione Luma",
       "Journey Map": "Mappa del Viaggio",
       "Dawns Awakened": "Albe Risvegliate",
+      "Altitude": "Altitudine",
+      "Max Combo": "Combo Massimo",
+      "NEW RECORD": "NUOVO RECORD",
       "you are here": "sei qui",
       "A GRACE IS OFFERED": "TI È OFFERTA UNA GRAZIA",
       "Choose a Blessing": "Scegli una Benedizione",
@@ -3313,6 +3340,10 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   // Um gesto é uma expiração inteira: esvazia o peito, tenha enchido ou não. Encher de
   // novo leva ~4,5s, e é isso — não uma trava de cooldown — que dá o compasso ao jogo.
   // Mantido como constante porque a economia de fôlego e as graças se referem a ele.
+  // Quanto tempo o aviso de objetivos fica na tela depois de aparecer ou de mudar.
+  // Curto o bastante para não virar painel, longo o bastante para caber uma leitura.
+  const HUD_AVISO_SEGUNDOS = 5;
+
   const pulseEnergyCost = 0.85;
 
   // Teto de fôlego, descontado o desgaste acumulado na corrida.
@@ -3584,6 +3615,10 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       horizonBloomIntensity: 0,
       mountainGlowIntensity: 0
     },
+
+    // Aviso de objetivos: quanto tempo ainda fica na tela, e a assinatura do último estado
+    // mostrado — é a mudança dela que reacende o aviso.
+    hud: { trackerTimer: 0, trackerSig: '' },
 
     tutorialStep: 0,
     tutorialDone: false,
@@ -4801,6 +4836,10 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     
     state.input.lastClick = -999; state.input.lastPress = -999; state.input.lastEmptyPulse = -999; state.input.keyboardHold = false; state.input.holding = false; state.input.inside = false; state.input.x = W * .5; state.input.y = H * .42;
     state.entropy = .12;
+    // O aviso de objetivos abre a corrida: é quando o jogador de fato quer saber o que a
+    // missão pede. Depois disso ele só volta quando um objetivo muda.
+    state.hud.trackerTimer = HUD_AVISO_SEGUNDOS + 2;
+    state.hud.trackerSig = '';
     state.sun.x = W * .5; state.sun.y = H * .38; state.sun.vx = 0; state.sun.vy = 0; state.sun.stability = .22; state.sun.energy = .25; state.sun.wear = 0;  // comeca quase vazio: a primeira respiracao tem que ser respirada
     state.sun.breath = 0;
     state.sun.breathStrength = .18;
@@ -5029,10 +5068,22 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         i++;
         setTimeout(reveal, 1200);
         } else {
-            // Preenche os dados da corrida quando a poesia terminar
-            let statsString = `Altitude: ${Math.floor(state.scoreMeters)}m\nDawns Awakened: ${state.runDawns} | Max Combo: x${state.maxComboThisRun}`;
-            if (isNewRecord) statsString = "✨ NEW RECORD ✨\n" + statsString;
-            statsText.innerText = statsString;
+            // Preenche os dados da corrida quando a poesia terminar.
+            //
+            // Os três rótulos estavam escritos em inglês direto no código, sem passar por
+            // t(). Num jogo com sete idiomas, a tela de resultado — a última coisa que o
+            // jogador lê a cada corrida — misturava dois idiomas. "Dawns Awakened" até já
+            // estava traduzido nos seis dicionários: só nunca era pedido.
+            //
+            // E uma linha por número, em vez de " | " no meio: em português a linha quebrava
+            // e deixava a barra pendurada sozinha no fim.
+            const linhasStats = [
+              `${t("Altitude")}: ${Math.floor(state.scoreMeters)}m`,
+              `${t("Dawns Awakened")}: ${state.runDawns}`,
+              `${t("Max Combo")}: x${Math.floor(state.maxComboThisRun)}`,
+            ];
+            if (isNewRecord) linhasStats.unshift(`\u2728 ${t("NEW RECORD")} \u2728`);
+            statsText.innerText = linhasStats.join("\n");
             
             // Animação de Estrelas de Conclusão
             if (isSuccess && starsContainer && experienceState.mission) {
@@ -5530,7 +5581,14 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       // ponto cheio. Com o pulso custando quase todo o fôlego, a janela do anti-spam nunca
       // dispara sozinha — quem separa um bom gesto de um gesto apressado é a tensão.
       if (fullness > 0.9 && strainAoSoltar < 0.3) {
-        state.combo = Math.min(20, state.combo + 1);
+        // O combo DECAI continuamente (14-gameplay.js: `state.combo - dt * .8`), então
+        // somar 1 a ele produzia número quebrado: a tela de resultado chegou a mostrar
+        // "Max Combo: x2.95992000000000007". E era pior que feio — como o decaimento comia
+        // frações entre um gesto e outro, seis gestos no ritmo certo podiam somar 5,2 e uma
+        // missão de "combo x6" pedia sete gestos sem dizer.
+        // Arredondando para baixo ANTES de somar, n gestos no ritmo valem exatamente n, e o
+        // decaimento volta a ser o que devia ser: o que se perde ao parar de respirar.
+        state.combo = Math.min(20, Math.floor(state.combo) + 1);
         state.maxComboThisRun = Math.max(state.maxComboThisRun, state.combo);
         state.mods.consecutivePulses++;
       }
@@ -6110,7 +6168,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       }
     }
 
-    updateHUD();
+    updateHUD(dt);
   }
 
   function updateParticles(dt) {
@@ -6177,7 +6235,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     }
   }
 
-  function updateHUD() {
+  function updateHUD(dt = 0) {
     const altitude = document.getElementById('altitudeDisplay');
     if (altitude) {
       altitude.textContent = `${Math.floor(state.scoreMeters)}m`;
@@ -6194,12 +6252,18 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     const topActions = document.getElementById('topActions');
     if (topActions) topActions.style.opacity = hideAll ? "0" : iconsOpacity;
 
-    // FOCUS MODE: Fades out UI when player reaches Flow State
-    let focusAlpha = 1.0;
-    if (state.sun.breakthrough) focusAlpha = 0.0;
-    else if (state.sun.nearFail) focusAlpha = 0.1;
-    else if (state.combo >= 6) focusAlpha = 0.15;
-    else if (state.combo >= 3) focusAlpha = 1.0 - ((state.combo - 3) / 3) * 0.85;
+    // O tracker de objetivos deixou de ser um painel permanente e virou um AVISO.
+    //
+    // Antes ele desvanecia por combo e parava em 0,1 ou 0,15: legível o bastante para puxar
+    // o olho, ilegível o bastante para não ser lido. Três linhas de texto fantasma no canto
+    // é o que dá a impressão de informação truncada e misturada — e o gatilho era o combo,
+    // que depois da mudança respiratória passou a medir outra coisa.
+    //
+    // Agora ele aparece inteiro quando tem algo a dizer (início da corrida, e toda vez que
+    // um objetivo muda de estado) e some por completo depois. Nunca fica no meio: ou está
+    // lá para ser lido, ou não está.
+    const avisoVisivel = state.hud.trackerTimer > 0;
+    state.hud.trackerTimer = Math.max(0, state.hud.trackerTimer - dt);
 
     // PENDING DRAFT UI UPDATE
     const pendingBtn = document.getElementById("pendingDraftBtn");
@@ -6207,7 +6271,8 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     if (pendingBtn && pendingBadge) {
         if (state.draft && state.draft.pending > 0 && (state.mode === 'gameplay' || state.mode === 'paused')) {
             pendingBtn.classList.remove('hidden-ui');
-            pendingBtn.style.opacity = hideAll ? '0' : focusAlpha.toString();
+            // Botão que o jogador precisa TOCAR: não desvanece com o aviso.
+            pendingBtn.style.opacity = hideAll ? '0' : '0.9';
             pendingBadge.textContent = state.draft.pending;
         } else {
             pendingBtn.classList.add('hidden-ui');
@@ -6218,11 +6283,20 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     if (ui.tracker && state.mode !== 'map' && state.mode !== 'menu') {
         // Durante o tutorial o painel de ensino ocupa esse mesmo canto, e os objetivos da
         // missão são ruído para quem ainda está aprendendo os verbos do jogo.
+        // .hidden zera a opacidade pelo CSS, mas o ramo de gameplay escreve `style.opacity`
+        // inline — e inline vence classe. Bastava a partida ter começado uma vez para o
+        // painel continuar aceso em cima do tutorial e atrás da tela de resultado, com a
+        // classe dizendo o contrário. Quem esconde tem que zerar o mesmo canal que quem
+        // mostra escreve.
+        const esconderTracker = () => { ui.tracker.classList.add('hidden'); ui.tracker.style.opacity = '0'; };
         if (isTutorialActive()) {
-            ui.tracker.classList.add('hidden');
+            esconderTracker();
         } else if (state.mode === 'gameplay' || state.mode === 'paused') {
             ui.tracker.classList.remove('hidden');
-            ui.tracker.style.opacity = hideAll ? '0' : focusAlpha.toString();
+            // Na pausa o aviso ficava por cima do cabeçalho do painel — "o céu vai esperar"
+            // atravessava a linha "perfeito: zero quase-quedas". Uma tela cheia é dona da
+            // tela: nada de HUD flutuando em cima dela. O aviso é da partida, e só dela.
+            ui.tracker.style.opacity = (hideAll || state.mode !== 'gameplay' || !avisoVisivel) ? '0' : '1';
 
             const m = experienceState.mission;
             const node = experienceState.node; // resolvido na troca de missão, não a cada frame
@@ -6257,9 +6331,17 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
                 updateItem(ui.tItemSub1, ui.tIconSub1, sub1Done);
                 updateItem(ui.tItemSub2, ui.tIconSub2, sub2Done);
                 updateItem(ui.tItemPerf, ui.tIconPerf, perfDone, perfFailed, '✧');
+
+                // Reacende o aviso quando algo de fato mudou. Sem esta assinatura o painel
+                // ou ficaria para sempre, ou sumiria antes de contar que uma estrela caiu.
+                const assinatura = `${mainDone}|${sub1Done}|${sub2Done}|${perfDone}|${perfFailed}|${node.title}`;
+                if (assinatura !== state.hud.trackerSig) {
+                  state.hud.trackerSig = assinatura;
+                  state.hud.trackerTimer = HUD_AVISO_SEGUNDOS;
+                }
             }
         } else {
-            ui.tracker.classList.add('hidden');
+            esconderTracker();
         }
     }
 

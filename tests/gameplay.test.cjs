@@ -506,3 +506,112 @@ test('a run starts with an empty enough chest that the first breath is breathed'
   assert.ok(Number(inicial[1]) <= 0.35,
     `A corrida começa com ${inicial[1]} de fôlego: o jogador solta um gesto pronto sem ter respirado.`);
 });
+
+test('the combo the player sees is always a whole number of breaths', () => {
+  // A tela de resultado chegou a mostrar "Max Combo: x2.95992000000000007". O combo decai
+  // continuamente quando o jogador sai do ritmo (14-gameplay.js), e somar 1 a um valor já
+  // corroído produzia fração — que vazava para o texto E para as metas, onde "combo x6"
+  // passava a exigir sete gestos sem avisar.
+  const game = makeHarness();
+  game.state.input.x = game.state.sun.x;
+  game.state.input.y = game.state.sun.y + game.state.camera.y;
+
+  const respirar = () => {
+    game.run('state.sun.energy = 1; state.sun.strain = 0; state.sun.vy = 0');
+    game.state.t += 5;
+    game.context.tryClickImpulse();
+  };
+
+  // Cinco respirações no ritmo: sem decaimento, valem exatamente cinco.
+  for (let i = 0; i < 5; i++) respirar();
+  assert.equal(game.state.combo, 5,
+    `Cinco gestos no ritmo valem cinco de combo, não ${game.state.combo}`);
+
+  // Agora o jogador sai do ritmo e o combo se desgasta para um valor quebrado — como
+  // acontece no jogo. O gesto seguinte tem que devolver um inteiro assim mesmo.
+  game.run('state.combo = 4.37');
+  respirar();
+  assert.ok(Number.isInteger(game.state.combo),
+    `O combo virou fração depois de decair: ${game.state.combo}`);
+  assert.ok(Number.isInteger(game.state.maxComboThisRun),
+    `O combo máximo guardado virou fração: ${game.state.maxComboThisRun}`);
+});
+
+// --- O topo da tela não pode se sobrepor -------------------------------------
+// O painel de objetivos tinha largura fixa de 183px e o anel do tempo é centrado. Numa tela
+// de 420px o painel invadia o anel em 23px; numa de 360px, em 53px — cobrindo o mostrador
+// inteiro. E como o painel tem z-index 45 contra 40 do anel, quem sumia era o anel.
+// Nenhum teste pegou isso: o Yata pegou, jogando. Este faz a conta que faltava.
+
+function regraCSS(seletor) {
+  const de = source.indexOf(seletor + ' {');
+  assert.notEqual(de, -1, `Regra CSS ausente: ${seletor}`);
+  return source.slice(de, source.indexOf('}', de));
+}
+
+// Resolve um valor CSS simples — px, vw, e calc() com somas e subtrações — numa largura dada.
+function emPixels(valor, largura) {
+  const expr = valor.trim().replace(/^calc\(/, '(');
+  const contas = expr.replace(/([\d.]+)vw/g, (_, n) => `(${n} * ${largura} / 100)`)
+                     .replace(/([\d.]+)px/g, '$1');
+  assert.match(contas, /^[-+*/()\d.\s]+$/, `Não sei resolver este valor CSS: ${valor}`);
+  return Function(`"use strict"; return (${contas});`)();
+}
+
+test('the objectives panel can never reach the timer ring, at any screen width', () => {
+  const tracker = regraCSS('.live-mission-tracker');
+  const esquerda = /left:\s*max\(([\d.]+)px/.exec(tracker);
+  const teto = /max-width:\s*([^;]+);/.exec(tracker);
+  assert.notEqual(esquerda, null, 'O tracker perdeu o recuo da esquerda.');
+  assert.notEqual(teto, null,
+    'O tracker perdeu o max-width — sem ele a largura volta a ser livre e ele invade o anel.');
+
+  const anel = regraCSS('.ring-svg');
+  const larguraAnel = Number(/width:\s*([\d.]+)px/.exec(anel)[1]);
+
+  const apertadas = [320, 360, 390, 414, 420, 480, 768, 1024, 1440]
+    .map(largura => {
+      // O anel é centrado: .celestial-hud usa left:50% com translateX(-50%).
+      const bordaDireitaDoPainel = Number(esquerda[1]) + emPixels(teto[1], largura);
+      const bordaEsquerdaDoAnel = largura / 2 - larguraAnel / 2;
+      return [largura, Math.round(bordaEsquerdaDoAnel - bordaDireitaDoPainel)];
+    })
+    .filter(([, folga]) => folga < 8)
+    .map(([largura, folga]) => `${largura}px: folga de ${folga}px`)
+    .join(' | ');
+
+  assert.equal(apertadas, '',
+    `O painel de objetivos encosta ou invade o anel do tempo: ${apertadas}`);
+});
+
+test('the objectives panel is a notice, not a permanent panel', () => {
+  // Ele desvanecia por combo e parava em 0,1 / 0,15: legível o bastante para puxar o olho,
+  // ilegível o bastante para ser lido. Agora ou está aceso para ser lido, ou está apagado.
+  const hud = functionSource('updateHUD');
+  assert.match(hud, /state\.hud\.trackerTimer/,
+    'O aviso voltou a não ter tempo de vida próprio.');
+  const opacidades = Array.from(hud.matchAll(/ui\.tracker\.style\.opacity = ([^;]+);/g)).map(m => m[1]);
+  assert.ok(opacidades.length > 0, 'Ninguém mais controla a opacidade do tracker.');
+  for (const expr of opacidades) {
+    assert.ok(!/0\.\d/.test(expr),
+      `O tracker voltou a ter opacidade fantasma: ${expr}`);
+  }
+});
+
+test('whatever hides the objectives panel writes the same channel that shows it', () => {
+  // .hidden zera a opacidade pelo CSS, mas o ramo de gameplay escreve style.opacity inline —
+  // e inline vence classe. Bastava a partida ter começado uma vez para o painel continuar
+  // aceso por cima do tutorial e atrás da tela de resultado.
+  const hud = functionSource('updateHUD');
+  const definicao = /const esconderTracker = \(\) => \{[^}]*\};/.exec(hud);
+  assert.notEqual(definicao, null, 'O caminho único de esconder o tracker sumiu.');
+  assert.match(definicao[0], /classList\.add\('hidden'\)/);
+  assert.match(definicao[0], /style\.opacity = '0'/,
+    'Esconder voltou a mexer só na classe, que a opacidade inline anula.');
+
+  // Fora dessa definição, ninguém mais pode esconder o tracker pela classe.
+  const resto = hud.replace(definicao[0], '');
+  const soltas = Array.from(resto.matchAll(/ui\.tracker\.classList\.add\('hidden'\)/g));
+  assert.equal(soltas.length, 0,
+    'Alguém voltou a esconder o tracker só pela classe, por fora de esconderTracker().');
+});
