@@ -168,7 +168,14 @@
       midB = [242, 180, 130];
       botB = [255, 244, 199];
     }
-    const top = mixColor(topA, topB, clamp(d * .7 + w * .3, 0, 1));
+    // WAYFINDING. Chen usou logica de parque tematico em Journey: um elemento distante
+    // orienta sem mapa nem bussola. Aqui o objetivo e SUBIR, e o topo do ceu era a parte
+    // mais escura do quadro — subir ia na direcao do escuro, o sinal invertido.
+    // Agora o alto esquenta com a altitude: a direcao do progresso fica legivel o tempo
+    // todo, e a recompensa cromatica chega por onde o jogador esta indo.
+    const subida01 = clamp(state.scoreMeters / 420, 0, 1);
+    let top = mixColor(topA, topB, clamp(d * .7 + w * .3, 0, 1));
+    top = mixColor(top, [255, 214, 158], subida01 * 0.5);
     const mid = mixColor(midA, midB, clamp(d * .55 + w * .45, 0, 1));
     const bot = mixColor(botA, botB, clamp(d * .35 + l * .65, 0, 1));
     const g = ctx.createLinearGradient(0, 0, 0, H);
@@ -301,6 +308,10 @@
         horizonAtmosphereColor = mixColor(horizonAtmosphereColor, [50, 55, 60], ri);
     }
 
+    // Saturado em ~450m: a partir dai o mundo ja recuou o quanto tinha que recuar e mais
+    // compressao so achataria a silhueta.
+    const recuoAltitude = clamp(state.scoreMeters / 450, 0, 1);
+
     const drawLayer = (layerName, colorArr, parallaxY, fogHeight) => {
       const mountains = state.world.mountains.filter(m => m.layer === layerName);
       if (mountains.length === 0) return;
@@ -310,7 +321,11 @@
       // Desenha as montanhas individualmente fechando o polígono de forma perfeita e limpa
       ctx.beginPath();
       mountains.forEach((m) => {
-        const h = m.h + Math.sin(state.t * .14 + m.wobble) * 3;
+        // METRICS: subir tem que ser SENTIDO, nao apenas lido no numero de altitude.
+        // O parallax rolava as montanhas para baixo, mas elas nao encolhiam nem se
+        // afastavam — o mundo tinha o mesmo tamanho a 10m e a 400m. Agora a serra comprime
+        // com a altitude, que e o que o olho le como "estou longe do chao".
+        const h = (m.h + Math.sin(state.t * .14 + m.wobble) * 3) * (1 - recuoAltitude * 0.42);
         const hw = m.w / 2;
         const px = m.x + hw * m.peak;
         const st = m.steep;
@@ -376,7 +391,9 @@
       });
       ctx.rect(-W, HORIZON_Y, W * 4, H * 2); // Anexa o chão base à máscara
       
-      ctx.fillStyle = `rgb(${colorArr.join(',')})`;
+      // Distancia nao e so tamanho: quanto mais alto, mais ar entre o olho e a rocha.
+      const comAltitude = mixColor(colorArr, horizonAtmosphereColor, recuoAltitude * 0.4);
+      ctx.fillStyle = `rgb(${comAltitude.join(',')})`;
       ctx.fill(); 
       
       // O Resgate do Sistema Cinematográfico: Névoa de 30% na base para 0% no topo, sem clip (fim do bug do quadrado)

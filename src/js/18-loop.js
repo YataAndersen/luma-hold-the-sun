@@ -79,10 +79,28 @@
   canvas.addEventListener("pointerdown", pointerDown, { passive:false });
   canvas.addEventListener("pointermove", pointerMove, { passive:false });
   window.addEventListener("pointerup", pointerUp, { passive:false });
-  window.addEventListener("resize", () => {
+  const ressincronizar = () => {
       resizeCanvas();
       if (state.mode === "map") resizeMapCanvas();
-  });
+  };
+  window.addEventListener("resize", ressincronizar);
+
+  // O evento 'resize' da janela nao cobre tudo. Arrastar o navegador para um monitor de
+  // proporcao diferente nao o dispara: o canvas fica com as dimensoes antigas e o CSS
+  // estica a imagem ate que algo mais force um resize — o jogo aparece achatado. O
+  // ResizeObserver olha o elemento em si, entao pega mudanca de monitor, zoom do
+  // navegador e rotacao de tela pelo mesmo caminho.
+  if (typeof ResizeObserver !== 'undefined' && canvas.parentElement) {
+      let ultimo = '';
+      new ResizeObserver(entradas => {
+          const r = entradas[0] && entradas[0].contentRect;
+          if (!r || !r.width || !r.height) return;
+          const chave = Math.round(r.width) + 'x' + Math.round(r.height);
+          if (chave === ultimo) return;   // observa toda pintura; so age quando muda de fato
+          ultimo = chave;
+          ressincronizar();
+      }).observe(canvas.parentElement);
+  }
   canvas.addEventListener("pointerleave", () => {
     // Sair da área NÃO interrompe mais a inspiração. Com o toque valendo em qualquer
     // ponto, "dentro" perdeu o sentido, e derrubar o sustain aqui fazia o gesto morrer
