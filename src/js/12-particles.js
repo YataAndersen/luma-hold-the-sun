@@ -1,11 +1,24 @@
+  // O sol nao mora numa altura fixa: a camera so o prende em ~45% depois que ele sobe, e
+  // no comeco da corrida ele fica bem mais baixo. Por isso posicao fixa em porcentagem nao
+  // resolve — ja escondeu o sol atras do texto duas vezes. A mensagem escolhe o lado
+  // OPOSTO ao sol no momento em que aparece, e some da frente dele por construcao.
+  function posicionarLongeDoSol(el) {
+    if (!el) return;
+    const solNaTela = (state.sun.y + state.camera.y) / H;   // 0 = topo, 1 = base
+    el.style.top = solNaTela > 0.5 ? '22%' : '80%';
+  }
+
   function showFloating(text, good = true) {
     text = t(text);
     ui.float.textContent = text;
     ui.float.style.color = good ? "rgba(255,249,236,.96)" : "rgba(255,187,160,.96)";
+    posicionarLongeDoSol(ui.float);
     ui.float.classList.remove("show"); void ui.float.offsetWidth; ui.float.classList.add("show");
   }
   function showReward(text) {
-    text = t(text); ui.reward.textContent = text; ui.reward.classList.add("show"); state.rewardTimer = 1.15; playReward(); }
+    text = t(text); ui.reward.textContent = text;
+    posicionarLongeDoSol(ui.reward);
+    ui.reward.classList.add("show"); state.rewardTimer = 1.15; playReward(); }
 
   // PACTO DE ENGENHARIA: Partículas e pássaros em volta do sol desativados para isolar a queda de FPS que corrompe o áudio.
   // Anel de toque: update e draw já existiam completos, só o spawner estava desligado.

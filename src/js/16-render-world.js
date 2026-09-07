@@ -444,6 +444,11 @@
         backColor1 = mixColor(backColor1, [20, 25, 30], ri);
     }
     
+    // A serra de bruma vai antes de tudo e quase nao se move: parallax lento e o que o
+    // olho le como "muito longe". A cor puxa para a atmosfera do horizonte, nao para a
+    // rocha, porque a esta distancia o ar pesa mais do que a materia.
+    const brumaLonge = mixColor(backColor3, horizonAtmosphereColor, 0.62);
+    drawLayer('bg4', brumaLonge, state.camera.y * 0.07, 260);
     drawLayer('bg3', backColor3, state.camera.y * 0.15, 220); 
     drawLayer('bg2', backColor2, state.camera.y * 0.3, 160); 
     drawLayer('bg1', backColor1, state.camera.y * 0.5, 100); 
@@ -666,10 +671,33 @@
       
       ctx.fillStyle = `rgb(${tColor.join(',')})`;
 
+      // Quatro silhuetas em vez de uma. Uma copa e lida pela borda, nao pelo volume:
+      // e a linha de cima que diz "pinheiro" ou "carvalho" a cem metros de distancia.
       ctx.beginPath();
-      ctx.arc(cx - r*0.4, cy + r*0.2, r*0.7, 0, Math.PI*2);
-      ctx.arc(cx + r*0.4, cy + r*0.2, r*0.7, 0, Math.PI*2);
-      ctx.arc(cx, cy - r*0.3, r*0.8, 0, Math.PI*2);
+      if (t.kind === 'conifera') {
+        // Triangulos empilhados, cada andar mais estreito: recorte serrilhado.
+        for (let a = 0; a < 3; a++) {
+          const p = a / 3;
+          const larg = r * (1.15 - p * 0.55);
+          const base = cy + r * 0.55 - a * r * 0.62;
+          ctx.moveTo(cx - larg, base);
+          ctx.lineTo(cx, base - r * 0.95);
+          ctx.lineTo(cx + larg, base);
+          ctx.closePath();
+        }
+      } else if (t.kind === 'esguia') {
+        // Alta e estreita, copa oval: verticaliza e quebra a horizontal da mata.
+        ctx.ellipse(cx, cy - r * 0.15, r * 0.45, r * 1.15, 0, 0, Math.PI * 2);
+      } else if (t.kind === 'aberta') {
+        // Copa larga e baixa, guarda-chuva: e a que da respiro entre as verticais.
+        ctx.ellipse(cx, cy + r * 0.1, r * 1.25, r * 0.55, 0, 0, Math.PI * 2);
+        ctx.moveTo(cx + r * 0.5, cy - r * 0.15);
+        ctx.arc(cx - r * 0.45, cy - r * 0.2, r * 0.5, 0, Math.PI * 2);
+      } else {
+        ctx.arc(cx - r*0.4, cy + r*0.2, r*0.7, 0, Math.PI*2);
+        ctx.arc(cx + r*0.4, cy + r*0.2, r*0.7, 0, Math.PI*2);
+        ctx.arc(cx, cy - r*0.3, r*0.8, 0, Math.PI*2);
+      }
       ctx.fill();
     }
 

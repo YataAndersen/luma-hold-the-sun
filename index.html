@@ -4130,37 +4130,74 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         });
     }
 
-    // LAYER CAKE MOUNTAINS: Sistema de 3 Planos Distantes
-    let xBg3 = -100;
-    while (xBg3 < W + 100) {
-      let type = Math.random();
-      let h, w;
-      if (type < 0.7) { h = rand(140, 240); w = rand(220, 340); } // 70% Big
-      else if (type < 0.9) { h = rand(90, 140); w = rand(150, 220); } // 20% Medium
-      else { h = rand(60, 90); w = rand(100, 150); } // 10% Small
-      state.world.mountains.push({ x: xBg3 + w/2, w: w, h: h, wobble: Math.random() * Math.PI * 2, layer: 'bg3', peak: rand(-0.4, 0.4), steep: rand(0.15, 0.6) });
-      xBg3 += w * rand(0.4, 0.6); 
-    }
-    let xBg2 = -100;
-    while (xBg2 < W + 100) {
-      let type = Math.random();
-      let h, w;
-      if (type < 0.7) { h = rand(100, 160); w = rand(180, 260); }
-      else if (type < 0.9) { h = rand(70, 100); w = rand(120, 180); }
-      else { h = rand(40, 70); w = rand(80, 120); }
-      state.world.mountains.push({ x: xBg2 + w/2, w: w, h: h, wobble: Math.random() * Math.PI * 2, layer: 'bg2', peak: rand(-0.4, 0.4), steep: rand(0.15, 0.6) });
-      xBg2 += w * rand(0.4, 0.6);
-    }
-    let xBg1 = -100;
-    while (xBg1 < W + 100) {
-      let type = Math.random();
-      let h, w;
-      if (type < 0.7) { h = rand(70, 120); w = rand(120, 180); }
-      else if (type < 0.9) { h = rand(40, 70); w = rand(80, 120); }
-      else { h = rand(20, 40); w = rand(50, 80); }
-      state.world.mountains.push({ x: xBg1 + w/2, w: w, h: h, wobble: Math.random() * Math.PI * 2, layer: 'bg1', peak: rand(-0.4, 0.4), steep: rand(0.15, 0.6) });
-      xBg1 += w * rand(0.4, 0.6);
-    }
+    // --- SILHUETA E RITMO DA SERRA ---
+    // Regra de environment design: cada plano de profundidade precisa de uma LINGUAGEM DE
+    // FORMA propria, nao apenas de uma escala propria. Antes os tres planos usavam o mesmo
+    // gerador, a mesma distribuicao (70/20/10) e a mesma assimetria, mudando so o tamanho:
+    // a paisagem era a mesma serra repetida tres vezes, e o olho le isso como repeticao,
+    // nao como profundidade.
+    //
+    //   bg3 (fundo)  - massas largas, baixas e macias. E atmosfera, nao recorte.
+    //   bg2 (meio)   - o plano de CARATER: maior variacao de altura e o pico dominante.
+    //   bg1 (frente) - colinas menores, mais frequentes e mais angulosas; textura na base.
+    //
+    // O ritmo tambem mudou. Espacamento constante apaga a silhueta; o que da cadencia e
+    // GRUPO-VAO-GRUPO — picos encostados formando uma massa, depois um respiro de ceu.
+    const gerarSerra = (layer, cfg) => {
+      let x = -120;
+      while (x < W + 120) {
+        const noGrupo = Math.round(rand(cfg.grupo[0], cfg.grupo[1]));
+        for (let i = 0; i < noGrupo && x < W + 120; i++) {
+          const sorte = Math.random();
+          const faixa = sorte < cfg.mix[0] ? cfg.alto : (sorte < cfg.mix[1] ? cfg.medio : cfg.baixo);
+          const h = rand(faixa[0], faixa[1]);
+          const w = rand(faixa[2], faixa[3]);
+          state.world.mountains.push({
+            x: x + w / 2, w: w, h: h,
+            wobble: Math.random() * Math.PI * 2,
+            layer: layer,
+            peak: rand(-cfg.assimetria, cfg.assimetria),
+            steep: rand(cfg.steep[0], cfg.steep[1])
+          });
+          x += w * rand(0.32, 0.5); // dentro do grupo os picos se encostam
+        }
+        x += rand(cfg.vao[0], cfg.vao[1]); // o vao que separa um grupo do proximo
+      }
+    };
+
+    // faixas: [alturaMin, alturaMax, larguraMin, larguraMax]
+    // bg4 e a serra mais distante: baixa, larguissima e quase sem contraste, vista pelos
+    // vaos das outras. Existe so para a bruma ter em que se agarrar — e o que transforma
+    // "tres camadas" em "distancia". Sem ela o horizonte termina abruptamente na bg3.
+    gerarSerra('bg4', {
+      mix: [0.8, 1.0], grupo: [4, 7], vao: [10, 40], assimetria: 0.1, steep: [0.5, 0.75],
+      alto:  [95, 140, 320, 460], medio: [70, 95, 250, 320], baixo: [55, 70, 200, 250]
+    });
+
+    gerarSerra('bg3', {
+      mix: [0.75, 0.95], grupo: [3, 5], vao: [30, 90], assimetria: 0.18, steep: [0.4, 0.65],
+      alto:  [150, 240, 260, 380], medio: [110, 150, 200, 260], baixo: [80, 110, 150, 200]
+    });
+    gerarSerra('bg2', {
+      mix: [0.5, 0.85], grupo: [2, 4], vao: [50, 130], assimetria: 0.42, steep: [0.2, 0.55],
+      alto:  [120, 185, 170, 250], medio: [75, 120, 120, 175], baixo: [40, 75, 80, 125]
+    });
+    gerarSerra('bg1', {
+      mix: [0.4, 0.75], grupo: [3, 6], vao: [40, 110], assimetria: 0.5, steep: [0.12, 0.38],
+      alto:  [70, 120, 110, 165], medio: [45, 70, 75, 115], baixo: [22, 45, 45, 80]
+    });
+
+    // PONTO FOCAL. Uma silhueta dominante e o que faz uma paisagem ser lembrada em vez de
+    // apenas vista. Fica sempre num terco da largura, nunca no centro: um pico central
+    // divide o quadro em duas metades iguais e mata a composicao.
+    state.world.mountains.push({
+      x: W * (Math.random() < 0.5 ? 0.34 : 0.66),
+      w: rand(200, 260), h: rand(215, 275),
+      wobble: Math.random() * Math.PI * 2,
+      layer: 'bg2',
+      peak: rand(-0.3, 0.3),
+      steep: rand(0.18, 0.3) // mais ingreme que a media do plano: le como "o pico"
+    });
 
     // --- GERAÇÃO EXCLUSIVA DE AMBIENTE ---
     if (state.biome === 'city' || state.biome === 'storm') {
@@ -4205,11 +4242,44 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
           xCity += baseW + rand(2, 6);
         }
     } else if (['forest', 'snow', 'autumn', 'sakura', 'swamp', 'meadow', 'hills'].includes(state.biome)) {
-        for (let i = 0; i < 28; i++) {
-            let tType = Math.random(); let th, tw;
-            if (tType < 0.7) { th = rand(35, 55); tw = rand(40, 60); } else if (tType < 0.9) { th = rand(20, 35); tw = rand(25, 40); } else { th = rand(12, 20); tw = rand(15, 25); }
-            if (['meadow', 'hills'].includes(state.biome) && Math.random() < 0.5) continue; // Biomas abertos tem menos árvores
-            state.world.trees.push({ x: rand(-20, W + 50), h: th, w: tw, wobble: Math.random() * Math.PI * 2 });
+        // Vegetacao tambem obedece a grupo-vao-grupo: mata fecha, clareira abre. Espalhar
+        // com rand() puro no eixo x distribui as arvores por igual, e distribuicao por
+        // igual e exatamente o que nao acontece na natureza nem em cenario desenhado.
+        //
+        // Cada arvore ganha uma silhueta ('kind') puxada pelo bioma. Antes todas eram o
+        // mesmo aglomerado de tres circulos, mudando so de tamanho — uma floresta inteira
+        // com uma unica forma nao le como floresta, le como padrao.
+        const silhuetaDoBioma = {
+            snow:   [['conifera', 0.85], ['esguia', 1.0]],
+            forest: [['conifera', 0.5], ['redonda', 0.85], ['esguia', 1.0]],
+            autumn: [['redonda', 0.6], ['aberta', 1.0]],
+            sakura: [['aberta', 0.75], ['redonda', 1.0]],
+            swamp:  [['esguia', 0.6], ['aberta', 1.0]],
+            meadow: [['redonda', 0.7], ['aberta', 1.0]],
+            hills:  [['redonda', 0.6], ['esguia', 1.0]]
+        }[state.biome] || [['redonda', 1.0]];
+        const sortearSilhueta = () => {
+            const r = Math.random();
+            for (const [nome, teto] of silhuetaDoBioma) if (r <= teto) return nome;
+            return 'redonda';
+        };
+        const aberto = ['meadow', 'hills'].includes(state.biome);
+        let tx = rand(-40, 20);
+        while (tx < W + 50) {
+            const naMata = Math.round(rand(2, aberto ? 3 : 6)); // clareiras maiores em bioma aberto
+            for (let i = 0; i < naMata && tx < W + 50; i++) {
+                const sorte = Math.random(); let th, tw;
+                if (sorte < 0.6) { th = rand(35, 55); tw = rand(40, 60); }
+                else if (sorte < 0.88) { th = rand(20, 35); tw = rand(25, 40); }
+                else { th = rand(12, 20); tw = rand(15, 25); }
+                state.world.trees.push({
+                    x: tx, h: th, w: tw,
+                    wobble: Math.random() * Math.PI * 2,
+                    kind: sortearSilhueta()
+                });
+                tx += rand(14, 30); // dentro da mata as copas quase se tocam
+            }
+            tx += rand(aberto ? 90 : 45, aberto ? 190 : 120); // a clareira
         }
         for (let i = 0; i < 35; i++) {
             if (state.biome === 'hills' && Math.random() < 0.3) continue;
@@ -4962,14 +5032,27 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       }
   }
 
+  // O sol nao mora numa altura fixa: a camera so o prende em ~45% depois que ele sobe, e
+  // no comeco da corrida ele fica bem mais baixo. Por isso posicao fixa em porcentagem nao
+  // resolve — ja escondeu o sol atras do texto duas vezes. A mensagem escolhe o lado
+  // OPOSTO ao sol no momento em que aparece, e some da frente dele por construcao.
+  function posicionarLongeDoSol(el) {
+    if (!el) return;
+    const solNaTela = (state.sun.y + state.camera.y) / H;   // 0 = topo, 1 = base
+    el.style.top = solNaTela > 0.5 ? '22%' : '80%';
+  }
+
   function showFloating(text, good = true) {
     text = t(text);
     ui.float.textContent = text;
     ui.float.style.color = good ? "rgba(255,249,236,.96)" : "rgba(255,187,160,.96)";
+    posicionarLongeDoSol(ui.float);
     ui.float.classList.remove("show"); void ui.float.offsetWidth; ui.float.classList.add("show");
   }
   function showReward(text) {
-    text = t(text); ui.reward.textContent = text; ui.reward.classList.add("show"); state.rewardTimer = 1.15; playReward(); }
+    text = t(text); ui.reward.textContent = text;
+    posicionarLongeDoSol(ui.reward);
+    ui.reward.classList.add("show"); state.rewardTimer = 1.15; playReward(); }
 
   // PACTO DE ENGENHARIA: Partículas e pássaros em volta do sol desativados para isolar a queda de FPS que corrompe o áudio.
   // Anel de toque: update e draw já existiam completos, só o spawner estava desligado.
@@ -6472,6 +6555,11 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         backColor1 = mixColor(backColor1, [20, 25, 30], ri);
     }
     
+    // A serra de bruma vai antes de tudo e quase nao se move: parallax lento e o que o
+    // olho le como "muito longe". A cor puxa para a atmosfera do horizonte, nao para a
+    // rocha, porque a esta distancia o ar pesa mais do que a materia.
+    const brumaLonge = mixColor(backColor3, horizonAtmosphereColor, 0.62);
+    drawLayer('bg4', brumaLonge, state.camera.y * 0.07, 260);
     drawLayer('bg3', backColor3, state.camera.y * 0.15, 220); 
     drawLayer('bg2', backColor2, state.camera.y * 0.3, 160); 
     drawLayer('bg1', backColor1, state.camera.y * 0.5, 100); 
@@ -6694,10 +6782,33 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       
       ctx.fillStyle = `rgb(${tColor.join(',')})`;
 
+      // Quatro silhuetas em vez de uma. Uma copa e lida pela borda, nao pelo volume:
+      // e a linha de cima que diz "pinheiro" ou "carvalho" a cem metros de distancia.
       ctx.beginPath();
-      ctx.arc(cx - r*0.4, cy + r*0.2, r*0.7, 0, Math.PI*2);
-      ctx.arc(cx + r*0.4, cy + r*0.2, r*0.7, 0, Math.PI*2);
-      ctx.arc(cx, cy - r*0.3, r*0.8, 0, Math.PI*2);
+      if (t.kind === 'conifera') {
+        // Triangulos empilhados, cada andar mais estreito: recorte serrilhado.
+        for (let a = 0; a < 3; a++) {
+          const p = a / 3;
+          const larg = r * (1.15 - p * 0.55);
+          const base = cy + r * 0.55 - a * r * 0.62;
+          ctx.moveTo(cx - larg, base);
+          ctx.lineTo(cx, base - r * 0.95);
+          ctx.lineTo(cx + larg, base);
+          ctx.closePath();
+        }
+      } else if (t.kind === 'esguia') {
+        // Alta e estreita, copa oval: verticaliza e quebra a horizontal da mata.
+        ctx.ellipse(cx, cy - r * 0.15, r * 0.45, r * 1.15, 0, 0, Math.PI * 2);
+      } else if (t.kind === 'aberta') {
+        // Copa larga e baixa, guarda-chuva: e a que da respiro entre as verticais.
+        ctx.ellipse(cx, cy + r * 0.1, r * 1.25, r * 0.55, 0, 0, Math.PI * 2);
+        ctx.moveTo(cx + r * 0.5, cy - r * 0.15);
+        ctx.arc(cx - r * 0.45, cy - r * 0.2, r * 0.5, 0, Math.PI * 2);
+      } else {
+        ctx.arc(cx - r*0.4, cy + r*0.2, r*0.7, 0, Math.PI*2);
+        ctx.arc(cx + r*0.4, cy + r*0.2, r*0.7, 0, Math.PI*2);
+        ctx.arc(cx, cy - r*0.3, r*0.8, 0, Math.PI*2);
+      }
       ctx.fill();
     }
 
