@@ -417,26 +417,58 @@ test('the late combo missions are reachable at all', () => {
 });
 
 test('every altitude mission is reachable at the pace the physics actually allows', () => {
+  // Este teste passava com as 18 missões impossíveis. Ele somava os impulsos dos gestos e
+  // ignorava três coisas: a entropia, que leva a gravidade de 190 a 240 nos primeiros
+  // quinze segundos de QUALQUER corrida; a expiração, em que nada sustenta o sol; e os
+  // multiplicadores do estado emocional. Prometia 443m em 60s onde o jogo entrega 182m.
+  //
+  // Agora ele chama o mesmo simulador da ferramenta, que foi conferido contra o navegador
+  // (178m previstos, 182m medidos). Um teste e uma ferramenta que discordam do jogo pelo
+  // mesmo motivo não são duas verificações: são a mesma suposição, escrita duas vezes.
+  const sim = require('../tools/sim-breath.cjs');
   const game = makeHarness();
-  // Subida por gesto, derivada das constantes de verdade: segurar quase neutraliza a
-  // gravidade, então o ganho de altitude é o impulso do gesto amortecido.
-  const porGesto = game.run('tune.clickImpulsePerfect / (1 - Math.pow(tune.damping, 60))');
-  const segundosPorGesto = game.run('pulseEnergyCost / sustainConfig.energyRecovery');
-  const metrosPorPixel = Number(/const METERS_PER_PIXEL = ([\d.]+)/.exec(source)[1]);
 
-  // Array.from porque o vm devolve arrays de outro realm, e o assert estrito compara protótipos.
   const alvos = Array.from(game.run(`missions
     .filter(m => m.kind === MissionKind.REACH_ALTITUDE)
-    .map(m => m.id + ':' + m.target + ':' + (60 + Math.floor((Number(m.id.slice(1)) - 1) / 10) * 15))`));
+    .map(m => m.id + ':' + m.target)`));
 
   const impossiveis = alvos
     .map(linha => linha.split(':'))
-    .filter(([, target, tempo]) => Number(target) > (Number(tempo) / segundosPorGesto) * porGesto * metrosPorPixel)
-    .map(([id, target, tempo]) => `${id} pede ${target}m em ${tempo}s`)
+    .map(([id, target]) => [id, Number(target), sim.duracaoDaMissao(id)])
+    .filter(([, target, tempo]) => target > sim.tetoRealista(tempo))
+    .map(([id, target, tempo]) => `${id} pede ${target}m em ${tempo}s (teto real: ${Math.round(sim.tetoRealista(tempo))}m)`)
     .join(' | ');
 
   assert.equal(impossiveis, '',
     `Missões de altitude acima do que a física entrega: ${impossiveis}`);
+});
+
+test('the altitude curve leaves room for a player who is not a metronome', () => {
+  // Alcançável não basta: uma meta em 98% do teto exige respirar como um relógio por dois
+  // minutos inteiros. O alvo é ficar abaixo de 80% do que a corrida perfeita entrega.
+  const sim = require('../tools/sim-breath.cjs');
+  const game = makeHarness();
+  const apertadas = Array.from(game.run(`missions
+    .filter(m => m.kind === MissionKind.REACH_ALTITUDE)
+    .map(m => m.id + ':' + m.target)`))
+    .map(l => l.split(':'))
+    .map(([id, target]) => [id, Number(target), sim.tetoRealista(sim.duracaoDaMissao(id))])
+    .filter(([, target, teto]) => target > teto * 0.8)
+    .map(([id, target, teto]) => `${id}: ${target}m é ${Math.round(target / teto * 100)}% do teto`)
+    .join(' | ');
+  assert.equal(apertadas, '', `Metas sem folga para erro humano: ${apertadas}`);
+});
+
+test('the altitude curve only ever goes up', () => {
+  const game = makeHarness();
+  const seq = Array.from(game.run(`missions
+    .filter(m => m.kind === MissionKind.REACH_ALTITUDE)
+    .map(m => m.id + ':' + m.target)`)).map(l => l.split(':'));
+  const quedas = seq
+    .filter((par, i) => i > 0 && Number(par[1]) <= Number(seq[i - 1][1]))
+    .map((par, i) => `${par[0]} pede ${par[1]}m`)
+    .join(' | ');
+  assert.equal(quedas, '', `A curva de altitude anda para trás: ${quedas}`);
 });
 
 // --- O fôlego só pode encher pelo gesto -------------------------------------

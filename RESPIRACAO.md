@@ -201,3 +201,47 @@ Cinco ciclos de respiração levaram a 121m.
 uma decisão correta de uma economia que não existe mais. Três testes novos travam isso agora
 (`tests/gameplay.test.cjs`), incluindo uma varredura que falha se **qualquer** linha do jogo
 voltar a fixar o fôlego no cheio.
+
+## As 18 missões de altitude eram impossíveis — e o teste que devia pegar isso concordava com o erro
+
+Depois de consertar o fôlego, joguei uma corrida inteira no navegador pela primeira vez.
+Ela chegou a **182m em 60 segundos**, respirando no ponto, sem prender uma vez. A missão 1
+pedia **210m em 60 segundos**. As 18 metas de altitude, de 210m a 690m, estavam **todas
+acima do que a física entrega** — e a progressão inteira não podia ser concluída.
+
+O `tools/sim-breath.cjs` prometia 443m nesses mesmos 60s, e `tests/gameplay.test.cjs`
+passava usando a mesma conta. **Ferramenta e teste não eram duas verificações: eram a mesma
+suposição, escrita duas vezes.** Faltavam três coisas nela:
+
+1. **A entropia.** Ela estava fixa em 0,12, o valor do primeiro instante da corrida. No jogo
+   cresce 0,06/s subindo e 0,12/s caindo e **satura em 1 nos primeiros ~15 segundos de
+   qualquer corrida**: a gravidade real de quase toda a corrida é 231, não 196. Com
+   sustentação 260, a margem cai de 64 para 29 — menos da metade da subida por respiração.
+2. **A expiração.** Não havia folga entre soltar e voltar a segurar: o gesto saía e a
+   inspiração seguinte começava no mesmo quadro, como se o dedo nunca deixasse a tela. Um
+   segundo de queda por ciclo, doze vezes por minuto.
+3. **O estado emocional.** `gravityMul` e `assistMul` mudam a margem em ~15%, e quando a
+   margem é de 29 px/s² isso decide a corrida. Em `flow` sobram 50; em `near_fail`, 22.
+
+Com os três dentro, o simulador diz **178m** onde o navegador mediu **182m** — 2% de erro.
+Aí ele passou a ser um instrumento.
+
+A curva foi reescrita contra esse teto, entre 55% e 78% dele, para sobrar espaço a quem não
+respira como um metrônomo:
+
+| missões | tempo | teto real | metas |
+|---|---|---|---|
+| m1–m10 | 60s | 178m | 100 → 135m |
+| m13–m19 | 75s | 226m | 140 → 165m |
+| m22–m28 | 90s | 279m | 175 → 205m |
+| m31–m40 | 105s | 332m | 210 → 250m |
+| m43–m50 | 120s | 387m | 265 → 300m |
+
+Três testes travam a curva agora: **alcançável** (contra o mesmo simulador, não contra uma
+conta paralela), **com folga** (nenhuma meta acima de 80% do teto) e **monótona** (a curva
+não anda para trás — a primeira tentativa deixou m31 pedindo menos que m28).
+
+**A lição:** um instrumento de medida também precisa ser medido. Esta é a terceira vez neste
+projeto que uma medição inválida escondeu um problema real — as primeiras corridas de
+benchmark, o teste de histograma, e agora esta. O critério que ficou: **um número só vale
+depois de bater com o jogo rodando.**
