@@ -358,6 +358,54 @@
     ctx.beginPath();
     ctx.arc(0,0,coreR,0,Math.PI*2);
     ctx.fill();
+
+    // --- O ANEL DA RESPIRAÇÃO ---
+    // O jogo inteiro gira em torno de encher o fôlego e soltar no ponto — e nada na tela
+    // enchia. O tutorial dizia "deixe a luz se juntar" e "a luz está cheia" sobre um sol
+    // que não mudava, então o jogador não tinha como saber o que devia encher nem quando.
+    // A mecânica central estava sendo comunicada só por texto.
+    //
+    // O anel é diegético e periférico de propósito: mora no próprio sol, não numa barra de
+    // HUD, então a atenção não precisa sair do lugar onde o gesto acontece.
+    {
+      const cheio = maxBreath();
+      const folego = clamp(state.sun.energy / Math.max(0.001, cheio), 0, 1);
+      const tensao = state.sun.strain;
+      const rAnel = haloR + 6;
+
+      // Trilho apagado: mostra que existe um ciclo mesmo com o peito vazio.
+      ctx.save();
+      ctx.globalAlpha = 0.16 * visuals.haloIntensity * 2;
+      ctx.strokeStyle = 'rgba(255,249,236,1)';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(0, 0, rAnel, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      // O arco que enche. Começa no topo e fecha no sentido horário: fechar o círculo é a
+      // leitura mais imediata de "completo" que existe.
+      if (folego > 0.01) {
+        ctx.save();
+        const fechado = folego > 0.985;
+        // Cheio pulsa; preso aperta e esquenta para o vermelho — os dois erros do gesto
+        // têm cor e movimento próprios antes de terem qualquer palavra.
+        const brilho = fechado ? 0.55 + Math.sin(state.t * 4) * 0.25 : 0.42;
+        // A tensao esfria e apaga em vez de esquentar e gritar: num jogo que quer acalmar,
+        // o erro se comunica pela luz que se retrai, nao por alarme vermelho.
+        const cor = tensao > 0.02
+          ? `rgba(${Math.round(255 - tensao * 60)}, ${Math.round(240 - tensao * 60)}, ${Math.round(210 - tensao * 20)}, ${brilho * (1 - tensao * 0.35)})`
+          : `rgba(255, 240, 210, ${brilho})`;
+        ctx.strokeStyle = cor;
+        ctx.lineWidth = 2.5 + (fechado ? 1.2 : 0) + tensao * 1.5;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.arc(0, 0, rAnel - tensao * 5, -Math.PI / 2, -Math.PI / 2 + folego * Math.PI * 2);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
     ctx.restore();
     state.sun.haloPulse = lerp(state.sun.haloPulse, 0, .1);
   }

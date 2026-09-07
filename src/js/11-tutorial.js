@@ -50,7 +50,7 @@
               setTut("☼", "the sun waits. touch anywhere and hold.", true);
               if (state.input.holding) { state.tutorial.step = 2; state.tutorial.delay = 1.0; showFloating("like that. the sun responds.", true); }
           } else if (state.tutorial.step === 2) {
-              setTut("≈", "hold the sun. it rises with your touch.", false);
+              setTut("≈", "hold. the sun rises, and the ring begins to fill.", false);
               if (!state.input.holding) ui.tutText.textContent = t("keep holding. the sun needs you.");
               if (state.scoreMeters > 50) {
                   state.tutorial.chapter = 2; state.tutorial.step = 1; state.tutorial.perfects = 0; state.tutorial.delay = 2.0;
@@ -65,11 +65,11 @@
               // do jogador aconteça exatamente no ponto e ele sinta a diferença.
               const cheio = state.sun.energy >= maxBreath() - 0.02;
               setTut(cheio ? "◉" : "◌",
-                     cheio ? "the light is full. release it now." : "hold. let the light gather.",
+                     cheio ? "the ring closed. let go now." : "hold. the ring fills with light.",
                      cheio);
               if (state.tutorial.perfects >= 2) { state.tutorial.step = 2; state.tutorial.delay = 1.5; showFloating("perfect. the rhythm begins.", true); }
           } else if (state.tutorial.step === 2) {
-              setTut("∿", "let it fill, then release. three times.", false);
+              setTut("∿", "let the ring close, then let go. three times.", false);
               if (state.combo >= 3) {
                   state.tutorial.chapter = 2.5; state.tutorial.step = 1; state.tutorial.delay = 2.0;
                   showFloating("the world begins to wake.", true);
@@ -80,7 +80,7 @@
           // O jogador precisa SENTIR a outra ponta do erro, não só a pressa. Este capítulo
           // só sai quando ele deixa a respiração prender uma vez e vê a luz endurecer.
           state.entropy = 0;
-          setTut("◍", "hold too long and the light tightens. feel it.", false);
+          setTut("◍", "hold past the close and the ring tightens. feel it.", false);
           if (state.sun.strain > 0.75) {
               state.tutorial.chapter = 3; state.tutorial.step = 1; state.tutorial.delay = 2.0;
               showFloating("that is the edge. breathe before it.", true);

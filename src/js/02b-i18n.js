@@ -314,7 +314,14 @@
 
       // toque em qualquer lugar da tela
       "the sun waits. touch anywhere and hold.": "o sol espera. toque em qualquer lugar e segure.",
-      "the sun falters. release your breath to save it!": "o sol vacila. solte o fôlego para salvá-lo!"
+      "the sun falters. release your breath to save it!": "o sol vacila. solte o fôlego para salvá-lo!",
+
+      // o anel da respiração
+      "hold. the sun rises, and the ring begins to fill.": "segure. o sol sobe, e o anel começa a encher.",
+      "hold. the ring fills with light.": "segure. o anel se enche de luz.",
+      "the ring closed. let go now.": "o anel fechou. solte agora.",
+      "let the ring close, then let go. three times.": "deixe o anel fechar, então solte. três vezes.",
+      "hold past the close and the ring tightens. feel it.": "segure além do fecho e o anel aperta. sinta."
     },
 
     'es': {  // espanhol
@@ -602,7 +609,14 @@
 
       // toque em qualquer lugar da tela
       "the sun waits. touch anywhere and hold.": "el sol espera. toca en cualquier parte y sostén.",
-      "the sun falters. release your breath to save it!": "¡el sol vacila. suelta el aliento para salvarlo!"
+      "the sun falters. release your breath to save it!": "¡el sol vacila. suelta el aliento para salvarlo!",
+
+      // o anel da respiração
+      "hold. the sun rises, and the ring begins to fill.": "sostén. el sol sube, y el anillo empieza a llenarse.",
+      "hold. the ring fills with light.": "sostén. el anillo se llena de luz.",
+      "the ring closed. let go now.": "el anillo se cerró. suelta ahora.",
+      "let the ring close, then let go. three times.": "deja que el anillo se cierre y suelta. tres veces.",
+      "hold past the close and the ring tightens. feel it.": "sostén más allá del cierre y el anillo se tensa. siéntelo."
     },
 
     'de': {  // alemao
@@ -890,7 +904,14 @@
 
       // toque em qualquer lugar da tela
       "the sun waits. touch anywhere and hold.": "die Sonne wartet. berühre irgendwo und halte.",
-      "the sun falters. release your breath to save it!": "die Sonne schwankt. lass den Atem los, um sie zu retten!"
+      "the sun falters. release your breath to save it!": "die Sonne schwankt. lass den Atem los, um sie zu retten!",
+
+      // o anel da respiração
+      "hold. the sun rises, and the ring begins to fill.": "halte. die Sonne steigt, und der Ring beginnt sich zu füllen.",
+      "hold. the ring fills with light.": "halte. der Ring füllt sich mit Licht.",
+      "the ring closed. let go now.": "der Ring hat sich geschlossen. lass jetzt los.",
+      "let the ring close, then let go. three times.": "lass den Ring sich schließen, dann los. dreimal.",
+      "hold past the close and the ring tightens. feel it.": "halte über den Schluss hinaus und der Ring spannt sich. spüre es."
     },
 
     'fr': {  // frances
@@ -1178,7 +1199,14 @@
 
       // toque em qualquer lugar da tela
       "the sun waits. touch anywhere and hold.": "le soleil attend. touche n'importe où et tiens.",
-      "the sun falters. release your breath to save it!": "le soleil vacille. relâche ton souffle pour le sauver !"
+      "the sun falters. release your breath to save it!": "le soleil vacille. relâche ton souffle pour le sauver !",
+
+      // o anel da respiração
+      "hold. the sun rises, and the ring begins to fill.": "tiens. le soleil monte, et l'anneau commence à se remplir.",
+      "hold. the ring fills with light.": "tiens. l'anneau se remplit de lumière.",
+      "the ring closed. let go now.": "l'anneau s'est fermé. relâche maintenant.",
+      "let the ring close, then let go. three times.": "laisse l'anneau se fermer, puis relâche. trois fois.",
+      "hold past the close and the ring tightens. feel it.": "tiens au-delà de la fermeture et l'anneau se resserre. sens-le."
     },
 
     'ru': {  // russo
@@ -1466,7 +1494,14 @@
 
       // toque em qualquer lugar da tela
       "the sun waits. touch anywhere and hold.": "солнце ждёт. коснись где угодно и держи.",
-      "the sun falters. release your breath to save it!": "солнце слабеет. отпусти дыхание, чтобы спасти его!"
+      "the sun falters. release your breath to save it!": "солнце слабеет. отпусти дыхание, чтобы спасти его!",
+
+      // o anel da respiração
+      "hold. the sun rises, and the ring begins to fill.": "держи. солнце поднимается, и кольцо начинает наполняться.",
+      "hold. the ring fills with light.": "держи. кольцо наполняется светом.",
+      "the ring closed. let go now.": "кольцо замкнулось. отпусти сейчас.",
+      "let the ring close, then let go. three times.": "дай кольцу замкнуться и отпусти. трижды.",
+      "hold past the close and the ring tightens. feel it.": "передержишь после замыкания — кольцо сжимается. почувствуй."
     },
 
     'it': {  // italiano
@@ -1754,7 +1789,14 @@
 
       // toque em qualquer lugar da tela
       "the sun waits. touch anywhere and hold.": "il sole attende. tocca ovunque e tieni.",
-      "the sun falters. release your breath to save it!": "il sole vacilla. lascia andare il respiro per salvarlo!"
+      "the sun falters. release your breath to save it!": "il sole vacilla. lascia andare il respiro per salvarlo!",
+
+      // o anel da respiração
+      "hold. the sun rises, and the ring begins to fill.": "tieni. il sole sale, e l’anello comincia a riempirsi.",
+      "hold. the ring fills with light.": "tieni. l’anello si riempie di luce.",
+      "the ring closed. let go now.": "l’anello si è chiuso. lascia andare ora.",
+      "let the ring close, then let go. three times.": "lascia chiudere l’anello, poi lascia andare. tre volte.",
+      "hold past the close and the ring tightens. feel it.": "tieni oltre la chiusura e l’anello si stringe. sentilo."
     }
   };
 
