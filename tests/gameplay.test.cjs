@@ -279,27 +279,43 @@ test('the goal remains pending before the timer expires; a successful finish unl
 });
 
 for (const code of ['Space', 'Enter']) {
-  test(`${code} auto-repeat sustains a single press without producing extra pulses`, () => {
+  test(`${code} inhales while held and only releases the gesture on key up`, () => {
     const game = makeHarness({ keyboard: true });
+
+    // Pressionar é inspirar: segura, e NÃO gasta o fôlego.
     game.key('keydown', code);
-    assert.equal(game.effects.pulses, 1);
+    assert.equal(game.effects.pulses, 0, 'Pressing must inhale, not exhale');
+    assert.equal(game.state.input.holding, true);
+
+    // O auto-repeat do sistema mantém o sustain e não vira gesto nenhum.
     for (let i = 0; i < 5; i++) {
-      // Advance beyond cooldown so only the keyboard rule can reject repeats.
       game.state.t += 0.5;
       game.key('keydown', code, true);
     }
-    assert.equal(game.effects.pulses, 1);
+    assert.equal(game.effects.pulses, 0, 'Auto-repeat must never fire a gesture');
     assert.equal(game.state.input.holding, true);
-    game.key('keyup', code);
-    assert.equal(game.state.input.holding, false);
-    // O primeiro gesto gastou o fôlego; segurar é o que paga o próximo, no teclado igual
-    // ao toque. Sem repor, o teste mediria a falta de ar em vez da regra de auto-repeat.
-    game.state.t += 0.5;
+
+    // Soltar é o gesto. Esta é a regra que o tutorial promete ao jogador.
     game.run('state.sun.energy = 1');
-    game.key('keydown', code);
-    assert.equal(game.effects.pulses, 2, 'A fresh press after release must work');
+    game.key('keyup', code);
+    assert.equal(game.effects.pulses, 1, 'Releasing is the gesture');
+    assert.equal(game.state.input.holding, false);
+
+    // Soltar sem estar segurando não inventa gesto.
+    game.key('keyup', code);
+    assert.equal(game.effects.pulses, 1, 'A release with nothing held does nothing');
   });
 }
+
+test('touch and keyboard release the gesture the same way', () => {
+  // O tutorial diz "the light is full, release it now" — se o pulso saísse ao encostar,
+  // soltar não faria nada e o jogo estaria mentindo para o jogador. Já esteve.
+  const disparaAoSoltar = /function pointerUp[\s\S]{0,240}?tryClickImpulse\(\)/.test(source);
+  const naoDisparaAoEncostar = !/function pointerDown\(e\) \{[\s\S]*?tryClickImpulse\(\)[\s\S]*?\n  \}/.test(
+    source.slice(source.indexOf('function pointerDown'), source.indexOf('function pointerMove')));
+  assert.ok(disparaAoSoltar, 'pointerUp deve disparar o gesto');
+  assert.ok(naoDisparaAoEncostar, 'pointerDown não pode disparar o gesto: encostar é inspirar');
+});
 
 test('rapid pulses inside the anti-spam window do not grow the perfect combo', () => {
   const game = makeHarness();

@@ -13,8 +13,9 @@
     const p = getPos(e);
     state.input.x = p.x; state.input.y = p.y; state.input.holding = true; state.input.inside = true; state.input.lastPress = state.t;
     if (state.mode === "menu") { startGame(); return; }
-    if (state.mode !== "gameplay") return;
-    tryClickImpulse();
+    // Encostar é INSPIRAR. O gesto não sai daqui: sai ao soltar, em pointerUp.
+    // Enquanto o pulso saía no toque, o jogo dizia "a luz está cheia, solte agora" e
+    // soltar não fazia nada — o gesto estava invertido em relação ao próprio design.
   }
   function pointerMove(e) {
     const p = getPos(e);
@@ -24,7 +25,13 @@
       ui.menuOrb.style.setProperty('--mx', `${dx * 18}px`); ui.menuOrb.style.setProperty('--my', `${dy * 18}px`);
     }
   }
-  function pointerUp(e) { e.preventDefault(); state.input.holding = false; silenceHoldAudio(); }
+  // Soltar é EXPIRAR: é aqui que o gesto acontece, com a força do fôlego acumulado.
+  function pointerUp(e) {
+    e.preventDefault();
+    if (state.mode === "gameplay" && state.input.holding) tryClickImpulse();
+    state.input.holding = false;
+    silenceHoldAudio();
+  }
 
   function triggerScreenFlash(color = 'rgba(255,249,236,0.1)') {
     state.screenFlash.alpha = 0.1;
@@ -37,25 +44,12 @@
 
   function tryClickImpulse() {
     const now = state.t;
-    const sunScreenY = state.sun.y + state.camera.y;
-    
-    const sensMult = 0.5 + (settings.gameplay.sensitivity / 100);
-    const currentInfluenceRadius = tune.influenceRadius * (state.mods.areaSustain ? 1.8 : 1) * sensMult;
-    
-    const dx = state.input.x - state.sun.x, dy = state.input.y - sunScreenY, dist = Math.hypot(dx, dy);
 
-    // As três recusas abaixo existiam e eram mudas: o jogador tocava e nada acontecia, sem
-    // saber qual das regras tinha quebrado. Cada uma agora responde com um gesto físico
-    // distinto — sem texto, para não competir com a atenção no sol.
-    if (dist > currentInfluenceRadius) {
-      // Longe demais: o halo se encolhe na direção do dedo, mostrando onde é o alcance.
-      if (now - state.input.lastRefusal > 0.35) {
-        state.input.lastRefusal = now;
-        state.sun.reachHint = 1;
-        state.sun.reachHintX = dx; state.sun.reachHintY = dy;
-      }
-      return;
-    }
+    // O gesto vale de qualquer ponto da tela: ver o comentário em 14-gameplay.js. Não há
+    // mais recusa por distância, e por isso não há mais o que "acertar" — só quando soltar.
+    const influence = 1;
+    const perfect = true;
+
     // FIX: Fallback seguro caso o mod.cooldown seja undefined (evita NaN e rate-limit quebrado)
     if (now - state.input.lastClick < tune.clickCooldown * (state.mods.cooldown || 1)) {
       // Rápido demais: o sol engasga — um recuo curto, legível como "ainda não".
@@ -78,15 +72,12 @@
       return;
     }
 
-    const distanceRatio = clamp(dist / currentInfluenceRadius, 0, 1);
-    
-    let antiSpam = 1; 
+    let antiSpam = 1;
     const dynamicSpamWindow = tune.antiSpamWindow * (1 - state.mods.antiSpamReduc);
     if (now - state.input.lastClick < dynamicSpamWindow) antiSpam = tune.antiSpamMult;
-    
-    const influence = getInteractionStrength(dist, currentInfluenceRadius);
-    const perfect = (dist / currentInfluenceRadius) <= influenceZones.perfect;
-    const baseImpulse = perfect ? tune.clickImpulsePerfect : tune.clickImpulseBase;
+
+    const distanceRatio = 0;
+    const baseImpulse = tune.clickImpulsePerfect;
     
     let dynamicPulseMult = state.mods.pulseMult;
     if (perfect && state.mods.cometStacks > 0) dynamicPulseMult += Math.min(0.5, state.mods.consecutivePulses * 0.1);

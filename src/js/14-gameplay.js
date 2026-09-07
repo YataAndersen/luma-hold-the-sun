@@ -144,13 +144,14 @@
 
     let holdIntensity = 0;
     if (state.input.holding && state.input.inside) {
-      const sunScreenY = state.sun.y + state.camera.y;
-      const currentInfluenceRadius = tune.influenceRadius * (state.mods.areaSustain ? 1.8 : 1);
-      const dx = state.input.x - state.sun.x,
-            dy = state.input.y - sunScreenY,
-            dist = Math.hypot(dx, dy);
-      if (dist <= currentInfluenceRadius) {
-        const influence = getInteractionStrength(dist, currentInfluenceRadius);
+      {
+        // TOQUE EM QUALQUER LUGAR DA TELA.
+        // Mirar é uma perícia espacial sem relação com respirar, e o sol deriva com o
+        // vento: exigir proximidade obrigava o jogador a PERSEGUIR um alvo móvel com o
+        // dedo, que é o oposto de relaxar. Além disso a zona "perfeita" tinha raio de
+        // 21px, menor que a ponta de um dedo. A perícia do LUMA é julgar duração; o
+        // espaço só disputava atenção com ela.
+        const influence = 1;
         // A tensão mata a sustentação. Sem isto, segurar para sempre seria a estratégia
         // ótima e o ciclo não fecharia: o jogo precisa que soltar seja necessário, não
         // apenas recomendado. É o que transforma o gesto numa duração com fim.
@@ -179,7 +180,7 @@
         }
         
         if (Math.random() < .16) spawnDust(state.sun.x, state.sun.y, 1);
-      } else state.sun.stableTimer = Math.max(0, state.sun.stableTimer - dt * 1.6);
+      }
     } else {
       state.sun.stability = clamp(state.sun.stability - .08 * dt, 0, 1);
       state.sun.stableTimer = Math.max(0, state.sun.stableTimer - dt * 1.3);

@@ -22,9 +22,12 @@
 
   const gravityConfig = {
     base: 190,
-    max: 270,
+    max: 250,
+    // A entropia tem que manter a MESMA proporção da base (~28%) que tinha antes:
+    // 240 sobre 850. Deixá-la em 90 sobre 190 a levava a 47% e, saturada, a gravidade
+    // empatava com a sustentação — o sol pairava sem subir e a corrida virava um limbo.
     progression: 1.08,
-    entropy: 90
+    entropy: 50
   };
 
   function getCurrentGravity(difficulty, entropy) {

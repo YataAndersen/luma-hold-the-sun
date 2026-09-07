@@ -84,9 +84,11 @@
       if (state.mode === "map") resizeMapCanvas();
   });
   canvas.addEventListener("pointerleave", () => {
-    state.input.inside = false;
-    state.input.holding = false;
-    silenceHoldAudio();
+    // Sair da área NÃO interrompe mais a inspiração. Com o toque valendo em qualquer
+    // ponto, "dentro" perdeu o sentido, e derrubar o sustain aqui fazia o gesto morrer
+    // no meio por um deslize de dedo na borda — sem que o jogador entendesse por quê.
+    // Só soltar de verdade (pointerup) termina a respiração.
+    if (!state.input.holding) state.input.inside = false;
   });
 
   window.addEventListener("keydown", (e) => {
@@ -103,14 +105,15 @@
       state.input.holding = true;
       state.input.inside = true;
       state.input.keyboardHold = true;
-      // O auto-repeat do sistema mantém o sustain, mas não dispara pulsos: o gesto tem que ser deliberado.
+      // O auto-repeat do sistema mantém o sustain e nada mais: segurar é inspirar.
       if (e.repeat) return;
       state.input.lastPress = state.t;
-      tryClickImpulse();
     }
   });
   window.addEventListener("keyup", (e) => {
     if (e.code === "Space" || e.code === "Enter") {
+      // Soltar a tecla é o gesto, igual a soltar o dedo: mesma regra nos dois controles.
+      if (state.mode === "gameplay" && state.input.holding) tryClickImpulse();
       state.input.holding = false;
       state.input.keyboardHold = false;
       silenceHoldAudio();
