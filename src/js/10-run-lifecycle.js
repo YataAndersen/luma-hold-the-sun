@@ -25,7 +25,7 @@
     
     state.input.lastClick = -999; state.input.lastPress = -999; state.input.lastEmptyPulse = -999; state.input.keyboardHold = false; state.input.holding = false; state.input.inside = false; state.input.x = W * .5; state.input.y = H * .42;
     state.entropy = .12;
-    state.sun.x = W * .5; state.sun.y = H * .38; state.sun.vx = 0; state.sun.vy = 0; state.sun.stability = .22; state.sun.energy = .92; state.sun.wear = 0;
+    state.sun.x = W * .5; state.sun.y = H * .38; state.sun.vx = 0; state.sun.vy = 0; state.sun.stability = .22; state.sun.energy = .25; state.sun.wear = 0;  // comeca quase vazio: a primeira respiracao tem que ser respirada
     state.sun.breath = 0;
     state.sun.breathStrength = .18;
     state.sun.strain = 0;

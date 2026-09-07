@@ -438,3 +438,39 @@ test('every altitude mission is reachable at the pace the physics actually allow
   assert.equal(impossiveis, '',
     `Missões de altitude acima do que a física entrega: ${impossiveis}`);
 });
+
+// --- O fôlego só pode encher pelo gesto -------------------------------------
+// Estes três testes existem porque a mesma regressão apareceu duas vezes: uma fonte de
+// energia que não era o jogador segurando. Quando isso acontece o anel já nasce cheio, a
+// tensão começa no instante do toque, e o jogador vê o sol descer enquanto segura — sem
+// nada na tela explicando. Nenhum teste anterior pegava isso.
+
+test('the passive trickle only lifts the breath off zero, never fills it', () => {
+  const trecho = between('const respiroDeCortesia', '\n        }');
+  const teto = /clamp\(state\.sun\.energy \+ [\d.]+ \* dt, 0, ([A-Za-z]+)\)/.exec(trecho);
+  assert.notEqual(teto, null, 'O gotejamento passivo mudou de forma; reveja o teto dele.');
+  assert.equal(teto[1], 'respiroDeCortesia',
+    'O gotejamento passivo voltou a encher até o topo: o anel nasce cheio e ninguém vê nada encher.');
+
+  const game = makeHarness();
+  const cortesia = game.run('breathConfig.minBreath * 2');
+  assert.ok(cortesia < 0.35,
+    `O respiro de cortesia (${cortesia}) chegou perto do cheio; o gesto deixa de ser necessário.`);
+});
+
+test('nothing outside the gesture pins the breath at full', () => {
+  const cheios = source.split('\n')
+    .map((linha, i) => [i + 1, linha])
+    .filter(([, linha]) => /state\.sun\.energy\s*=\s*(1(\.0+)?|maxEnergy|maxBreath\(\))\s*;/.test(linha))
+    .map(([n, linha]) => `${n}: ${linha.trim()}`)
+    .join(' | ');
+  assert.equal(cheios, '',
+    `Alguém voltou a fixar o fôlego no cheio — energia infinita: ${cheios}`);
+});
+
+test('a run starts with an empty enough chest that the first breath is breathed', () => {
+  const inicial = /state\.sun\.energy = ([\d.]+); state\.sun\.wear/.exec(source);
+  assert.notEqual(inicial, null, 'Não achei a energia inicial em resetRun.');
+  assert.ok(Number(inicial[1]) <= 0.35,
+    `A corrida começa com ${inicial[1]} de fôlego: o jogador solta um gesto pronto sem ter respirado.`);
+});

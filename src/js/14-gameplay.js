@@ -388,10 +388,22 @@
       }
     }
 
-    if (state.tutorial.active && state.tutorial.chapter === 1) {
-        state.sun.energy = 1.0;
-    } else {
-        state.sun.energy = clamp(state.sun.energy + .05 * dt, 0, maxEnergy);
+    // Havia AQUI uma segunda fonte de energia infinita no capitulo 1 do tutorial, alem da
+    // que ja foi removida em 11-tutorial.js. Enquanto ela existisse, o tutorial continuava
+    // ensinando o gesto num mundo onde segurar nao custava nada — exatamente o que a
+    // remocao anterior pretendia corrigir.
+    {
+        // Gotejamento passivo: era valvula de seguranca da economia antiga, para o jogador
+        // nunca ficar preso sem energia nenhuma. Com a respiracao, encher ate o TOPO
+        // sozinho destruia a mecanica inteira: em ~1,6s parado o peito ja estava cheio,
+        // a tensao comecava no instante em que o dedo encostava, a sustentacao caia para
+        // 110 contra gravidade 200 e o sol descia enquanto o jogador segurava. E o motivo
+        // de nada parecer "encher": ja estava cheio antes do toque.
+        // Agora ele so devolve o minimo para sair do zero. Encher continua sendo do gesto.
+        const respiroDeCortesia = breathConfig.minBreath * 2;
+        if (state.sun.energy < respiroDeCortesia) {
+          state.sun.energy = clamp(state.sun.energy + .05 * dt, 0, respiroDeCortesia);
+        }
     }
 
     const altitude01 = clamp(state.scoreMeters / 1800, 0, 1);

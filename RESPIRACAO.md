@@ -157,3 +157,47 @@ node --test tests/gameplay.test.cjs tests/locales.test.cjs
 ```
 
 E depois **abra o jogo e jogue**. Nenhuma dessas ferramentas pegou o gesto invertido, o anel ausente ou o card em cima do sol. Quem pegou foi o Yata, jogando.
+
+## O fôlego enchia sozinho — e por isso ninguém via nada encher
+
+O anel entrou, e mesmo assim o Yata disse **"não vejo nada enchendo"**. Ele estava certo, e a
+causa não era o anel: **já estava cheio antes de o dedo tocar a tela.**
+
+Sobrara da economia antiga um gotejamento passivo:
+
+```js
+state.sun.energy = clamp(state.sun.energy + .05 * dt, 0, maxEnergy);
+```
+
+Era uma válvula de segurança sensata quando pulsar custava 0,08 — ninguém ficava preso sem
+saída. Com a respiração, ela virou o oposto: **1,6s parado enchiam o peito inteiro.** A
+partir daí, encostar começava a `strain` no mesmo instante, a sustentação caía de 260 para
+~110 contra uma gravidade de ~200, e **o sol descia enquanto o jogador segurava**. O jogo
+inteiro parecia quebrado, e a única evidência na tela era um anel que nunca se movia.
+
+Três coisas saíram junto:
+
+- O gotejamento passou a ter teto em `breathConfig.minBreath * 2` — devolve o mínimo para sair
+  do zero, e nada além disso. **Encher é do gesto.**
+- Havia uma **segunda** fonte de energia infinita no capítulo 1 do tutorial, dentro de
+  `14-gameplay.js`, sobrevivendo à remoção já feita em `11-tutorial.js`. O tutorial continuava
+  ensinando o gesto num mundo onde segurar não custava nada.
+- A corrida começava com `energy = .92`: o primeiro gesto saía pronto, sem ter sido respirado.
+  Agora começa em `.25`.
+
+Medido no navegador depois:
+
+```
+antes: e=0.25 st=0    y=532  vy=164
+   2s: e=0.69 st=0    y=585  vy=-47     ← segurar já está vencendo a queda
+   4s: e=1    st=0.237 y=451
+   5s: e=1    st=0.628                  ← a tensão aparece só depois do cheio
+apos soltar: e=0.04 st=0    y=358
+```
+
+Cinco ciclos de respiração levaram a 121m.
+
+**A lição, de novo:** mudança de mecânica deixa entulho. O gotejamento não era um bug — era
+uma decisão correta de uma economia que não existe mais. Três testes novos travam isso agora
+(`tests/gameplay.test.cjs`), incluindo uma varredura que falha se **qualquer** linha do jogo
+voltar a fixar o fôlego no cheio.
