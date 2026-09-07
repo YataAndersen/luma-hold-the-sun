@@ -310,7 +310,11 @@
       "the shelter broke": "o amparo se rompeu",
       "eternity holds you": "a eternidade te segura",
       "the image would not form": "a imagem não se formou",
-      "the poem is yours": "o poema é seu"
+      "the poem is yours": "o poema é seu",
+
+      // toque em qualquer lugar da tela
+      "the sun waits. touch anywhere and hold.": "o sol espera. toque em qualquer lugar e segure.",
+      "the sun falters. release your breath to save it!": "o sol vacila. solte o fôlego para salvá-lo!"
     },
 
     'es': {  // espanhol
@@ -594,7 +598,11 @@
       "the shelter broke": "el amparo se rompió",
       "eternity holds you": "la eternidad te sostiene",
       "the image would not form": "la imagen no se formó",
-      "the poem is yours": "el poema es tuyo"
+      "the poem is yours": "el poema es tuyo",
+
+      // toque em qualquer lugar da tela
+      "the sun waits. touch anywhere and hold.": "el sol espera. toca en cualquier parte y sostén.",
+      "the sun falters. release your breath to save it!": "¡el sol vacila. suelta el aliento para salvarlo!"
     },
 
     'de': {  // alemao
@@ -878,7 +886,11 @@
       "the shelter broke": "die Obhut zerbrach",
       "eternity holds you": "die Ewigkeit hält dich",
       "the image would not form": "das Bild entstand nicht",
-      "the poem is yours": "das Gedicht gehört dir"
+      "the poem is yours": "das Gedicht gehört dir",
+
+      // toque em qualquer lugar da tela
+      "the sun waits. touch anywhere and hold.": "die Sonne wartet. berühre irgendwo und halte.",
+      "the sun falters. release your breath to save it!": "die Sonne schwankt. lass den Atem los, um sie zu retten!"
     },
 
     'fr': {  // frances
@@ -1162,7 +1174,11 @@
       "the shelter broke": "l’abri s’est rompu",
       "eternity holds you": "l’éternité te retient",
       "the image would not form": "l’image ne s’est pas formée",
-      "the poem is yours": "le poème est à toi"
+      "the poem is yours": "le poème est à toi",
+
+      // toque em qualquer lugar da tela
+      "the sun waits. touch anywhere and hold.": "le soleil attend. touche n'importe où et tiens.",
+      "the sun falters. release your breath to save it!": "le soleil vacille. relâche ton souffle pour le sauver !"
     },
 
     'ru': {  // russo
@@ -1446,7 +1462,11 @@
       "the shelter broke": "приют разрушен",
       "eternity holds you": "вечность держит тебя",
       "the image would not form": "изображение не сложилось",
-      "the poem is yours": "стихи твои"
+      "the poem is yours": "стихи твои",
+
+      // toque em qualquer lugar da tela
+      "the sun waits. touch anywhere and hold.": "солнце ждёт. коснись где угодно и держи.",
+      "the sun falters. release your breath to save it!": "солнце слабеет. отпусти дыхание, чтобы спасти его!"
     },
 
     'it': {  // italiano
@@ -1730,7 +1750,11 @@
       "the shelter broke": "il riparo si è rotto",
       "eternity holds you": "l’eternità ti sostiene",
       "the image would not form": "l’immagine non si è formata",
-      "the poem is yours": "la poesia è tua"
+      "the poem is yours": "la poesia è tua",
+
+      // toque em qualquer lugar da tela
+      "the sun waits. touch anywhere and hold.": "il sole attende. tocca ovunque e tieni.",
+      "the sun falters. release your breath to save it!": "il sole vacilla. lascia andare il respiro per salvarlo!"
     }
   };
 

@@ -66,7 +66,6 @@
   bindSlider('setAmb', settings.audio, 'ambient', 'valAmb');
   bindSlider('setMas', settings.audio, 'master', 'valMas');
   bindSelect('setDiff', settings.gameplay, 'difficulty');
-  bindSlider('setSens', settings.gameplay, 'sensitivity', 'valSens');
   bindToggle('setHap', settings.gameplay, 'haptics', 'valHap', 'on', 'off');
   bindSelect('setVisFb', settings.gameplay, 'feedback');
   bindSlider('setBri', settings.visual, 'brightness', 'valBri');

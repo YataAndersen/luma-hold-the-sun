@@ -38,9 +38,6 @@
   function updateTutorialLogic(dt) {
       if (!state.tutorial.active || state.mode !== "gameplay") return;
       
-      const sunScreenY = state.sun.y + state.camera.y;
-      const dist = Math.hypot(state.input.x - state.sun.x, state.input.y - sunScreenY);
-      const isNear = dist < tune.influenceRadius * 1.2;
 
       if (state.tutorial.delay > 0) { state.tutorial.delay -= dt; return; }
 
@@ -50,8 +47,8 @@
           // o fôlego encher — que é a única coisa que o jogo pede dele.
           state.entropy = 0;
           if (state.tutorial.step === 1) {
-              setTut("☼", "the sun waits. touch near it to hold it up.", true);
-              if (state.input.holding && isNear) { state.tutorial.step = 2; state.tutorial.delay = 1.0; showFloating("like that. the sun responds.", true); }
+              setTut("☼", "the sun waits. touch anywhere and hold.", true);
+              if (state.input.holding) { state.tutorial.step = 2; state.tutorial.delay = 1.0; showFloating("like that. the sun responds.", true); }
           } else if (state.tutorial.step === 2) {
               setTut("≈", "hold the sun. it rises with your touch.", false);
               if (!state.input.holding) ui.tutText.textContent = t("keep holding. the sun needs you.");
@@ -97,7 +94,7 @@
               setTut("◬", "the horizon is the limit. if the sun falls too far, the world goes dark.", false);
               if (state.sun.nearFail) { state.tutorial.step = 3; state.tutorial.delay = 0.5; }
           } else if (state.tutorial.step === 3) {
-              setTut("◓", "the sun falters. one last pulse can save it!", true);
+              setTut("◓", "the sun falters. release your breath to save it!", true);
               if (!state.sun.nearFail && state.sun.vy < 0) { state.tutorial.step = 4; state.tutorial.delay = 2.0; showFloating("the abyss drew back.", true); }
           } else if (state.tutorial.step === 4) {
               setTut("◒", "stay high and steady to open the dawn.", false);

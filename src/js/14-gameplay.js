@@ -90,7 +90,6 @@
     state.sun.impulseEfficiency = lerp(state.sun.impulseEfficiency, 1, dt * 5);
 
     state.sun.errorTremor = lerp(state.sun.errorTremor, 0, dt * 15);
-    state.sun.reachHint = Math.max(0, state.sun.reachHint - dt * 1.6);
     state.sun.glowFail = lerp(state.sun.glowFail, 0, dt * 12);
 
     // --- SISTEMA BIOLÓGICO: RESPIRAÇÃO v2.0 ---

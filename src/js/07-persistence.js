@@ -71,8 +71,6 @@
       if (document.getElementById('valMas')) document.getElementById('valMas').textContent = settings.audio.master + '%';
       
       if (document.getElementById('setDiff')) document.getElementById('setDiff').value = settings.gameplay.difficulty;
-      if (document.getElementById('setSens')) document.getElementById('setSens').value = settings.gameplay.sensitivity;
-      if (document.getElementById('valSens')) document.getElementById('valSens').textContent = settings.gameplay.sensitivity + '%';
       if (document.getElementById('setHap')) document.getElementById('setHap').checked = settings.gameplay.haptics;
       if (document.getElementById('valHap')) document.getElementById('valHap').textContent = t(settings.gameplay.haptics ? 'on' : 'off');
       if (document.getElementById('setVisFb')) document.getElementById('setVisFb').value = settings.gameplay.feedback;
