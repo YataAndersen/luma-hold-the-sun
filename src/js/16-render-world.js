@@ -98,6 +98,7 @@
     // drawDust(); // Desativado para performance extrema
       drawForeground(); // Desenhado por último. Se o sol cair, ele esconde ATRÁS do mato rasteiro!
     ctx.restore();
+    drawMolduraFG(); // na frente de TUDO, inclusive do sol: e a lente, nao o mundo.
     drawRain();
     drawDawnGoal();
     drawDangerOverlay();
@@ -348,106 +349,59 @@
       ctx.restore();
     };
 
-    // CINEMATOGRAPHIC DEPTH v4.0 (Flawless Atmospheric Perspective)
-    let backColor3 = mixColor([42, 95, 122], [232, 158, 107], d * 0.7 + w * 0.3);
-    let backColor2 = mixColor([26, 47, 68], [196, 107, 78], d * 0.65 + w * 0.35); 
-    let backColor1 = mixColor([10, 26, 42], [139, 90, 74], d * 0.6 + w * 0.4);
-    
-    if (state.biome === 'meadow') {
-        backColor3 = mixColor([106, 143, 106], [196, 107, 78], d*0.7+w*0.3); backColor2 = mixColor([90, 122, 79], [196, 107, 78], d*0.65+w*0.35); backColor1 = mixColor([74, 106, 63], [139, 90, 74], d*0.6+w*0.4);
-    } else if (state.biome === 'hills') {
-        backColor3 = mixColor([122, 143, 143], [196, 107, 78], d*0.7+w*0.3); backColor2 = mixColor([106, 127, 127], [196, 107, 78], d*0.65+w*0.35); backColor1 = mixColor([90, 111, 111], [139, 90, 74], d*0.6+w*0.4);
-    } else if (state.biome === 'coast') {
-        backColor3 = mixColor([35, 92, 227], [196, 107, 78], d*0.7+w*0.3); backColor2 = mixColor([58, 122, 217], [196, 107, 78], d*0.65+w*0.35); backColor1 = mixColor([138, 203, 162], [139, 90, 74], d*0.6+w*0.4);
-    } else if (state.biome === 'snow') {
-        backColor3 = mixColor([40, 60, 80], [180, 200, 220], d * 0.7 + w * 0.3);
-        backColor2 = mixColor([30, 45, 65], [140, 170, 190], d * 0.65 + w * 0.35);
-        backColor1 = mixColor([20, 30, 50], [100, 130, 160], d * 0.6 + w * 0.4);
-    } else if (state.biome === 'sea') {
-        backColor3 = mixColor([15, 30, 50], [40, 100, 140], d * 0.7 + w * 0.3);
-        backColor2 = mixColor([10, 20, 40], [30, 80, 120], d * 0.65 + w * 0.35);
-        backColor1 = mixColor([5, 15, 30], [20, 60, 90], d * 0.6 + w * 0.4);
-    } else if (state.biome === 'volcano') {
-        backColor3 = mixColor([30, 15, 20], [120, 40, 30], d * 0.7 + w * 0.3);
-        backColor2 = mixColor([20, 10, 15], [90, 20, 15], d * 0.65 + w * 0.35);
-        backColor1 = mixColor([10, 5, 8], [50, 10, 5], d * 0.6 + w * 0.4);
-    } else if (state.biome === 'aether') {
-        backColor3 = mixColor([30, 20, 50], [160, 100, 200], d * 0.7 + w * 0.3);
-        backColor2 = mixColor([20, 15, 40], [120, 70, 160], d * 0.65 + w * 0.35);
-        backColor1 = mixColor([15, 10, 30], [80, 40, 120], d * 0.6 + w * 0.4);
-    } else if (state.biome === 'cosmos') {
-        backColor3 = mixColor([10, 15, 25], [30, 40, 60], d * 0.7 + w * 0.3);
-        backColor2 = mixColor([5, 10, 15], [20, 30, 50], d * 0.65 + w * 0.35);
-        backColor1 = mixColor([0, 5, 10], [10, 20, 35], d * 0.6 + w * 0.4);
-    } else if (state.biome === 'desert') {
-        backColor3 = mixColor([60, 30, 20], [200, 120, 70], d * 0.7 + w * 0.3);
-        backColor2 = mixColor([40, 20, 15], [160, 90, 50], d * 0.65 + w * 0.35);
-        backColor1 = mixColor([30, 15, 10], [120, 60, 40], d * 0.6 + w * 0.4);
-    } else if (state.biome === 'crystal') {
-        backColor3 = mixColor([25, 10, 45], [80, 40, 140], d * 0.7 + w * 0.3);
-        backColor2 = mixColor([15, 5, 30], [60, 25, 100], d * 0.65 + w * 0.35);
-        backColor1 = mixColor([10, 2, 20], [40, 15, 70], d * 0.6 + w * 0.4);
-    } else if (state.biome === 'city') {
-        backColor3 = mixColor([30, 20, 45], [100, 50, 80], d * 0.7 + w * 0.3);
-        backColor2 = mixColor([20, 15, 35], [70, 30, 60], d * 0.65 + w * 0.35);
-        backColor1 = mixColor([10, 8, 20], [40, 15, 40], d * 0.6 + w * 0.4);
-    } else if (state.biome === 'autumn') {
-        backColor3 = mixColor([80, 40, 30], [180, 100, 60], d*0.7+w*0.3);
-        backColor2 = mixColor([60, 30, 20], [140, 80, 40], d*0.65+w*0.35);
-        backColor1 = mixColor([40, 20, 15], [100, 60, 30], d*0.6+w*0.4);
-    } else if (state.biome === 'swamp') {
-        backColor3 = mixColor([20, 40, 30], [80, 140, 100], d*0.7+w*0.3);
-        backColor2 = mixColor([15, 30, 25], [60, 100, 80], d*0.65+w*0.35);
-        backColor1 = mixColor([10, 20, 15], [40, 80, 60], d*0.6+w*0.4);
-    } else if (state.biome === 'sakura') {
-        backColor3 = mixColor([40, 20, 30], [200, 120, 160], d*0.7+w*0.3);
-        backColor2 = mixColor([30, 15, 25], [160, 100, 140], d*0.65+w*0.35);
-        backColor1 = mixColor([20, 10, 15], [120, 80, 100], d*0.6+w*0.4);
-    } else if (state.biome === 'canyon') {
-        backColor3 = mixColor([50, 25, 20], [160, 80, 40], d*0.7+w*0.3);
-        backColor2 = mixColor([40, 20, 15], [120, 60, 30], d*0.65+w*0.35);
-        backColor1 = mixColor([30, 15, 10], [100, 50, 25], d*0.6+w*0.4);
-    } else if (state.biome === 'ruins') {
-        backColor3 = mixColor([20, 40, 35], [80, 160, 140], d*0.7+w*0.3);
-        backColor2 = mixColor([15, 30, 25], [60, 120, 100], d*0.65+w*0.35);
-        backColor1 = mixColor([10, 20, 15], [40, 80, 70], d*0.6+w*0.4);
-    } else if (state.biome === 'abyss') {
-        backColor3 = mixColor([8, 12, 20], [15, 25, 45], d*0.7+w*0.3);
-        backColor2 = mixColor([5, 8, 15], [10, 15, 30], d*0.65+w*0.35);
-        backColor1 = mixColor([2, 5, 10], [5, 10, 20], d*0.6+w*0.4);
-    } else if (state.biome === 'shattered') {
-        backColor3 = mixColor([25, 15, 15], [100, 40, 40], d*0.7+w*0.3);
-        backColor2 = mixColor([15, 10, 10], [70, 25, 25], d*0.65+w*0.35);
-        backColor1 = mixColor([10, 5, 5], [40, 15, 15], d*0.6+w*0.4);
-    } else if (state.biome === 'nebula') {
-        backColor3 = mixColor([30, 10, 45], [140, 50, 180], d*0.7+w*0.3);
-        backColor2 = mixColor([20, 5, 30], [100, 30, 140], d*0.65+w*0.35);
-        backColor1 = mixColor([10, 2, 20], [60, 15, 100], d*0.6+w*0.4);
-    } else if (state.biome === 'cyber') {
-        backColor3 = mixColor([15, 10, 30], [60, 20, 120], d*0.7+w*0.3);
-        backColor2 = mixColor([10, 5, 20], [40, 10, 80], d*0.65+w*0.35);
-        backColor1 = mixColor([5, 2, 15], [20, 5, 50], d*0.6+w*0.4);
-    } else if (state.biome === 'zenith') {
-        backColor3 = mixColor([150, 150, 160], [255, 240, 250], d*0.7+w*0.3);
-        backColor2 = mixColor([120, 120, 130], [255, 255, 255], d*0.65+w*0.35);
-        backColor1 = mixColor([90, 90, 100], [240, 240, 255], d*0.6+w*0.4);
-    } else if (['ursa', 'orion', 'aries'].includes(state.biome)) {
-        backColor3 = mixColor([5, 10, 20], [15, 25, 45], d * 0.7 + w * 0.3);
-        backColor2 = mixColor([2, 5, 15], [10, 15, 30], d * 0.65 + w * 0.35);
-        backColor1 = mixColor([0, 2, 8], [5, 10, 20], d * 0.6 + w * 0.4);
-    }
-    
-    if (state.biome === 'storm') {
-        const ri = state.weather.rainIntensity;
-        backColor3 = mixColor(backColor3, [40, 45, 50], ri);
-        backColor2 = mixColor(backColor2, [30, 35, 40], ri);
-        backColor1 = mixColor(backColor1, [20, 25, 30], ri);
-    }
-    
+    // --- UMA COR POR BIOMA, CINCO PLANOS DERIVADOS ---
+    // Antes cada bioma escolhia TRES cores de montanha a mao, sem relacao entre si: 54
+    // pares de RGB decididos isoladamente. Nada garantia que os planos conversassem, e a
+    // maior parte do trabalho era manter a mao firme em 18 lugares diferentes.
+    //
+    // Agora cada bioma declara so a sua IDENTIDADE — a cor do plano mais proximo, a rocha
+    // sem ar pelo meio — e os cinco planos saem dela por perspectiva aerea: cada degrau
+    // mistura mais atmosfera. A harmonia deixa de ser sorte e passa a ser aritmetica, e
+    // sobra uma decisao por bioma em vez de tres.
+    const IDENTIDADE = {
+      meadow: [[74, 106, 63], [139, 90, 74]],
+      hills: [[90, 111, 111], [139, 90, 74]],
+      coast: [[138, 203, 162], [139, 90, 74]],
+      snow: [[20, 30, 50], [100, 130, 160]],
+      sea: [[5, 15, 30], [20, 60, 90]],
+      volcano: [[10, 5, 8], [50, 10, 5]],
+      aether: [[15, 10, 30], [80, 40, 120]],
+      cosmos: [[0, 5, 10], [10, 20, 35]],
+      desert: [[30, 15, 10], [120, 60, 40]],
+      crystal: [[10, 2, 20], [40, 15, 70]],
+      city: [[10, 8, 20], [40, 15, 40]],
+      autumn: [[40, 20, 15], [100, 60, 30]],
+      swamp: [[10, 20, 15], [40, 80, 60]],
+      sakura: [[20, 10, 15], [120, 80, 100]],
+      canyon: [[30, 15, 10], [100, 50, 25]],
+      ruins: [[10, 20, 15], [40, 80, 70]],
+      abyss: [[2, 5, 10], [5, 10, 20]],
+      shattered: [[10, 5, 5], [40, 15, 15]],
+      nebula: [[10, 2, 20], [60, 15, 100]],
+      cyber: [[5, 2, 15], [20, 5, 50]],
+      zenith: [[90, 90, 100], [240, 240, 255]],
+    };
+    const [chaveNoite, chaveDia] = IDENTIDADE[state.biome] || [[10, 26, 42], [139, 90, 74]];
+    let corBase = mixColor(chaveNoite, chaveDia, d * 0.6 + w * 0.4);
+
+    if (state.biome === 'storm') corBase = mixColor(corBase, [20, 25, 30], state.weather.rainIntensity);
+
+    // A escada de ar. Os degraus sao desiguais de proposito: a atmosfera se acumula rapido
+    // no comeco e satura no fim, entao dobrar a distancia nao dobra a bruma.
+    const arNoPlano = ar => mixColor(corBase, horizonAtmosphereColor, ar);
+    const backColor1 = corBase;          // rocha, sem ar
+    const backColor2 = arNoPlano(0.26);
+    const backColor3 = arNoPlano(0.48);
+
     // A serra de bruma vai antes de tudo e quase nao se move: parallax lento e o que o
     // olho le como "muito longe". A cor puxa para a atmosfera do horizonte, nao para a
     // rocha, porque a esta distancia o ar pesa mais do que a materia.
-    const brumaLonge = mixColor(backColor3, horizonAtmosphereColor, 0.62);
+    // PERSPECTIVA AEREA EM DEGRAUS. Cada plano recua um passo a mais na direcao da cor do
+    // ar, e nao apenas escurece: e a proporcao de ATMOSFERA na mistura que o olho le como
+    // distancia. bg5 esta a 85% de ar — sobra so o suficiente para nao sumir.
+    const limiteDoMundo = arNoPlano(0.86);
+    const brumaLonge = arNoPlano(0.68);
+    drawLayer('bg5', limiteDoMundo, state.camera.y * 0.03, 300);
     drawLayer('bg4', brumaLonge, state.camera.y * 0.07, 260);
     drawLayer('bg3', backColor3, state.camera.y * 0.15, 220); 
     drawLayer('bg2', backColor2, state.camera.y * 0.3, 160); 
@@ -650,9 +604,15 @@
     if (state.biome === 'storm') tColor = mixColor(tColor, [20, 30, 25], state.weather.rainIntensity);
     
     const trunkColor = mixColor([10, 20, 36], [68, 42, 30], d); 
+    // Cor do ar na altura do bosque, para a perspectiva aerea das arvores distantes.
+    const horizonAtmosphereColorTrees = mixColor([68, 103, 192], [245, 215, 179], clamp(d, 0, 1));
     for (const t of state.world.trees) {
       const tx = t.x;
-      const ty = HORIZON_Y - 5;
+      // A arvore distante senta mais alto (mais perto da linha do horizonte) e recebe
+      // uma dose de atmosfera na cor — a mesma regra das serras, na escala do bosque.
+      const ty = HORIZON_Y - 5 - (t.recuo || 0);
+      const ar = (t.dist || 0) * 0.55;
+      const corCopa = mixColor(tColor, horizonAtmosphereColorTrees, ar);
       const th = t.h + Math.sin(state.t * 0.5 + t.wobble) * 2;
       const tw = t.w;
       
@@ -669,7 +629,7 @@
       const cx = tx + wind * 1.5;
       const cy = ty - th;
       
-      ctx.fillStyle = `rgb(${tColor.join(',')})`;
+      ctx.fillStyle = `rgb(${corCopa.join(',')})`;
 
       // Quatro silhuetas em vez de uma. Uma copa e lida pela borda, nao pelo volume:
       // e a linha de cima que diz "pinheiro" ou "carvalho" a cem metros de distancia.
@@ -899,6 +859,110 @@
 
       ctx.restore();
   }
+
+  // --- PRIMEIRO PLANO FORA DE FOCO ---
+  // Profundidade de campo e o que separa "ilustracao chapada" de "fotografia": o olho
+  // aceita o desfoque como prova de que ha uma lente, e o cenario ganha um eixo Z que
+  // nenhuma quantidade de parallax entrega sozinha.
+  //
+  // O desfoque e caro: ctx.filter custa proporcional a AREA borrada, e este projeto ja
+  // pagou por isso antes. Por isso a moldura e desenhada UMA VEZ num canvas fora de tela,
+  // com o blur aplicado ali, e depois so copiada a cada quadro. O custo por frame vira um
+  // unico drawImage, e o raio do desfoque passa a ser de graca.
+  let fgCache = null, fgCacheChave = '';
+
+  function renderizarMolduraFG(corArr, rimArr) {
+    const cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    const g = cv.getContext('2d');
+    g.filter = 'blur(7px)';
+
+    // Duas passadas. A primeira, um pouco maior e mais clara, sobra como um fio de luz na
+    // borda; a segunda cobre o miolo de escuro. Sem esse rim, uma silhueta quase preta
+    // sobre chao quase preto nao e forma, e buraco — foi exatamente o que aconteceu aqui.
+    for (const passada of [0, 1]) {
+      g.fillStyle = `rgb(${(passada ? corArr : rimArr).join(',')})`;
+      g.strokeStyle = g.fillStyle;
+      const inflar = passada ? 1 : 1.06;
+      desenharProps(g, inflar);
+    }
+    g.filter = 'none';
+    return cv;
+  }
+
+  function desenharProps(g, inflar) {
+
+    for (const p of state.world.fgProps) {
+      const e = p.escala * inflar;
+      g.save();
+      g.translate(p.x, H);
+
+      if (p.tipo === 'galho') {
+        // Curvas contra retas: o galho e uma curva longa, as folhas sao cunhas retas.
+        // Uma silhueta so de curvas fica mole, so de retas fica dura — a oposicao faz ler.
+        g.beginPath();
+        g.moveTo(0, 40 * e);
+        g.quadraticCurveTo(p.lado * 60 * e, -120 * e, p.lado * 30 * e, -300 * e);
+        g.lineWidth = 16 * e;
+        g.lineCap = 'round';
+        g.stroke();
+        for (let i = 0; i < 7; i++) {
+          const t = 0.25 + i * 0.11;
+          const fx = p.lado * (60 * e * 2 * t * (1 - t) + 30 * e * t * t);
+          const fy = 40 * e + (-160 * e) * 2 * t * (1 - t) + (-340 * e) * t * t;
+          const dir = (i % 2 ? 1 : -1) * p.lado;
+          g.beginPath();
+          g.moveTo(fx, fy);
+          g.lineTo(fx + dir * 52 * e, fy - 16 * e);
+          g.lineTo(fx + dir * 44 * e, fy + 20 * e);
+          g.closePath(); g.fill();
+        }
+      } else if (p.tipo === 'capim') {
+        // Big / medium / small dentro do proprio tufo: uma lamina domina, duas acompanham,
+        // o resto e detalhe. Tres alturas iguais nao formam grupo, formam cerca.
+        for (let i = 0; i < 11; i++) {
+          const dom = i === 3 ? 1.0 : (i === 6 || i === 1 ? 0.72 : 0.42);
+          const alt = (300 * e) * dom;
+          const bx = (i - 5) * 17 * e;
+          const curva = Math.sin(p.semente + i) * 40 * e;
+          g.beginPath();
+          g.moveTo(bx - 7 * e, 40 * e);
+          g.quadraticCurveTo(bx + curva * 0.4, -alt * 0.6, bx + curva, -alt);
+          g.quadraticCurveTo(bx + curva * 0.4, -alt * 0.6, bx + 7 * e, 40 * e);
+          g.closePath(); g.fill();
+        }
+      } else {
+        // Rocha: retas dominantes com um unico canto arredondado. O contrario do capim,
+        // de proposito — bioma sem vegetacao precisa de peso, nao de leveza.
+        g.beginPath();
+        g.moveTo(-120 * e, 60 * e);
+        g.lineTo(-90 * e, -180 * e);
+        g.lineTo(-10 * e, -240 * e);
+        g.quadraticCurveTo(70 * e, -230 * e, 95 * e, -120 * e);
+        g.lineTo(130 * e, 60 * e);
+        g.closePath(); g.fill();
+      }
+      g.restore();
+    }
+  }
+
+  function drawMolduraFG() {
+    if (!state.world.fgProps.length) return;
+    const d = state.sky.dawn;
+    // Quase silhueta pura: o primeiro plano nao disputa valor com o foco.
+    const corArr = mixColor([6, 10, 18], [30, 20, 16], d);
+    // O rim puxa a cor do proprio ceu: e a luz do mundo batendo na borda do que esta perto.
+    const rimArr = mixColor([46, 62, 92], [120, 92, 74], d);
+    const chave = `${state.biome}|${W}x${H}|${Math.round(d * 6)}`;
+    if (chave !== fgCacheChave) { fgCache = renderizarMolduraFG(corArr, rimArr); fgCacheChave = chave; }
+    if (!fgCache) return;
+    ctx.save();
+    ctx.globalAlpha = 0.9;
+    // Parallax mais rapido que tudo: o que esta perto da lente corre mais.
+    ctx.drawImage(fgCache, 0, state.camera.y * 0.55 + Math.sin(state.world.breath) * 10);
+    ctx.restore();
+  }
+
   function drawRain() {
       if (state.biome !== 'storm' || state.weather.rainIntensity <= 0.01) return;
       ctx.save();

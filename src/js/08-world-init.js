@@ -69,6 +69,14 @@
     };
 
     // faixas: [alturaMin, alturaMax, larguraMin, larguraMax]
+    // bg5 e o limite do mundo: quase inteiramente dissolvida no ceu. Perspectiva AEREA
+    // levada ao extremo — a esta distancia o ar venceu a rocha e so resta um degrau de
+    // valor. Nao serve para ser vista, serve para o olho saber que ha mundo alem.
+    gerarSerra('bg5', {
+      mix: [0.9, 1.0], grupo: [5, 9], vao: [0, 20], assimetria: 0.06, steep: [0.6, 0.85],
+      alto:  [60, 95, 420, 620], medio: [45, 60, 340, 420], baixo: [35, 45, 280, 340]
+    });
+
     // bg4 e a serra mais distante: baixa, larguissima e quase sem contraste, vista pelos
     // vaos das outras. Existe so para a bruma ter em que se agarrar — e o que transforma
     // "tres camadas" em "distancia". Sem ela o horizonte termina abruptamente na bg3.
@@ -101,6 +109,32 @@
       peak: rand(-0.3, 0.3),
       steep: rand(0.18, 0.3) // mais ingreme que a media do plano: le como "o pico"
     });
+
+    // --- PRIMEIRO PLANO: BORDA INFERIOR ---
+    // Primeira tentativa deste plano colocou galhos grandes nas laterais, como abertura de
+    // filme. Ficou errado por dois motivos, e o segundo e de jogo, nao de arte:
+    //   1. borrado a 7px, a forma virou mancha. Silhueta boa "salta da pagina"; borrao nao
+    //      salta, e o desfoque nao conserta uma forma que nao le nitida.
+    //   2. num jogo de subida vertical, o que fica nas LATERAIS fica ali a corrida inteira,
+    //      espremendo o espaco de jogo. O que fica embaixo sai de cena conforme se sobe.
+    // Entao a moldura virou uma faixa na base, com parallax rapido: enquadra a largada e
+    // se despede quando o sol ganha altura. Enquadrar sem estorvar.
+    state.world.fgProps.length = 0;
+    const folhagem = ['forest','snow','autumn','sakura','swamp','meadow','hills'].includes(state.biome);
+    let fx = -30;
+    while (fx < W + 60) {
+      // 1-2-3: um tufo dominante, um medio de apoio, e os pequenos que costuram os dois.
+      const papel = Math.random();
+      const dom = papel < 0.18 ? 1.0 : (papel < 0.48 ? 0.62 : 0.34);
+      state.world.fgProps.push({
+        x: fx,
+        escala: dom * rand(0.85, 1.15),
+        lado: Math.random() < 0.5 ? -1 : 1,
+        tipo: folhagem ? 'capim' : 'rocha',
+        semente: Math.random() * 1000
+      });
+      fx += rand(34, 78);
+    }
 
     // --- GERAÇÃO EXCLUSIVA DE AMBIENTE ---
     if (state.biome === 'city' || state.biome === 'storm') {
@@ -175,8 +209,16 @@
                 if (sorte < 0.6) { th = rand(35, 55); tw = rand(40, 60); }
                 else if (sorte < 0.88) { th = rand(20, 35); tw = rand(25, 40); }
                 else { th = rand(12, 20); tw = rand(15, 25); }
+                // Profundidade DENTRO da mata. Antes toda arvore vivia na mesma linha, na
+                // mesma escala: uma fileira, nao um bosque. Agora cada uma tem sua propria
+                // distancia, e ela governa escala, altura na tela e quanto ar entra na cor.
+                // Grande e pequeno lado a lado e o que faz a mata ter fundo.
+                const dist = Math.random();
+                const escala = 1.15 - dist * 0.62;
                 state.world.trees.push({
-                    x: tx, h: th, w: tw,
+                    x: tx, h: th * escala, w: tw * escala,
+                    dist: dist,
+                    recuo: dist * 16,
                     wobble: Math.random() * Math.PI * 2,
                     kind: sortearSilhueta()
                 });
@@ -184,6 +226,10 @@
             }
             tx += rand(aberto ? 90 : 45, aberto ? 190 : 120); // a clareira
         }
+        // As mais distantes vao ao fundo do array para serem desenhadas primeiro:
+        // sobreposicao e a pista de profundidade mais forte que existe.
+        state.world.trees.sort((a, b) => b.dist - a.dist);
+
         for (let i = 0; i < 35; i++) {
             if (state.biome === 'hills' && Math.random() < 0.3) continue;
             state.world.bushes.push({ x: rand(-20, W + 50), h: rand(8, 18), w: rand(15, 32), wobble: Math.random() * Math.PI * 2 });

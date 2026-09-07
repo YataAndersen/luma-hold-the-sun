@@ -131,7 +131,7 @@
 
     world: {
       stars: [], horizonStars: [], mountains: [], skyline: [], birds: [], rare: [], ambientDust: [], clouds: [], rain: [],
-      dust: [], sparks: [], pulses: [], trail: [], leaves: [], trees: [], bushes: [], constellation: null,
+      dust: [], sparks: [], pulses: [], trail: [], leaves: [], trees: [], bushes: [], fgProps: [], constellation: null,
       breath: 0
     }
   };
