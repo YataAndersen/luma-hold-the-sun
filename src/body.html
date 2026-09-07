@@ -79,10 +79,9 @@
 
   <div id="missionToast" class="mission-toast">Dawn remembered</div>
 
-  <div class="tutorial-panel hidden" id="tutorialPanel">
-    <div class="tutorial-title" id="tutorialTitle">move your light toward the sun</div>
-    <div class="tutorial-sub" id="tutorialSub">stay close to sustain the light</div>
-  </div>
+  <!-- Havia aqui um segundo painel com a MESMA classe .tutorial-panel e a mesma ancora
+       de posicao do #tutorialContainer. Nenhum JS o referenciava: markup morto que so
+       duplicava a classe e atrapalhava depurar sobreposicao no rodape. -->
 
   <div id="menuScreen" class="screen menu-screen">
     <div class="altar-wrapper">

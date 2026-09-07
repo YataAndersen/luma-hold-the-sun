@@ -150,10 +150,14 @@
     }
 
 
-    /* O painel do tutorial ficava em top:16% — e o capitulo 1 existe justamente para
+    /* Duas correcoes aqui. A primeira: o painel ficava em top:16% — e o capitulo 1 existe justamente para
        FAZER O SOL SUBIR, entao ele subia para dentro do card. O texto que ensina a
-       olhar para o sol tapava o sol. Vai para a base, junto das outras mensagens. */
-    .tutorial-panel{position:absolute;left:50%;bottom:9%;transform:translateX(-50%);z-index:28;min-width:260px;max-width:84%;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(10px);text-align:center;transition:opacity .35s ease,transform .35s ease;pointer-events:none}
+       olhar para o sol tapava o sol. Foi para a base.
+       A segunda: na base ele passou a dividir espaco com a faixa escura do primeiro plano,
+       e um card translucido sobre uma massa escura le como se estivesse ATRAS dela. Subiu
+       para 19% (acima da faixa) e ganhou fundo opaco: card de interface tem que parecer
+       interface, nao vidro sobre borrao. */
+    .tutorial-panel{position:absolute;left:50%;bottom:19%;transform:translateX(-50%);z-index:28;min-width:260px;max-width:84%;padding:14px 16px;border-radius:18px;background:rgba(12,18,30,.72);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.35);text-align:center;transition:opacity .35s ease,transform .35s ease;pointer-events:none}
     .tutorial-panel.hidden{opacity:0;transform:translateX(-50%) translateY(8px)}
     .tut-icon{font-size:22px;line-height:1;color:var(--sun-glow);opacity:.92;margin-bottom:9px;text-shadow:0 0 14px rgba(255,216,147,.45)}
     .tut-text{font:300 13px/1.55 var(--font-display);letter-spacing:.05em;color:var(--ui-primary);text-transform:lowercase}

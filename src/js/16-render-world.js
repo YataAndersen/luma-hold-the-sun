@@ -427,6 +427,13 @@
 
     if (state.biome === 'storm') corBase = mixColor(corBase, [20, 25, 30], state.weather.rainIntensity);
 
+    // O color script entra AQUI, depois da identidade do bioma e antes da escada de ar:
+    // o lugar continua sendo ele, muda o momento da jornada em que voce o encontra.
+    const script = scriptCromatico(isTutorialActive() ? 'm1' :
+      ((typeof experienceState !== 'undefined' && experienceState && experienceState.mission && experienceState.mission.id) || 'm1'));
+    corBase = aplicarScript(corBase, script);
+    horizonAtmosphereColor = aplicarScript(horizonAtmosphereColor, script);
+
     // --- AGRUPAMENTO DE VALOR ---
     // A escada de ar era regular: 0 / 0,26 / 0,48 / 0,68 / 0,86. Cinco planos igualmente
     // espacados produzem cinco valores distintos, e medindo a cena isso deu ONZE massas de
@@ -459,9 +466,9 @@
 
     // Alvos de valor por grupo. Abrem com o amanhecer, mas a DISTANCIA entre eles e o que
     // importa: e ela que sobrevive ao teste de 4 valores.
-    const vPerto = 16 + d * 26;
-    const vMeio  = 52 + d * 58;
-    const vLonge = 104 + d * 96;
+    const vPerto = (16 + d * 26) * script.valor;
+    const vMeio  = (52 + d * 58) * script.valor;
+    const vLonge = (104 + d * 96) * script.valor;
 
     const backColor1 = comValor(corBase, vPerto);
     const backColor2 = comValor(arNoPlano(0.14), vPerto * 1.35);

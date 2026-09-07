@@ -161,10 +161,14 @@
     }
 
 
-    /* O painel do tutorial ficava em top:16% — e o capitulo 1 existe justamente para
+    /* Duas correcoes aqui. A primeira: o painel ficava em top:16% — e o capitulo 1 existe justamente para
        FAZER O SOL SUBIR, entao ele subia para dentro do card. O texto que ensina a
-       olhar para o sol tapava o sol. Vai para a base, junto das outras mensagens. */
-    .tutorial-panel{position:absolute;left:50%;bottom:9%;transform:translateX(-50%);z-index:28;min-width:260px;max-width:84%;padding:14px 16px;border-radius:18px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);backdrop-filter:blur(10px);text-align:center;transition:opacity .35s ease,transform .35s ease;pointer-events:none}
+       olhar para o sol tapava o sol. Foi para a base.
+       A segunda: na base ele passou a dividir espaco com a faixa escura do primeiro plano,
+       e um card translucido sobre uma massa escura le como se estivesse ATRAS dela. Subiu
+       para 19% (acima da faixa) e ganhou fundo opaco: card de interface tem que parecer
+       interface, nao vidro sobre borrao. */
+    .tutorial-panel{position:absolute;left:50%;bottom:19%;transform:translateX(-50%);z-index:28;min-width:260px;max-width:84%;padding:14px 16px;border-radius:18px;background:rgba(12,18,30,.72);border:1px solid rgba(255,255,255,.14);backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.35);text-align:center;transition:opacity .35s ease,transform .35s ease;pointer-events:none}
     .tutorial-panel.hidden{opacity:0;transform:translateX(-50%) translateY(8px)}
     .tut-icon{font-size:22px;line-height:1;color:var(--sun-glow);opacity:.92;margin-bottom:9px;text-shadow:0 0 14px rgba(255,216,147,.45)}
     .tut-text{font:300 13px/1.55 var(--font-display);letter-spacing:.05em;color:var(--ui-primary);text-transform:lowercase}
@@ -803,10 +807,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
 
   <div id="missionToast" class="mission-toast">Dawn remembered</div>
 
-  <div class="tutorial-panel hidden" id="tutorialPanel">
-    <div class="tutorial-title" id="tutorialTitle">move your light toward the sun</div>
-    <div class="tutorial-sub" id="tutorialSub">stay close to sustain the light</div>
-  </div>
+  <!-- Havia aqui um segundo painel com a MESMA classe .tutorial-panel e a mesma ancora
+       de posicao do #tutorialContainer. Nenhum JS o referenciava: markup morto que so
+       duplicava a classe e atrapalhava depurar sobreposicao no rodape. -->
 
   <div id="menuScreen" class="screen menu-screen">
     <div class="altar-wrapper">
@@ -3359,6 +3362,54 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     };
   }
 
+
+  // --- COLOR SCRIPT ---
+  // Um color script nao e escolher uma paleta bonita por cena: e organizar a progressao
+  // emocional cromatica da experiencia inteira. O LUMA nao tinha nenhum. Pior: a ordem dos
+  // biomas repete literalmente — as missoes 1 a 19 e 20 a 38 percorrem a MESMA sequencia,
+  // e as tres constelacoes se alternam tres vezes. A jornada dava a volta e recomecava.
+  //
+  // Em vez de reordenar os biomas (eles carregam o nome e a identidade de cada ritual), o
+  // script modula por cima. E a repeticao vira o argumento: o jogo e sobre devolver a luz
+  // ao mundo, entao a SEGUNDA passagem pelos mesmos lugares tem que estar mais quente,
+  // mais saturada e mais alta em valor que a primeira. O mesmo lugar, acordado.
+  //
+  //   Ato I   (1-19)   o mundo apagado. Frio, dessaturado, baixo.
+  //   Ato II  (20-38)  os mesmos lugares despertando. Calor e croma entram.
+  //   Ato III (39-47)  as constelacoes. Frio de novo, mas ALTO — fino, limpo, cosmico.
+  //                    E a queda de temperatura antes do pagamento, como Nava descreve:
+  //                    esfriar de proposito para a chegada valer.
+  //   Ato IV  (48-50)  o zenite. Calor cheio, croma cheio, o ponto mais claro da jornada.
+  function scriptCromatico(missionId) {
+    const n = parseInt(String(missionId || 'm1').slice(1), 10) || 1;
+    const entre = (a, b, t) => a + (b - a) * clamp(t, 0, 1);
+
+    if (n <= 19) {
+      const t = (n - 1) / 18;
+      return { calor: entre(0.00, 0.18, t), croma: entre(0.55, 0.72, t), valor: entre(0.82, 0.95, t) };
+    }
+    if (n <= 38) {
+      const t = (n - 20) / 18;
+      return { calor: entre(0.30, 0.62, t), croma: entre(0.85, 1.05, t), valor: entre(1.02, 1.18, t) };
+    }
+    if (n <= 47) {
+      const t = (n - 39) / 8;
+      // A quebra: o calor cai de 0,62 para 0,10 de uma missao para a outra. E o contraste
+      // entre vizinhos que faz o arco existir — uma rampa monotona nao e script, e degrade.
+      return { calor: entre(0.10, 0.04, t), croma: entre(0.5, 0.38, t), valor: entre(1.22, 1.38, t) };
+    }
+    const t = (n - 48) / 2;
+    return { calor: entre(0.55, 0.92, t), croma: entre(0.9, 1.15, t), valor: entre(1.35, 1.6, t) };
+  }
+
+  // Aplica calor e croma preservando a identidade do bioma: o lugar continua sendo ele,
+  // muda o momento da jornada em que voce o encontra.
+  function aplicarScript(cor, s) {
+    const cinza = 0.2126 * cor[0] + 0.7152 * cor[1] + 0.0722 * cor[2];
+    const comCroma = cor.map(c => cinza + (c - cinza) * s.croma);
+    const quente = [255, 186, 122];
+    return comCroma.map((c, i) => c + (quente[i] - c) * s.calor * 0.34);
+  }
   const state = {
     mode: "menu",
     emotion: new EmotionRuntime(),
@@ -5178,7 +5229,15 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   function posicionarLongeDoSol(el) {
     if (!el) return;
     const solNaTela = (state.sun.y + state.camera.y) / H;   // 0 = topo, 1 = base
-    el.style.top = solNaTela > 0.5 ? '22%' : '80%';
+
+    // Durante o tutorial a base nao esta livre: o painel de ensino mora la (77%-91%) e
+    // as mensagens caiam DENTRO dele — medido, a flutuante nascia a 695px e o painel
+    // comecava em 694. Enquanto o tutorial fala, a faixa de baixo e dele.
+    const tutorialNaTela = ui.tutContainer && !ui.tutContainer.classList.contains('hidden');
+    const faixaBaixa = tutorialNaTela ? '58%' : '80%';
+
+    // O topo tambem tem dono: o HUD do tempo e da altitude vai ate ~11%.
+    el.style.top = solNaTela > 0.5 ? '20%' : faixaBaixa;
   }
 
   function showFloating(text, good = true) {
@@ -6677,6 +6736,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
 
     if (state.biome === 'storm') corBase = mixColor(corBase, [20, 25, 30], state.weather.rainIntensity);
 
+    // O color script entra AQUI, depois da identidade do bioma e antes da escada de ar:
+    // o lugar continua sendo ele, muda o momento da jornada em que voce o encontra.
+    const script = scriptCromatico(isTutorialActive() ? 'm1' :
+      ((typeof experienceState !== 'undefined' && experienceState && experienceState.mission && experienceState.mission.id) || 'm1'));
+    corBase = aplicarScript(corBase, script);
+    horizonAtmosphereColor = aplicarScript(horizonAtmosphereColor, script);
+
     // --- AGRUPAMENTO DE VALOR ---
     // A escada de ar era regular: 0 / 0,26 / 0,48 / 0,68 / 0,86. Cinco planos igualmente
     // espacados produzem cinco valores distintos, e medindo a cena isso deu ONZE massas de
@@ -6709,9 +6775,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
 
     // Alvos de valor por grupo. Abrem com o amanhecer, mas a DISTANCIA entre eles e o que
     // importa: e ela que sobrevive ao teste de 4 valores.
-    const vPerto = 16 + d * 26;
-    const vMeio  = 52 + d * 58;
-    const vLonge = 104 + d * 96;
+    const vPerto = (16 + d * 26) * script.valor;
+    const vMeio  = (52 + d * 58) * script.valor;
+    const vLonge = (104 + d * 96) * script.valor;
 
     const backColor1 = comValor(corBase, vPerto);
     const backColor2 = comValor(arNoPlano(0.14), vPerto * 1.35);

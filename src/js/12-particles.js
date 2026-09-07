@@ -5,7 +5,15 @@
   function posicionarLongeDoSol(el) {
     if (!el) return;
     const solNaTela = (state.sun.y + state.camera.y) / H;   // 0 = topo, 1 = base
-    el.style.top = solNaTela > 0.5 ? '22%' : '80%';
+
+    // Durante o tutorial a base nao esta livre: o painel de ensino mora la (77%-91%) e
+    // as mensagens caiam DENTRO dele — medido, a flutuante nascia a 695px e o painel
+    // comecava em 694. Enquanto o tutorial fala, a faixa de baixo e dele.
+    const tutorialNaTela = ui.tutContainer && !ui.tutContainer.classList.contains('hidden');
+    const faixaBaixa = tutorialNaTela ? '58%' : '80%';
+
+    // O topo tambem tem dono: o HUD do tempo e da altitude vai ate ~11%.
+    el.style.top = solNaTela > 0.5 ? '20%' : faixaBaixa;
   }
 
   function showFloating(text, good = true) {

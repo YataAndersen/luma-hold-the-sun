@@ -201,3 +201,51 @@
     };
   }
 
+
+  // --- COLOR SCRIPT ---
+  // Um color script nao e escolher uma paleta bonita por cena: e organizar a progressao
+  // emocional cromatica da experiencia inteira. O LUMA nao tinha nenhum. Pior: a ordem dos
+  // biomas repete literalmente — as missoes 1 a 19 e 20 a 38 percorrem a MESMA sequencia,
+  // e as tres constelacoes se alternam tres vezes. A jornada dava a volta e recomecava.
+  //
+  // Em vez de reordenar os biomas (eles carregam o nome e a identidade de cada ritual), o
+  // script modula por cima. E a repeticao vira o argumento: o jogo e sobre devolver a luz
+  // ao mundo, entao a SEGUNDA passagem pelos mesmos lugares tem que estar mais quente,
+  // mais saturada e mais alta em valor que a primeira. O mesmo lugar, acordado.
+  //
+  //   Ato I   (1-19)   o mundo apagado. Frio, dessaturado, baixo.
+  //   Ato II  (20-38)  os mesmos lugares despertando. Calor e croma entram.
+  //   Ato III (39-47)  as constelacoes. Frio de novo, mas ALTO — fino, limpo, cosmico.
+  //                    E a queda de temperatura antes do pagamento, como Nava descreve:
+  //                    esfriar de proposito para a chegada valer.
+  //   Ato IV  (48-50)  o zenite. Calor cheio, croma cheio, o ponto mais claro da jornada.
+  function scriptCromatico(missionId) {
+    const n = parseInt(String(missionId || 'm1').slice(1), 10) || 1;
+    const entre = (a, b, t) => a + (b - a) * clamp(t, 0, 1);
+
+    if (n <= 19) {
+      const t = (n - 1) / 18;
+      return { calor: entre(0.00, 0.18, t), croma: entre(0.55, 0.72, t), valor: entre(0.82, 0.95, t) };
+    }
+    if (n <= 38) {
+      const t = (n - 20) / 18;
+      return { calor: entre(0.30, 0.62, t), croma: entre(0.85, 1.05, t), valor: entre(1.02, 1.18, t) };
+    }
+    if (n <= 47) {
+      const t = (n - 39) / 8;
+      // A quebra: o calor cai de 0,62 para 0,10 de uma missao para a outra. E o contraste
+      // entre vizinhos que faz o arco existir — uma rampa monotona nao e script, e degrade.
+      return { calor: entre(0.10, 0.04, t), croma: entre(0.5, 0.38, t), valor: entre(1.22, 1.38, t) };
+    }
+    const t = (n - 48) / 2;
+    return { calor: entre(0.55, 0.92, t), croma: entre(0.9, 1.15, t), valor: entre(1.35, 1.6, t) };
+  }
+
+  // Aplica calor e croma preservando a identidade do bioma: o lugar continua sendo ele,
+  // muda o momento da jornada em que voce o encontra.
+  function aplicarScript(cor, s) {
+    const cinza = 0.2126 * cor[0] + 0.7152 * cor[1] + 0.0722 * cor[2];
+    const comCroma = cor.map(c => cinza + (c - cinza) * s.croma);
+    const quente = [255, 186, 122];
+    return comCroma.map((c, i) => c + (quente[i] - c) * s.calor * 0.34);
+  }
