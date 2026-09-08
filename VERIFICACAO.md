@@ -135,3 +135,32 @@ Ver `RESPIRACAO.md` para os casos completos. Em resumo, toda mudança de núcleo
 **O entulho não parece bug. Parece decisão antiga correta.** Por isso passa em revisão e só aparece jogando.
 
 **Antes de adicionar um canal de feedback novo, procure se já existe um.**
+
+---
+
+## Quinta vez: o teste provava o incremento e nunca o decaimento
+
+Medido no navegador **a 60fps** (a regra do fps funcionando, pela primeira vez a favor):
+sete respirações no ponto rendiam **combo máximo x1**.
+
+O decaimento do combo era condicionado a `state.sun.flowTimer <= 0` — e o `flowTimer`
+**zera sozinho a cada 3,6s**, porque é ele que dispara a revoada. Resultado: o combo caía
+0,8/s durante boa parte de todo ciclo, mesmo jogando perfeitamente. **~4 pontos perdidos por
+ciclo contra +1 por gesto.**
+
+O que isso tornava impossível, sem ninguém ver:
+
+- a secundária **"flow state (combo x3)"** — uma das duas estrelas de quase toda missão;
+- as **8 missões de `COMBO_TARGET`** (alvos de 5 a 14);
+- **toda** condição de perfeição `max combo xN`.
+
+E existia um teste de combo. Ele chamava `tryClickImpulse` catorze vezes **sem rodar a
+física**: provava que o incremento funciona e nunca que o decaimento permite chegar lá.
+
+**O que ficou:** quando uma grandeza tem duas forças em cima dela, testar uma só não diz
+nada. O teste novo verifica que o decaimento **não** depende de um timer que se reinicia
+sozinho, e que a janela de tolerância é maior que o ciclo do gesto — as duas coisas que
+faziam a conta fechar negativa.
+
+**E o padrão, de novo:** o decaimento de 0,8/s era correto quando um gesto saía a cada 0,5s.
+Ele não virou bug; virou entulho quando o ciclo passou a ser 5,8s. Ninguém o "quebrou".

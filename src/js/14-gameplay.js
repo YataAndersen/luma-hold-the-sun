@@ -421,7 +421,26 @@
     state.sky.aurora = lerp(state.sky.aurora, Math.max(state.worldResponse.auroraLevel * .46, state.dawnGoal.completed ? .42 : (state.emotionalState.wonder > .5 ? .15 : 0)), dt * 1.6);
     state.sky.silentSky = lerp(state.sky.silentSky, (state.feedbackLoops.breathingWindow > 0 && !state.sun.nearFail) ? .18 : 0, dt * .8);
 
-    if (state.combo > 0 && state.sun.flowTimer <= 0) state.combo = Math.max(0, state.combo - dt * .8);
+    // O combo mede CONSISTÊNCIA DE RITMO, e por isso só pode se desgastar quando o jogador
+    // sai do ritmo — nunca durante a expiração, que é parte do ritmo.
+    //
+    // A condição anterior era `flowTimer <= 0`, e o flowTimer **zera sozinho a cada 3,6s**
+    // (é ele que dispara a revoada). Ou seja: o combo decaía 0,8/s durante boa parte de todo
+    // ciclo, mesmo jogando bem. Num ciclo de 5,2s isso comia ~4 pontos, e um gesto dá +1 —
+    // **o combo não conseguia passar de 1.** Medido no navegador a 60fps: sete respirações
+    // no ponto, combo máximo x1.
+    //
+    // Consequência que ninguém tinha visto: a secundária "flow state (combo x3)" era
+    // inalcançável, as 8 missões de COMBO_TARGET (5 a 14) eram invencíveis, e toda perfeição
+    // "max combo xN" também. O teste de combo existia, mas chamava tryClickImpulse 14 vezes
+    // sem rodar a física — provava o incremento, nunca o decaimento.
+    //
+    // Agora o gatilho é o tempo desde o último gesto: passou de ~1,6 ciclo sem respirar, o
+    // ritmo se perdeu e o combo cede. Dentro do ritmo, ele acumula.
+    const cicloDoGesto = (1 / sustainConfig.energyRecovery) + breathConfig.strainTime / 2;
+    if (state.combo > 0 && (state.t - state.input.lastClick) > cicloDoGesto * 1.6) {
+      state.combo = Math.max(0, state.combo - dt * .8);
+    }
 
     if (state.rewardTimer > 0) {
       state.rewardTimer -= dt;

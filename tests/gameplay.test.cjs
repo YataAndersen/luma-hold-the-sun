@@ -713,3 +713,32 @@ test('every perfection condition says exactly what it measures', () => {
     .filter(l => !/\\|(zero near-fails|reach \\d+m|max combo x\\d+)$/.test(l))`)).join(' | ');
   assert.equal(vagas, '', `Perfeição descrita de forma não verificável: ${vagas}`);
 });
+
+test('breathing in rhythm builds combo instead of losing it', () => {
+  // Medido no navegador a 60fps: sete respirações no ponto davam **combo máximo x1**.
+  // O decaimento era condicionado a `state.sun.flowTimer <= 0`, e o flowTimer **zera sozinho
+  // a cada 3,6s** — é ele que dispara a revoada. Então o combo caía 0,8/s durante boa parte
+  // de todo ciclo, mesmo jogando bem: ~4 pontos perdidos por ciclo contra +1 por gesto.
+  //
+  // O que isso tornava impossível, sem ninguém ver: a secundária "flow state (combo x3)",
+  // as 8 missões de COMBO_TARGET (5 a 14) e toda perfeição "max combo xN".
+  //
+  // O teste de combo que existia chamava tryClickImpulse 14 vezes sem rodar a física —
+  // provava o incremento e nunca o decaimento. É o limite descrito em VERIFICACAO.md:
+  // os testes leem declarações, não jogam.
+  const update = functionSource('updateGameplay');
+  const decai = /if \(state\.combo > 0 && ([^)]*)\) \{/.exec(update)
+             || /if \(state\.combo > 0 && ([^)]*)\)/.exec(update);
+  assert.notEqual(decai, null, 'Não achei mais a regra de decaimento do combo.');
+  assert.doesNotMatch(decai[1], /flowTimer/,
+    'O decaimento do combo voltou a depender do flowTimer, que zera sozinho a cada 3,6s.');
+  assert.match(decai[1], /lastClick/,
+    'O decaimento do combo tem que medir tempo sem gesto, não um timer que se reinicia.');
+
+  // E a aritmética: quem respira no ritmo nunca entra na janela de decaimento.
+  const game = makeHarness();
+  const ciclo = game.run('(1 / sustainConfig.energyRecovery) + breathConfig.strainTime / 2');
+  const janela = Number(/\(state\.t - state\.input\.lastClick\) > cicloDoGesto \* ([\d.]+)/.exec(update)[1]);
+  assert.ok(ciclo * janela > ciclo * 1.2,
+    `A janela de tolerância (${(ciclo * janela).toFixed(1)}s) é apertada demais para um ciclo de ${ciclo.toFixed(1)}s.`);
+});
