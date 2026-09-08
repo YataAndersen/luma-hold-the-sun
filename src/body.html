@@ -4,7 +4,7 @@
 
   <div class="splash-screen" id="splashScreen">
     <div class="splash-orb"></div>
-    <div class="splash-logo">luma</div>
+    <div class="splash-logo">sustine</div>
     <div class="splash-sub">playing for a better world</div>
   </div>
 
@@ -68,8 +68,8 @@
         <div class="subtitle" data-i18n>the gesture is yours now. the sky waits for the rest.</div>
       </div>
       <div class="panel-footer" style="margin-top: 24px;">
-        <div class="luma-actions">
-          <button class="luma-btn luma-btn-primary" id="completeProceedBtn" data-i18n>begin the journey</button>
+        <div class="sustine-actions">
+          <button class="sustine-btn sustine-btn-primary" id="completeProceedBtn" data-i18n>begin the journey</button>
         </div>
       </div>
     </div>
@@ -94,7 +94,7 @@
 
   <div id="menuScreen" class="screen menu-screen">
     <div class="altar-wrapper">
-      <div class="eyebrow" style="margin-bottom: 6vh;">luma</div>
+      <div class="eyebrow" style="margin-bottom: 6vh;">sustine</div>
       
       <div class="menu-sun-orb breathe" id="menuOrb" style="margin: 0 auto 3vh;"></div>
       
@@ -106,12 +106,12 @@
         <div class="altar-line"><div class="altar-line-fill" id="menuWorldLightFill"></div></div>
       </div>
       
-      <div class="luma-actions">
-        <button class="luma-btn luma-btn-primary" id="startBtn" data-i18n>awaken</button>
-        <div class="luma-secondary-actions">
-          <button class="luma-btn luma-btn-secondary" id="returnMapMenuBtn" data-i18n>journey</button>
-          <button class="luma-btn luma-btn-secondary" id="openHarmonyBtn" data-i18n>harmony</button>
-          <button class="luma-btn luma-btn-secondary" id="openMemoriesBtn" data-i18n>memories</button>
+      <div class="sustine-actions">
+        <button class="sustine-btn sustine-btn-primary" id="startBtn" data-i18n>awaken</button>
+        <div class="sustine-secondary-actions">
+          <button class="sustine-btn sustine-btn-secondary" id="returnMapMenuBtn" data-i18n>journey</button>
+          <button class="sustine-btn sustine-btn-secondary" id="openHarmonyBtn" data-i18n>harmony</button>
+          <button class="sustine-btn sustine-btn-secondary" id="openMemoriesBtn" data-i18n>memories</button>
         </div>
       </div>
       <div class="caption" style="position:absolute; bottom:24px;" data-i18n>developed with care</div>
@@ -189,7 +189,7 @@
                         </div>
                     </div>
                     <div class="setting-item" style="justify-content: center; margin-top: 10px;">
-                        <button class="luma-btn luma-btn-secondary" id="replayTutorialBtn" data-i18n>replay the first ritual</button>
+                        <button class="sustine-btn sustine-btn-secondary" id="replayTutorialBtn" data-i18n>replay the first ritual</button>
                     </div>
                 </div>
             </div>
@@ -253,9 +253,9 @@
                 <div class="category-header"><span class="category-icon">💾</span><span class="category-title" data-i18n>data</span></div>
                 <div class="category-content">
                     <div class="setting-actions">
-                        <button class="luma-btn luma-btn-secondary" id="btnResetProg" data-i18n>reset progress</button>
-                        <button class="luma-btn luma-btn-secondary" id="btnExportSave" data-i18n>export save</button>
-                        <button class="luma-btn luma-btn-secondary" id="btnImportSave" data-i18n>import save</button>
+                        <button class="sustine-btn sustine-btn-secondary" id="btnResetProg" data-i18n>reset progress</button>
+                        <button class="sustine-btn sustine-btn-secondary" id="btnExportSave" data-i18n>export save</button>
+                        <button class="sustine-btn sustine-btn-secondary" id="btnImportSave" data-i18n>import save</button>
                         <input type="file" id="fileImportSave" style="display:none" accept=".json">
                     </div>
                     <div class="setting-info">
@@ -267,7 +267,7 @@
         </div>
         
         <div class="settings-actions">
-            <button class="luma-btn luma-btn-primary" id="closeHarmonyBtn" data-i18n>save &amp; return</button>
+            <button class="sustine-btn sustine-btn-primary" id="closeHarmonyBtn" data-i18n>save &amp; return</button>
         </div>
     </div>
   </div>
@@ -279,7 +279,7 @@
         <div class="title" data-i18n>Memories of Light</div>
         <div class="subtitle" data-i18n>fragments of past suns and recovered worlds.</div>
       </div>
-      <div class="panel-content" id="memoriesContent" style="flex-grow: 1; overflow-y: auto; text-align: left; padding: 10px; font-family: var(--font-ui); font-size: 14px; color: var(--luma-paper-soft);">
+      <div class="panel-content" id="memoriesContent" style="flex-grow: 1; overflow-y: auto; text-align: left; padding: 10px; font-family: var(--font-ui); font-size: 14px; color: var(--sustine-paper-soft);">
         <!-- Estrutura que showMemories() preenche. Faltava por inteiro: a função retornava
              na primeira guarda e a tela nem chegava a abrir. -->
         <div class="altar-wrapper">
@@ -303,8 +303,8 @@
         </div>
       </div>
       <div class="panel-footer" style="margin-top: 20px;">
-        <div class="luma-actions">
-          <button class="luma-btn luma-btn-text" id="closeMemoriesBtn" data-i18n>return</button>
+        <div class="sustine-actions">
+          <button class="sustine-btn sustine-btn-text" id="closeMemoriesBtn" data-i18n>return</button>
         </div>
       </div>
     </div>
@@ -317,13 +317,13 @@
       <div class="title-large" style="margin-bottom: 1vh;" data-i18n>paused</div>
       <div class="subtitle" style="margin-bottom: 8vh;" data-i18n>breathe. the light remains.</div>
       
-      <div class="luma-actions">
-        <button class="luma-btn luma-btn-primary" id="resumeBtn" data-i18n>return</button>
-        <div class="luma-secondary-actions">
-          <button class="luma-btn luma-btn-secondary" id="pauseRestartBtn" data-i18n>rise again</button>
-          <button class="luma-btn luma-btn-secondary" id="returnMapPauseBtn" data-i18n>journey</button>
-          <button class="luma-btn luma-btn-secondary" id="homePauseBtn" data-i18n>home</button>
-          <button class="luma-btn luma-btn-secondary" id="pauseHarmonyBtn" data-i18n>harmony</button>
+      <div class="sustine-actions">
+        <button class="sustine-btn sustine-btn-primary" id="resumeBtn" data-i18n>return</button>
+        <div class="sustine-secondary-actions">
+          <button class="sustine-btn sustine-btn-secondary" id="pauseRestartBtn" data-i18n>rise again</button>
+          <button class="sustine-btn sustine-btn-secondary" id="returnMapPauseBtn" data-i18n>journey</button>
+          <button class="sustine-btn sustine-btn-secondary" id="homePauseBtn" data-i18n>home</button>
+          <button class="sustine-btn sustine-btn-secondary" id="pauseHarmonyBtn" data-i18n>harmony</button>
         </div>
       </div>
     </div>
@@ -337,7 +337,7 @@
   </div>
   
   <div class="map-header">
-    <div class="map-eyebrow" data-i18n>Luma Constellation</div>
+    <div class="map-eyebrow" data-i18n>Sustine Constellation</div>
     <div class="map-title" data-i18n>Journey Map</div>
   </div>
   <div class="map-stats">
@@ -363,10 +363,10 @@
       <div class="map-m-subs" id="mSubs"></div>
       <div class="map-m-perf" id="mPerfContainer">perfect: complete without near-fail</div>
     </div>
-    <div class="luma-actions">
-      <button class="luma-btn luma-btn-primary" id="btnPlayNode" data-i18n>start</button>
-      <div class="luma-secondary-actions">
-        <button class="luma-btn luma-btn-secondary" id="btnHomeFromMap" data-i18n>home</button>
+    <div class="sustine-actions">
+      <button class="sustine-btn sustine-btn-primary" id="btnPlayNode" data-i18n>start</button>
+      <div class="sustine-secondary-actions">
+        <button class="sustine-btn sustine-btn-secondary" id="btnHomeFromMap" data-i18n>home</button>
       </div>
     </div>
   </div>
@@ -386,15 +386,15 @@
 
     <div class="result-stats" id="resultStats" style="color: var(--sun-glow); white-space: pre-line; font-weight: 600; text-shadow: 0 0 12px rgba(255,196,107,0.4); margin-bottom: 6vh;"></div>
     
-    <div class="luma-actions" id="resultActions" style="opacity:0; pointer-events:none; transition:opacity 1s;">
-      <button class="luma-btn luma-btn-primary" id="restartBtn" data-i18n>rise again</button>
-      <div class="luma-secondary-actions">
-        <button class="luma-btn luma-btn-secondary" id="nextNodeBtn" data-i18n>next node</button>
-        <button class="luma-btn luma-btn-secondary" id="returnMapResultBtn" data-i18n>journey</button>
-        <button class="luma-btn luma-btn-secondary" id="shareBtn" data-i18n>share</button>
+    <div class="sustine-actions" id="resultActions" style="opacity:0; pointer-events:none; transition:opacity 1s;">
+      <button class="sustine-btn sustine-btn-primary" id="restartBtn" data-i18n>rise again</button>
+      <div class="sustine-secondary-actions">
+        <button class="sustine-btn sustine-btn-secondary" id="nextNodeBtn" data-i18n>next node</button>
+        <button class="sustine-btn sustine-btn-secondary" id="returnMapResultBtn" data-i18n>journey</button>
+        <button class="sustine-btn sustine-btn-secondary" id="shareBtn" data-i18n>share</button>
       </div>
       <div style="margin-top: 12px;">
-         <button class="luma-btn luma-btn-text" id="homeResultBtn" data-i18n>home</button>
+         <button class="sustine-btn sustine-btn-text" id="homeResultBtn" data-i18n>home</button>
       </div>
     </div>
   </div>
@@ -443,13 +443,13 @@
             <div class="settings-subtitle" data-i18n>your journey in verse</div>
         </div>
         <div class="share-preview" id="sharePreview"></div>
-        <div class="luma-actions">
-            <button class="luma-btn luma-btn-primary" id="shareActionBtn" data-i18n>share card</button>
-            <div class="luma-secondary-actions">
-                <button class="luma-btn luma-btn-secondary" id="saveImageBtn" data-i18n>save image</button>
-                <button class="luma-btn luma-btn-secondary" id="copyTextBtn" data-i18n>copy text</button>
+        <div class="sustine-actions">
+            <button class="sustine-btn sustine-btn-primary" id="shareActionBtn" data-i18n>share card</button>
+            <div class="sustine-secondary-actions">
+                <button class="sustine-btn sustine-btn-secondary" id="saveImageBtn" data-i18n>save image</button>
+                <button class="sustine-btn sustine-btn-secondary" id="copyTextBtn" data-i18n>copy text</button>
             </div>
-            <button class="luma-btn luma-btn-text" id="closeShareModal" style="margin-top: 12px;" data-i18n>close</button>
+            <button class="sustine-btn sustine-btn-text" id="closeShareModal" style="margin-top: 12px;" data-i18n>close</button>
         </div>
     </div>
 </div>

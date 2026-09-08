@@ -1,4 +1,4 @@
-  // --- LUMA ANALYTICS SYSTEM v1.0 ---
+  // --- SUSTINE ANALYTICS SYSTEM v1.0 ---
   const EVENT_TYPES = {
       SESSION_START: 'session_start', SESSION_END: 'session_end',
       RUN_START: 'run_start', RUN_END: 'run_end', RUN_COMPLETE: 'run_complete',
@@ -26,7 +26,7 @@
           this.enabled = false;
           this.queue = [];
           this.flushInterval = null;
-          this.endpoint = 'https://api.luma.game/analytics'; // Fallback simulado
+          this.endpoint = 'https://api.sustine.game/analytics'; // Fallback simulado
           this.debug = window.location.search.includes('debug=true');
           this.session = new SessionData();
       }

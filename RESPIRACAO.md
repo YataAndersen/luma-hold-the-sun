@@ -1,10 +1,10 @@
-# LUMA — a respiração como mecânica
+# SUSTINE — a respiração como mecânica
 
 Este documento existe porque as constantes de `03-tuning.js` parecem arbitrárias sem ele, e não são. Elas codificam uma decisão de design que veio de um playtest do Yata em 06/09/2026.
 
 ## A intenção
 
-O LUMA nasceu como **o avesso do Flappy Bird**. O Flappy fazia as pessoas sofrerem; o LUMA precisa desafiar sem estressar. O alvo é que o jogador entre em concentração pela respiração — a sincronia cardiorrespiratória é fisicamente agradável, e uma experiência agradável é o que faz alguém voltar.
+O SUSTINE nasceu como **o avesso do Flappy Bird**. O Flappy fazia as pessoas sofrerem; o SUSTINE precisa desafiar sem estressar. O alvo é que o jogador entre em concentração pela respiração — a sincronia cardiorrespiratória é fisicamente agradável, e uma experiência agradável é o que faz alguém voltar.
 
 A perícia pedida é a de **julgar duração**: como contar de zero a trinta de cabeça e terminar perto do que o relógio diria. Não é a de tocar rápido.
 
@@ -19,7 +19,7 @@ O jogo estava rodando na frequência errada, e isso era medível, não opinável
 | queda livre | 710 px/s | 223 px/s |
 | cooldown do toque | 0,14s | 0,35s |
 
-1,9 toques por segundo é a ordem de grandeza do Flappy Bird. Respiração coerente fica entre 6 e 12 ciclos por minuto. **O LUMA era mecanicamente o jogo que queria inverter, com uma roupa calma por cima.** A frustração relatada — "acelerei mais e o sol não respondeu, como fazer meia embreagem" — era o corpo do jogo discordando da alma dele.
+1,9 toques por segundo é a ordem de grandeza do Flappy Bird. Respiração coerente fica entre 6 e 12 ciclos por minuto. **O SUSTINE era mecanicamente o jogo que queria inverter, com uma roupa calma por cima.** A frustração relatada — "acelerei mais e o sol não respondeu, como fazer meia embreagem" — era o corpo do jogo discordando da alma dele.
 
 ## Por que não existia ritmo
 

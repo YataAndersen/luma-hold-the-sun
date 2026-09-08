@@ -7,7 +7,7 @@
         meadow: 78, hills: 80, coast: 76, canyon: 82, desert: 84, forest: 78, snow: 72, storm: 88, ruins: 75, crystal: 82, nebula: 74, cosmos: 86, aurora: 84, zenith: 90
     };
     
-    // --- LUMA DYNAMIC MUSIC MOOD SYSTEM ---
+    // --- SUSTINE DYNAMIC MUSIC MOOD SYSTEM ---
     let mood = { intensity: 0, warmth: 0, tension: 0, space: 0 };
     
     if (state.mode === "menu") {

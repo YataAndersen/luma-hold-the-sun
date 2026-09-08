@@ -148,7 +148,7 @@
         // Mirar é uma perícia espacial sem relação com respirar, e o sol deriva com o
         // vento: exigir proximidade obrigava o jogador a PERSEGUIR um alvo móvel com o
         // dedo, que é o oposto de relaxar. Além disso a zona "perfeita" tinha raio de
-        // 21px, menor que a ponta de um dedo. A perícia do LUMA é julgar duração; o
+        // 21px, menor que a ponta de um dedo. A perícia do SUSTINE é julgar duração; o
         // espaço só disputava atenção com ela.
         const influence = 1;
         // A tensão mata a sustentação. Sem isto, segurar para sempre seria a estratégia

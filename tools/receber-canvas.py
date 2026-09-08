@@ -8,7 +8,7 @@ intermediario.
 """
 import base64, http.server, os, socketserver
 
-DESTINO = "E:/VIBE CODING/Playing For a Better World/Hold the Sun/LUMA - PROJETO PRINCIPAL/press"
+DESTINO = "E:/VIBE CODING/Playing For a Better World/Hold the Sun/SUSTINE - PROJETO PRINCIPAL/press"
 
 class H(http.server.SimpleHTTPRequestHandler):
     def _cors(self):

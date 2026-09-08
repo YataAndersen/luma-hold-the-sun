@@ -138,7 +138,7 @@
             if (compScreen) compScreen.classList.add('hidden');
         }
       } catch(e) {
-        console.error("Luma engine error:", e);
+        console.error("Sustine engine error:", e);
       } finally {
         if(fade) fade.classList.remove("active");
       }

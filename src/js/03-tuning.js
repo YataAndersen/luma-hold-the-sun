@@ -1,5 +1,5 @@
   // --- A CONSTANTE DE TEMPO DO JOGO ---
-  // O LUMA é o avesso do Flappy Bird: desafiar sem estressar. Isso é uma decisão de
+  // O SUSTINE é o avesso do Flappy Bird: desafiar sem estressar. Isso é uma decisão de
   // FREQUÊNCIA, não de dificuldade. Os números antigos — queda a 710px/s, cooldown de
   // 0,14s, ~1,9 pulsos por segundo sustentáveis — rodavam na frequência do dedo, a mesma
   // ordem de grandeza do Flappy Bird. Estes rodam na frequência da respiração: um gesto a
@@ -204,7 +204,7 @@
 
   // --- COLOR SCRIPT ---
   // Um color script nao e escolher uma paleta bonita por cena: e organizar a progressao
-  // emocional cromatica da experiencia inteira. O LUMA nao tinha nenhum. Pior: a ordem dos
+  // emocional cromatica da experiencia inteira. O SUSTINE nao tinha nenhum. Pior: a ordem dos
   // biomas repete literalmente — as missoes 1 a 19 e 20 a 38 percorrem a MESMA sequencia,
   // e as tres constelacoes se alternam tres vezes. A jornada dava a volta e recomecava.
   //

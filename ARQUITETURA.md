@@ -1,4 +1,4 @@
-# LUMA — arquitetura
+# SUSTINE — arquitetura
 
 ## A regra que importa
 
@@ -25,7 +25,7 @@ A solução é separar a *fonte* e concatenar na saída. O build é um script No
 ## Estrutura
 
 ```
-LUMA - PROJETO PRINCIPAL/
+SUSTINE - PROJETO PRINCIPAL/
 ├── index.html          ← GERADO. não editar.
 ├── src/
 │   ├── head.html       cabeçalho e metadados
@@ -89,7 +89,7 @@ A ordem importa: são fatias sequenciais de um mesmo escopo. `manifest.json` é 
 ## Testes
 
 ```bash
-node --test "LUMA - PROJETO PRINCIPAL/tests/gameplay.test.cjs"
+node --test "SUSTINE - PROJETO PRINCIPAL/tests/gameplay.test.cjs"
 ```
 
 Os testes extraem declarações do `index.html` **gerado** e as executam com stubs de render, som e persistência. Rode o build antes de testar. Se renomear uma função ou constante coberta, atualize a lista `declarations` no topo do arquivo de teste.

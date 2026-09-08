@@ -1,4 +1,4 @@
-# Página do itch.io — LUMA: Hold the Sun
+# Página do itch.io — SUSTINE: Hold the Sun
 
 Conteúdo pronto para colar em `itch.io/game/new`. Escrito em inglês para alcance; o jogo tem inglês e português embutidos.
 
@@ -7,15 +7,15 @@ Conteúdo pronto para colar em `itch.io/game/new`. Escrito em inglês para alcan
 ## Título
 
 ```
-LUMA: Hold the Sun
+SUSTINE: Hold the Sun
 ```
 
-Mantém o prefixo de `LUMA: Between`, que já está publicado. Duas peças com o mesmo prefixo começam a ler como **série**, e isso faz o segundo título carregar o primeiro nas buscas.
+Mantém o prefixo de `SUSTINE: Between`, que já está publicado. Duas peças com o mesmo prefixo começam a ler como **série**, e isso faz o segundo título carregar o primeiro nas buscas.
 
 ## URL
 
 ```
-yata-andersen.itch.io/luma-hold-the-sun
+yata-andersen.itch.io/sustine-hold-the-sun
 ```
 
 ## Short description (tagline)
@@ -90,7 +90,7 @@ Deixei de fora `pixel-art` (não é), `2d` (genérico demais para trazer alguém
 | Kind of project | HTML |
 | Release status | Released |
 | Pricing | Free / com doação opcional |
-| Uploads | `luma-hold-the-sun.zip` marcado como **"This file will be played in the browser"** |
+| Uploads | `sustine-hold-the-sun.zip` marcado como **"This file will be played in the browser"** |
 | Embed | Manual: **444 × 900** · com **fullscreen** ligado |
 | Mobile friendly | Sim · orientação **portrait** |
 | Genre | Action (o mais próximo; não existe "contemplativo") |
@@ -108,7 +108,7 @@ A página depende de imagens que eu não posso gerar aqui:
 
    | arquivo | o que mostra |
    |---|---|
-   | `press/luma-loop.gif` | um ciclo de respiração inteiro: o anel enchendo, o gesto ao soltar e o sol subindo — vem primeiro na galeria |
+   | `press/sustine-loop.gif` | um ciclo de respiração inteiro: o anel enchendo, o gesto ao soltar e o sol subindo — vem primeiro na galeria |
    | `press/shot-01-gameplay.png` | o sol com o anel a meio caminho, nuvens em camadas |
    | `press/shot-02-subindo.png` | o instante do gesto, com o raio de luz e a linha do amanhecer |
    | `press/shot-03-ritmo.png` | altitude ganha, montanhas recuando em perspectiva aérea |

@@ -96,10 +96,12 @@
   
   const btnExportSave = document.getElementById('btnExportSave');
   if (btnExportSave) btnExportSave.addEventListener('click', () => {
+      // luma_core / luma_map mantem o nome antigo: arquivos de save que jogadores ja
+      // baixaram usam esses campos, e renomear quebraria a importacao deles.
       const data = JSON.stringify({ luma_core: localStorage.getItem(SAVE_KEY), luma_map: localStorage.getItem(JOURNEY_SAVE_KEY) });
       const blob = new Blob([data], { type: 'application/json' });
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = `luma_save_${Date.now()}.json`;
+      a.href = URL.createObjectURL(blob); a.download = `sustine_save_${Date.now()}.json`;
       a.click(); URL.revokeObjectURL(a.href);
   });
   

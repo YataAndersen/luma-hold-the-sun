@@ -1,4 +1,4 @@
-# LUMA — gameplay: estado e direção
+# SUSTINE — gameplay: estado e direção
 
 > ## ⚠ Registro histórico, não descrição do jogo atual
 >
@@ -258,7 +258,7 @@ itch.io aceita HTML5 ([documentação](https://itch.io/docs/creators/html5)). O 
 ## Como rodar os testes
 
 ```bash
-node --test "LUMA - PROJETO PRINCIPAL/tests/gameplay.test.cjs"
+node --test "SUSTINE - PROJETO PRINCIPAL/tests/gameplay.test.cjs"
 ```
 
 Eles extraem as declarações do HTML de produção e exercitam a lógica com stubs de render, som e persistência. Ao renomear uma função ou constante coberta, atualize a lista `declarations` no topo do arquivo de teste.

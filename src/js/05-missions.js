@@ -1,4 +1,4 @@
-  // --- LUMA EXPERIENCE SYSTEM v1.0 (Mission & VFX State) ---
+  // --- SUSTINE EXPERIENCE SYSTEM v1.0 (Mission & VFX State) ---
   const MissionKind = { ABOVE_DAWN_LINE: 'above_dawn_line', REACH_ALTITUDE: 'reach_altitude', BIRDS_THIS_RUN: 'birds_this_run', SURVIVE_TIME: 'survive_time', COMBO_TARGET: 'combo_target', AVOID_NEAR_FAIL: 'avoid_near_fail', STABILITY_TIME: 'stability_time' };
   
   // --- SISTEMA DE RARIDADE ---
@@ -105,6 +105,9 @@
     { id: 'm50', title: 'The Zenith', subtitle: 'Reach 300m into pure light.', kind: MissionKind.REACH_ALTITUDE, target: 300, perfectText: 'zero near-fails', toast: 'Transcendence', nodeMeta: 'Apex · Zenith', biome: 'zenith' }
   ];
 
+  // ATENCAO: a chave abaixo guarda o nome antigo do jogo de proposito. O jogo se chamava
+  // LUMA e foi publicado assim; renomear a chave junto com a marca apagaria a jornada de
+  // todo mundo que ja jogou, sem aviso e sem volta. Nome invisivel e DADO, nao marca.
   const JOURNEY_SAVE_KEY = "luma_journey_progress_v3";
   let mapProgress = { totalDawns: 0, bestScore: 0, completedNodes: [], perfectNodes: [], nodeStats: {}, currentNodeId: "m1", lastRun: null, lastRunProcessed: true };
 

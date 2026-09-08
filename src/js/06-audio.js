@@ -1,5 +1,5 @@
   // ============================================================================
-  // 🎵 LUMA AUDIO ENGINE V2.0 - EXTREME PERFORMANCE REFACTOR
+  // 🎵 SUSTINE AUDIO ENGINE V2.0 - EXTREME PERFORMANCE REFACTOR
   // Blindagem de CPU, Limite de Polifonia, Rate Limiting e Try/Catch global
   // ============================================================================
 

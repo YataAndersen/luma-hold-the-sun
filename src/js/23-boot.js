@@ -3,7 +3,7 @@
       el.addEventListener('mouseenter', () => { if (audioInitialized) playUIHover(); });
       el.addEventListener('click', () => { 
           if (!audioInitialized) { initAudio(); audioInitialized = true; }
-          if (el.classList.contains('luma-btn-secondary') || el.classList.contains('luma-btn-text') || el.id.includes('close')) {
+          if (el.classList.contains('sustine-btn-secondary') || el.classList.contains('sustine-btn-text') || el.id.includes('close')) {
               playUIBack();
           } else { playUIConfirm(); }
       });
@@ -36,14 +36,14 @@
   if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
           const swCode = `
-              const CACHE_NAME = 'luma-cache-v1';
+              const CACHE_NAME = 'sustine-cache-v1';
               self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(['/']))); });
               self.addEventListener('fetch', event => { event.respondWith(caches.match(event.request).then(response => response || fetch(event.request))); });
           `;
           const blob = new Blob([swCode], { type: 'application/javascript' });
           const swUrl = URL.createObjectURL(blob);
           navigator.serviceWorker.register(swUrl)
-              .then(reg => console.log('Luma Offline PWA Registered'))
-              .catch(err => console.log('Luma SW Error:', err));
+              .then(reg => console.log('Sustine Offline PWA Registered'))
+              .catch(err => console.log('Sustine SW Error:', err));
       });
   }

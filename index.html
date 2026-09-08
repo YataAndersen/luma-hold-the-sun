@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>LUMA — Hold the Sun</title>
+  <title>Sustine — Hold the Sun</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Nunito:wght@300;400&display=swap" rel="stylesheet">
@@ -38,15 +38,15 @@
       --ui-secondary:rgba(255,249,236,.76);
       --ui-tertiary:rgba(255,249,236,.5);
 
-      /* Luma Button System v1.0 */
-      --luma-paper: rgba(248,240,226,.88);
-      --luma-paper-soft: rgba(248,240,226,.68);
-      --luma-paper-faint: rgba(248,240,226,.52);
-      --luma-line: rgba(248,240,226,.10);
-      --luma-panel: rgba(255,255,255,.05);
-      --luma-gold-1: #FFF0D4;
-      --luma-gold-2: #F0D19A;
-      --luma-ink-dark: #08111d;
+      /* Sustine Button System v1.0 */
+      --sustine-paper: rgba(248,240,226,.88);
+      --sustine-paper-soft: rgba(248,240,226,.68);
+      --sustine-paper-faint: rgba(248,240,226,.52);
+      --sustine-line: rgba(248,240,226,.10);
+      --sustine-panel: rgba(255,255,255,.05);
+      --sustine-gold-1: #FFF0D4;
+      --sustine-gold-2: #F0D19A;
+      --sustine-ink-dark: #08111d;
 
       --panel:rgba(255,255,255,.06);
       --line:rgba(255,255,255,.10);
@@ -59,7 +59,7 @@
       --font-display:"Nunito","Segoe UI",system-ui,sans-serif;
       --font-ui:"Inter","Segoe UI",system-ui,sans-serif;
 
-      /* LUMA UI ANIMATIONS v1.0 - Curvas e Tempos Oficiais */
+      /* SUSTINE UI ANIMATIONS v1.0 - Curvas e Tempos Oficiais */
       --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
       --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
       --ease-spring: cubic-bezier(0.34, 1.2, 0.64, 1);
@@ -236,14 +236,14 @@
     .seal-item{padding:12px 8px;border-radius:14px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);transition:transform var(--duration-normal) var(--ease-out)}
     .seal-item.rare{background:rgba(255,216,147,.09);border-color:rgba(255,216,147,.30);box-shadow:0 0 16px rgba(255,216,147,.12)}
     .seal-icon{font-size:15px;color:var(--sun-glow);margin-bottom:5px}
-    .seal-name{font:300 10px/1.3 var(--font-display);letter-spacing:.05em;text-transform:lowercase;color:var(--luma-paper-soft)}
+    .seal-name{font:300 10px/1.3 var(--font-display);letter-spacing:.05em;text-transform:lowercase;color:var(--sustine-paper-soft)}
 
     .biomes-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:9px;width:100%;padding-bottom:2vh;text-align:center}
     .biome-item{padding:10px 6px;border-radius:12px;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03)}
     .biome-item.unlocked{border-color:rgba(255,216,147,.24);color:var(--sun-glow)}
     .biome-item.locked{opacity:.34}
     .biome-icon{font-size:14px;margin-bottom:3px}
-    .biome-name{font:300 9px/1.2 var(--font-display);letter-spacing:.08em;text-transform:lowercase;color:var(--luma-paper-soft)}
+    .biome-name{font:300 9px/1.2 var(--font-display);letter-spacing:.08em;text-transform:lowercase;color:var(--sustine-paper-soft)}
     .progress-symbols{display:flex;justify-content:center;gap:20px;font-size:24px;filter:drop-shadow(0 0 10px rgba(255,217,122,.12))}
     .progress-symbols span{opacity:.28;transition:.25s ease}
     .progress-symbols span.unlocked{opacity:1;filter:drop-shadow(0 0 16px rgba(255,217,122,.44))}
@@ -253,8 +253,8 @@
     .meter-fill{border-radius:999px;background:linear-gradient(90deg,var(--sun-core),var(--sun-glow),var(--ui-primary));box-shadow:0 0 12px rgba(255,217,122,.16);}
     
 
-    /* === LUMA BUTTON SYSTEM v1.0 === */
-    .luma-btn{
+    /* === SUSTINE BUTTON SYSTEM v1.0 === */
+    .sustine-btn{
       appearance:none;
       border:none;
       outline:none;
@@ -270,18 +270,18 @@
         border-color var(--duration-fast) var(--ease-out);
     }
 
-    .luma-btn:active{
+    .sustine-btn:active{
       transform:scale(.97);
       transition: transform var(--duration-instant) ease;
     }
 
-    .luma-btn-primary{
+    .sustine-btn-primary{
       position: relative; overflow: hidden;
       min-width:152px;
       height:52px;
       padding:0 22px;
-      background:linear-gradient(180deg, var(--luma-gold-1), var(--luma-gold-2));
-      color:var(--luma-ink-dark);
+      background:linear-gradient(180deg, var(--sustine-gold-1), var(--sustine-gold-2));
+      color:var(--sustine-ink-dark);
       font-size:16px;
       font-weight:600;
       letter-spacing:.1em;
@@ -292,27 +292,27 @@
         inset 0 2px 0 rgba(255,255,255,0.4);
     }
     
-    .luma-btn-primary::after {
+    .sustine-btn-primary::after {
       content: ''; position: absolute; inset: 0;
       background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.4), transparent 60%);
       opacity: 0; transition: opacity var(--duration-fast) var(--ease-out);
       mix-blend-mode: overlay; pointer-events: none;
     }
 
-    .luma-btn-primary:hover{
+    .sustine-btn-primary:hover{
       transform:translateY(-1px);
       filter:brightness(1.03);
     }
     
-    .luma-btn-primary:hover::after { opacity: 1; }
+    .sustine-btn-primary:hover::after { opacity: 1; }
 
-    .luma-btn.hidden{display:none}
-    .luma-btn-secondary{
+    .sustine-btn.hidden{display:none}
+    .sustine-btn-secondary{
       min-width:unset;
       height:36px;
       padding:0 16px;
       background:radial-gradient(circle, rgba(255,255,255,.08), rgba(255,255,255,.02));
-      color:var(--luma-paper);
+      color:var(--sustine-paper);
       border:1px solid rgba(255,255,255,.15);
       font-size:12px;
       font-weight:500;
@@ -321,15 +321,15 @@
       box-shadow:0 0 12px rgba(240,209,154,.08);
     }
 
-    .luma-btn-secondary:hover{
+    .sustine-btn-secondary:hover{
       transform:translateY(-1px);
       background:rgba(255,255,255,.06);
-      color:var(--luma-paper);
+      color:var(--sustine-paper);
     }
 
-    .luma-btn-text{
+    .sustine-btn-text{
       background:transparent;
-      color:var(--luma-paper-faint);
+      color:var(--sustine-paper-faint);
       font-size:13px;
       font-weight:300;
       letter-spacing:.10em;
@@ -337,36 +337,36 @@
       height:auto;
     }
 
-    .luma-btn-text:hover{
-      color:var(--luma-paper-soft);
+    .sustine-btn-text:hover{
+      color:var(--sustine-paper-soft);
     }
 
-    .luma-btn-icon{
+    .sustine-btn-icon{
       width:40px;
       height:40px;
       padding:0;
       display:grid;
       place-items:center;
       background:rgba(255,255,255,.05);
-      color:var(--luma-paper-soft);
+      color:var(--sustine-paper-soft);
       border:1px solid rgba(248,240,226,.08);
       box-shadow:0 6px 18px rgba(0,0,0,.16);
     }
 
-    .luma-btn-icon:hover{
+    .sustine-btn-icon:hover{
       transform:translateY(-1px);
       background:rgba(255,255,255,.08);
-      color:var(--luma-paper);
+      color:var(--sustine-paper);
     }
 
-    .luma-actions{
+    .sustine-actions{
       display:flex;
       flex-direction:column;
       align-items:center;
       gap:16px;
     }
 
-    .luma-secondary-actions{
+    .sustine-secondary-actions{
       display:flex;
       flex-wrap:wrap;
       justify-content:center;
@@ -613,7 +613,7 @@
 .map-eyebrow { font: 600 11px/1 var(--font-ui); letter-spacing: 0.3em; text-transform: lowercase; color: var(--ui-tertiary); margin-bottom: 8px; }
 .map-title { font: 300 24px/1 var(--font-display); color: var(--ui-primary); letter-spacing: 0.05em; text-transform: lowercase; text-shadow: 0 0 16px rgba(255,249,236,0.1); }
 
-.map-bottom-panel { position: absolute; bottom: max(14px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 10; width: min(92%, 360px); max-height: 42%; overflow-y: auto; background: var(--luma-panel); backdrop-filter: blur(12px) saturate(135%); border: 1px solid var(--line); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; transition: transform var(--duration-normal) var(--ease-out), opacity var(--duration-normal) var(--ease-out); }
+.map-bottom-panel { position: absolute; bottom: max(14px, env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); z-index: 10; width: min(92%, 360px); max-height: 42%; overflow-y: auto; background: var(--sustine-panel); backdrop-filter: blur(12px) saturate(135%); border: 1px solid var(--line); border-radius: 22px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; align-items: center; text-align: center; transition: transform var(--duration-normal) var(--ease-out), opacity var(--duration-normal) var(--ease-out); }
 .map-bottom-panel.hidden { transform: translate(-50%, 20px); opacity: 0; pointer-events: none; }
 
 .map-node-header { display: flex; flex-direction: column; align-items: center; gap: 4px; }
@@ -639,7 +639,7 @@
 
 .chapter-nav { position: absolute; top: 50%; left: max(12px, env(safe-area-inset-left)); transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 15; background: rgba(10, 26, 42, 0.5); backdrop-filter: blur(8px); padding: 10px 6px; border-radius: 999px; border: 1px solid var(--line); }
 .chapter-btn { width: 32px; height: 32px; border-radius: 50%; border: 1px solid transparent; background: transparent; color: var(--ui-secondary); font-family: var(--font-display); font-size: 13px; cursor: pointer; transition: all var(--duration-fast) var(--ease-out); }
-.chapter-btn:hover { background: var(--luma-panel); border-color: rgba(255,255,255,0.15); color: var(--ui-primary); transform: scale(1.1); }
+.chapter-btn:hover { background: var(--sustine-panel); border-color: rgba(255,255,255,0.15); color: var(--ui-primary); transform: scale(1.1); }
 .chapter-btn.active { background: rgba(255, 216, 147, 0.1); border-color: rgba(255, 216, 147, 0.4); color: var(--sun-core); font-weight: bold; }
 
 /* ===== CINEMATIC TRANSITION ===== */
@@ -779,7 +779,7 @@
     scroll-behavior: auto !important;
   }
   .breathe, .breatheLogo, .mission-bar-sheen { animation: none !important; }
-  .luma-btn:hover, .draft-card:hover, .seal-item:hover { transform: none !important; }
+  .sustine-btn:hover, .draft-card:hover, .seal-item:hover { transform: none !important; }
 }
 body.reduce-motion *, body.reduce-motion *::before, body.reduce-motion *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
 body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion .mission-bar-sheen { animation: none !important; }
@@ -793,7 +793,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
 
   <div class="splash-screen" id="splashScreen">
     <div class="splash-orb"></div>
-    <div class="splash-logo">luma</div>
+    <div class="splash-logo">sustine</div>
     <div class="splash-sub">playing for a better world</div>
   </div>
 
@@ -857,8 +857,8 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         <div class="subtitle" data-i18n>the gesture is yours now. the sky waits for the rest.</div>
       </div>
       <div class="panel-footer" style="margin-top: 24px;">
-        <div class="luma-actions">
-          <button class="luma-btn luma-btn-primary" id="completeProceedBtn" data-i18n>begin the journey</button>
+        <div class="sustine-actions">
+          <button class="sustine-btn sustine-btn-primary" id="completeProceedBtn" data-i18n>begin the journey</button>
         </div>
       </div>
     </div>
@@ -883,7 +883,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
 
   <div id="menuScreen" class="screen menu-screen">
     <div class="altar-wrapper">
-      <div class="eyebrow" style="margin-bottom: 6vh;">luma</div>
+      <div class="eyebrow" style="margin-bottom: 6vh;">sustine</div>
       
       <div class="menu-sun-orb breathe" id="menuOrb" style="margin: 0 auto 3vh;"></div>
       
@@ -895,12 +895,12 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         <div class="altar-line"><div class="altar-line-fill" id="menuWorldLightFill"></div></div>
       </div>
       
-      <div class="luma-actions">
-        <button class="luma-btn luma-btn-primary" id="startBtn" data-i18n>awaken</button>
-        <div class="luma-secondary-actions">
-          <button class="luma-btn luma-btn-secondary" id="returnMapMenuBtn" data-i18n>journey</button>
-          <button class="luma-btn luma-btn-secondary" id="openHarmonyBtn" data-i18n>harmony</button>
-          <button class="luma-btn luma-btn-secondary" id="openMemoriesBtn" data-i18n>memories</button>
+      <div class="sustine-actions">
+        <button class="sustine-btn sustine-btn-primary" id="startBtn" data-i18n>awaken</button>
+        <div class="sustine-secondary-actions">
+          <button class="sustine-btn sustine-btn-secondary" id="returnMapMenuBtn" data-i18n>journey</button>
+          <button class="sustine-btn sustine-btn-secondary" id="openHarmonyBtn" data-i18n>harmony</button>
+          <button class="sustine-btn sustine-btn-secondary" id="openMemoriesBtn" data-i18n>memories</button>
         </div>
       </div>
       <div class="caption" style="position:absolute; bottom:24px;" data-i18n>developed with care</div>
@@ -978,7 +978,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
                         </div>
                     </div>
                     <div class="setting-item" style="justify-content: center; margin-top: 10px;">
-                        <button class="luma-btn luma-btn-secondary" id="replayTutorialBtn" data-i18n>replay the first ritual</button>
+                        <button class="sustine-btn sustine-btn-secondary" id="replayTutorialBtn" data-i18n>replay the first ritual</button>
                     </div>
                 </div>
             </div>
@@ -1042,9 +1042,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
                 <div class="category-header"><span class="category-icon">💾</span><span class="category-title" data-i18n>data</span></div>
                 <div class="category-content">
                     <div class="setting-actions">
-                        <button class="luma-btn luma-btn-secondary" id="btnResetProg" data-i18n>reset progress</button>
-                        <button class="luma-btn luma-btn-secondary" id="btnExportSave" data-i18n>export save</button>
-                        <button class="luma-btn luma-btn-secondary" id="btnImportSave" data-i18n>import save</button>
+                        <button class="sustine-btn sustine-btn-secondary" id="btnResetProg" data-i18n>reset progress</button>
+                        <button class="sustine-btn sustine-btn-secondary" id="btnExportSave" data-i18n>export save</button>
+                        <button class="sustine-btn sustine-btn-secondary" id="btnImportSave" data-i18n>import save</button>
                         <input type="file" id="fileImportSave" style="display:none" accept=".json">
                     </div>
                     <div class="setting-info">
@@ -1056,7 +1056,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         </div>
         
         <div class="settings-actions">
-            <button class="luma-btn luma-btn-primary" id="closeHarmonyBtn" data-i18n>save &amp; return</button>
+            <button class="sustine-btn sustine-btn-primary" id="closeHarmonyBtn" data-i18n>save &amp; return</button>
         </div>
     </div>
   </div>
@@ -1068,7 +1068,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         <div class="title" data-i18n>Memories of Light</div>
         <div class="subtitle" data-i18n>fragments of past suns and recovered worlds.</div>
       </div>
-      <div class="panel-content" id="memoriesContent" style="flex-grow: 1; overflow-y: auto; text-align: left; padding: 10px; font-family: var(--font-ui); font-size: 14px; color: var(--luma-paper-soft);">
+      <div class="panel-content" id="memoriesContent" style="flex-grow: 1; overflow-y: auto; text-align: left; padding: 10px; font-family: var(--font-ui); font-size: 14px; color: var(--sustine-paper-soft);">
         <!-- Estrutura que showMemories() preenche. Faltava por inteiro: a função retornava
              na primeira guarda e a tela nem chegava a abrir. -->
         <div class="altar-wrapper">
@@ -1092,8 +1092,8 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         </div>
       </div>
       <div class="panel-footer" style="margin-top: 20px;">
-        <div class="luma-actions">
-          <button class="luma-btn luma-btn-text" id="closeMemoriesBtn" data-i18n>return</button>
+        <div class="sustine-actions">
+          <button class="sustine-btn sustine-btn-text" id="closeMemoriesBtn" data-i18n>return</button>
         </div>
       </div>
     </div>
@@ -1106,13 +1106,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       <div class="title-large" style="margin-bottom: 1vh;" data-i18n>paused</div>
       <div class="subtitle" style="margin-bottom: 8vh;" data-i18n>breathe. the light remains.</div>
       
-      <div class="luma-actions">
-        <button class="luma-btn luma-btn-primary" id="resumeBtn" data-i18n>return</button>
-        <div class="luma-secondary-actions">
-          <button class="luma-btn luma-btn-secondary" id="pauseRestartBtn" data-i18n>rise again</button>
-          <button class="luma-btn luma-btn-secondary" id="returnMapPauseBtn" data-i18n>journey</button>
-          <button class="luma-btn luma-btn-secondary" id="homePauseBtn" data-i18n>home</button>
-          <button class="luma-btn luma-btn-secondary" id="pauseHarmonyBtn" data-i18n>harmony</button>
+      <div class="sustine-actions">
+        <button class="sustine-btn sustine-btn-primary" id="resumeBtn" data-i18n>return</button>
+        <div class="sustine-secondary-actions">
+          <button class="sustine-btn sustine-btn-secondary" id="pauseRestartBtn" data-i18n>rise again</button>
+          <button class="sustine-btn sustine-btn-secondary" id="returnMapPauseBtn" data-i18n>journey</button>
+          <button class="sustine-btn sustine-btn-secondary" id="homePauseBtn" data-i18n>home</button>
+          <button class="sustine-btn sustine-btn-secondary" id="pauseHarmonyBtn" data-i18n>harmony</button>
         </div>
       </div>
     </div>
@@ -1126,7 +1126,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   </div>
   
   <div class="map-header">
-    <div class="map-eyebrow" data-i18n>Luma Constellation</div>
+    <div class="map-eyebrow" data-i18n>Sustine Constellation</div>
     <div class="map-title" data-i18n>Journey Map</div>
   </div>
   <div class="map-stats">
@@ -1152,10 +1152,10 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       <div class="map-m-subs" id="mSubs"></div>
       <div class="map-m-perf" id="mPerfContainer">perfect: complete without near-fail</div>
     </div>
-    <div class="luma-actions">
-      <button class="luma-btn luma-btn-primary" id="btnPlayNode" data-i18n>start</button>
-      <div class="luma-secondary-actions">
-        <button class="luma-btn luma-btn-secondary" id="btnHomeFromMap" data-i18n>home</button>
+    <div class="sustine-actions">
+      <button class="sustine-btn sustine-btn-primary" id="btnPlayNode" data-i18n>start</button>
+      <div class="sustine-secondary-actions">
+        <button class="sustine-btn sustine-btn-secondary" id="btnHomeFromMap" data-i18n>home</button>
       </div>
     </div>
   </div>
@@ -1175,15 +1175,15 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
 
     <div class="result-stats" id="resultStats" style="color: var(--sun-glow); white-space: pre-line; font-weight: 600; text-shadow: 0 0 12px rgba(255,196,107,0.4); margin-bottom: 6vh;"></div>
     
-    <div class="luma-actions" id="resultActions" style="opacity:0; pointer-events:none; transition:opacity 1s;">
-      <button class="luma-btn luma-btn-primary" id="restartBtn" data-i18n>rise again</button>
-      <div class="luma-secondary-actions">
-        <button class="luma-btn luma-btn-secondary" id="nextNodeBtn" data-i18n>next node</button>
-        <button class="luma-btn luma-btn-secondary" id="returnMapResultBtn" data-i18n>journey</button>
-        <button class="luma-btn luma-btn-secondary" id="shareBtn" data-i18n>share</button>
+    <div class="sustine-actions" id="resultActions" style="opacity:0; pointer-events:none; transition:opacity 1s;">
+      <button class="sustine-btn sustine-btn-primary" id="restartBtn" data-i18n>rise again</button>
+      <div class="sustine-secondary-actions">
+        <button class="sustine-btn sustine-btn-secondary" id="nextNodeBtn" data-i18n>next node</button>
+        <button class="sustine-btn sustine-btn-secondary" id="returnMapResultBtn" data-i18n>journey</button>
+        <button class="sustine-btn sustine-btn-secondary" id="shareBtn" data-i18n>share</button>
       </div>
       <div style="margin-top: 12px;">
-         <button class="luma-btn luma-btn-text" id="homeResultBtn" data-i18n>home</button>
+         <button class="sustine-btn sustine-btn-text" id="homeResultBtn" data-i18n>home</button>
       </div>
     </div>
   </div>
@@ -1232,13 +1232,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
             <div class="settings-subtitle" data-i18n>your journey in verse</div>
         </div>
         <div class="share-preview" id="sharePreview"></div>
-        <div class="luma-actions">
-            <button class="luma-btn luma-btn-primary" id="shareActionBtn" data-i18n>share card</button>
-            <div class="luma-secondary-actions">
-                <button class="luma-btn luma-btn-secondary" id="saveImageBtn" data-i18n>save image</button>
-                <button class="luma-btn luma-btn-secondary" id="copyTextBtn" data-i18n>copy text</button>
+        <div class="sustine-actions">
+            <button class="sustine-btn sustine-btn-primary" id="shareActionBtn" data-i18n>share card</button>
+            <div class="sustine-secondary-actions">
+                <button class="sustine-btn sustine-btn-secondary" id="saveImageBtn" data-i18n>save image</button>
+                <button class="sustine-btn sustine-btn-secondary" id="copyTextBtn" data-i18n>copy text</button>
             </div>
-            <button class="luma-btn luma-btn-text" id="closeShareModal" style="margin-top: 12px;" data-i18n>close</button>
+            <button class="sustine-btn sustine-btn-text" id="closeShareModal" style="margin-top: 12px;" data-i18n>close</button>
         </div>
     </div>
 </div>
@@ -1257,7 +1257,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   // Parede de concreto primeiro. A imersão do jogador não pode quebrar.
   // ============================================================================
 
-  // --- LUMA ANALYTICS SYSTEM v1.0 ---
+  // --- SUSTINE ANALYTICS SYSTEM v1.0 ---
   const EVENT_TYPES = {
       SESSION_START: 'session_start', SESSION_END: 'session_end',
       RUN_START: 'run_start', RUN_END: 'run_end', RUN_COMPLETE: 'run_complete',
@@ -1285,7 +1285,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
           this.enabled = false;
           this.queue = [];
           this.flushInterval = null;
-          this.endpoint = 'https://api.luma.game/analytics'; // Fallback simulado
+          this.endpoint = 'https://api.sustine.game/analytics'; // Fallback simulado
           this.debug = window.location.search.includes('debug=true');
           this.session = new SessionData();
       }
@@ -1403,6 +1403,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   let W = canvas.width;
   let H = canvas.height;
   let HORIZON_Y = H * 0.865;
+  // ATENCAO: a chave abaixo guarda o nome antigo do jogo de proposito. O jogo se chamava
+  // LUMA e foi publicado assim; renomear a chave junto com a marca apagaria a jornada de
+  // todo mundo que ja jogou, sem aviso e sem volta. Nome invisivel e DADO, nao marca.
   const SAVE_KEY = "luma_hold_the_sun_merged_v3";
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -1652,7 +1655,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       'locked': 'bloqueada',
 
       // --- mapa ---
-      'Luma Constellation': 'Constelação Luma',
+      'Sustine Constellation': 'Constelação Sustine',
+      'every meter, a small victory.': 'cada metro, uma pequena vitória.',
+      'I reached {n}m in Sustine.': 'Alcancei {n}m em Sustine.',
+      'small gestures can light up the world': 'pequenos gestos podem iluminar o mundo',
+      'the sun rested on the horizon': 'o sol descansou no horizonte',
+      'altitude': 'altitude',
+      'rhythm': 'ritmo',
       'Journey Map': 'Mapa da Jornada',
       'Dawns Awakened': 'Amanheceres Despertos',
       'Altitude': 'Altitude',
@@ -1960,7 +1969,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "perfect ": "perfecta",
       "available": "disponible",
       "locked": "bloqueada",
-      "Luma Constellation": "Constelación Luma",
+      "Sustine Constellation": "Constelación Sustine",
+      "every meter, a small victory.": "cada metro, una pequeña victoria.",
+      "I reached {n}m in Sustine.": "Alcancé {n}m en Sustine.",
+      "small gestures can light up the world": "pequeños gestos pueden iluminar el mundo",
+      "the sun rested on the horizon": "el sol descansó en el horizonte",
+      "altitude": "altitud",
+      "rhythm": "ritmo",
       "Journey Map": "Mapa del Viaje",
       "Dawns Awakened": "Amaneceres Despertados",
       "Altitude": "Altitud",
@@ -2268,7 +2283,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "perfect ": "perfekt",
       "available": "verfügbar",
       "locked": "gesperrt",
-      "Luma Constellation": "Luma-Konstellation",
+      "Sustine Constellation": "Sustine-Konstellation",
+      "every meter, a small victory.": "jeder Meter, ein kleiner Sieg.",
+      "I reached {n}m in Sustine.": "Ich erreichte {n}m in Sustine.",
+      "small gestures can light up the world": "kleine Gesten können die Welt erhellen",
+      "the sun rested on the horizon": "die Sonne ruhte am Horizont",
+      "altitude": "Höhe",
+      "rhythm": "Rhythmus",
       "Journey Map": "Reisekarte",
       "Dawns Awakened": "Erweckte Morgen",
       "Altitude": "Höhe",
@@ -2576,7 +2597,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "perfect ": "parfaite",
       "available": "disponible",
       "locked": "verrouillée",
-      "Luma Constellation": "Constellation Luma",
+      "Sustine Constellation": "Constellation Sustine",
+      "every meter, a small victory.": "chaque mètre, une petite victoire.",
+      "I reached {n}m in Sustine.": "J'ai atteint {n}m dans Sustine.",
+      "small gestures can light up the world": "de petits gestes peuvent illuminer le monde",
+      "the sun rested on the horizon": "le soleil s'est reposé sur l'horizon",
+      "altitude": "altitude",
+      "rhythm": "rythme",
       "Journey Map": "Carte du Voyage",
       "Dawns Awakened": "Aubes Éveillées",
       "Altitude": "Altitude",
@@ -2884,7 +2911,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "perfect ": "идеальная",
       "available": "доступна",
       "locked": "закрыта",
-      "Luma Constellation": "Созвездие Лума",
+      "Sustine Constellation": "Созвездие Сустине",
+      "every meter, a small victory.": "каждый метр — маленькая победа.",
+      "I reached {n}m in Sustine.": "Я достиг {n}м в Sustine.",
+      "small gestures can light up the world": "малые жесты могут осветить мир",
+      "the sun rested on the horizon": "солнце легло на горизонт",
+      "altitude": "высота",
+      "rhythm": "ритм",
       "Journey Map": "Карта Пути",
       "Dawns Awakened": "Пробуждённых Рассветов",
       "Altitude": "Высота",
@@ -3192,7 +3225,13 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       "perfect ": "perfetta",
       "available": "disponibile",
       "locked": "bloccata",
-      "Luma Constellation": "Costellazione Luma",
+      "Sustine Constellation": "Costellazione Sustine",
+      "every meter, a small victory.": "ogni metro, una piccola vittoria.",
+      "I reached {n}m in Sustine.": "Ho raggiunto {n}m in Sustine.",
+      "small gestures can light up the world": "piccoli gesti possono illuminare il mondo",
+      "the sun rested on the horizon": "il sole si è posato sull'orizzonte",
+      "altitude": "altitudine",
+      "rhythm": "ritmo",
       "Journey Map": "Mappa del Viaggio",
       "Dawns Awakened": "Albe Risvegliate",
       "Altitude": "Altitudine",
@@ -3357,7 +3396,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     return match || 'en';
   }
   // --- A CONSTANTE DE TEMPO DO JOGO ---
-  // O LUMA é o avesso do Flappy Bird: desafiar sem estressar. Isso é uma decisão de
+  // O SUSTINE é o avesso do Flappy Bird: desafiar sem estressar. Isso é uma decisão de
   // FREQUÊNCIA, não de dificuldade. Os números antigos — queda a 710px/s, cooldown de
   // 0,14s, ~1,9 pulsos por segundo sustentáveis — rodavam na frequência do dedo, a mesma
   // ordem de grandeza do Flappy Bird. Estes rodam na frequência da respiração: um gesto a
@@ -3562,7 +3601,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
 
   // --- COLOR SCRIPT ---
   // Um color script nao e escolher uma paleta bonita por cena: e organizar a progressao
-  // emocional cromatica da experiencia inteira. O LUMA nao tinha nenhum. Pior: a ordem dos
+  // emocional cromatica da experiencia inteira. O SUSTINE nao tinha nenhum. Pior: a ordem dos
   // biomas repete literalmente — as missoes 1 a 19 e 20 a 38 percorrem a MESMA sequencia,
   // e as tres constelacoes se alternam tres vezes. A jornada dava a volta e recomecava.
   //
@@ -3761,7 +3800,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   // primeira corrida — como a preparação da missão, que roda no boot — precisa tolerar isso.
   function isTutorialActive() { return !!(state.tutorial && state.tutorial.active); }
 
-  // --- LUMA EXPERIENCE SYSTEM v1.0 (Mission & VFX State) ---
+  // --- SUSTINE EXPERIENCE SYSTEM v1.0 (Mission & VFX State) ---
   const MissionKind = { ABOVE_DAWN_LINE: 'above_dawn_line', REACH_ALTITUDE: 'reach_altitude', BIRDS_THIS_RUN: 'birds_this_run', SURVIVE_TIME: 'survive_time', COMBO_TARGET: 'combo_target', AVOID_NEAR_FAIL: 'avoid_near_fail', STABILITY_TIME: 'stability_time' };
   
   // --- SISTEMA DE RARIDADE ---
@@ -3868,6 +3907,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     { id: 'm50', title: 'The Zenith', subtitle: 'Reach 300m into pure light.', kind: MissionKind.REACH_ALTITUDE, target: 300, perfectText: 'zero near-fails', toast: 'Transcendence', nodeMeta: 'Apex · Zenith', biome: 'zenith' }
   ];
 
+  // ATENCAO: a chave abaixo guarda o nome antigo do jogo de proposito. O jogo se chamava
+  // LUMA e foi publicado assim; renomear a chave junto com a marca apagaria a jornada de
+  // todo mundo que ja jogou, sem aviso e sem volta. Nome invisivel e DADO, nao marca.
   const JOURNEY_SAVE_KEY = "luma_journey_progress_v3";
   let mapProgress = { totalDawns: 0, bestScore: 0, completedNodes: [], perfectNodes: [], nodeStats: {}, currentNodeId: "m1", lastRun: null, lastRunProcessed: true };
 
@@ -3963,7 +4005,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   // -------------------------------------------------------------
 
   // ============================================================================
-  // 🎵 LUMA AUDIO ENGINE V2.0 - EXTREME PERFORMANCE REFACTOR
+  // 🎵 SUSTINE AUDIO ENGINE V2.0 - EXTREME PERFORMANCE REFACTOR
   // Blindagem de CPU, Limite de Polifonia, Rate Limiting e Try/Catch global
   // ============================================================================
 
@@ -5015,7 +5057,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
             if (compScreen) compScreen.classList.add('hidden');
         }
       } catch(e) {
-        console.error("Luma engine error:", e);
+        console.error("Sustine engine error:", e);
       } finally {
         if(fade) fade.classList.remove("active");
       }
@@ -5656,7 +5698,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
 
     // A força do gesto é a qualidade da respiração, e a curva tem um pico nítido:
     // ao quadrado, meio fôlego rende só um quarto do impulso. É o que separa julgar a
-    // duração de apertar depressa — e é a única "dificuldade" que o LUMA quer ter.
+    // duração de apertar depressa — e é a única "dificuldade" que o SUSTINE quer ter.
     const fullness = clamp(state.sun.energy / maxBreath(), 0, 1);
     // Guardado antes de zerar abaixo: a qualidade do gesto é a do instante em que soltou.
     const strainAoSoltar = state.sun.strain;
@@ -5865,7 +5907,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         // Mirar é uma perícia espacial sem relação com respirar, e o sol deriva com o
         // vento: exigir proximidade obrigava o jogador a PERSEGUIR um alvo móvel com o
         // dedo, que é o oposto de relaxar. Além disso a zona "perfeita" tinha raio de
-        // 21px, menor que a ponta de um dedo. A perícia do LUMA é julgar duração; o
+        // 21px, menor que a ponta de um dedo. A perícia do SUSTINE é julgar duração; o
         // espaço só disputava atenção com ela.
         const influence = 1;
         // A tensão mata a sustentação. Sem isto, segurar para sempre seria a estratégia
@@ -6501,7 +6543,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         meadow: 78, hills: 80, coast: 76, canyon: 82, desert: 84, forest: 78, snow: 72, storm: 88, ruins: 75, crystal: 82, nebula: 74, cosmos: 86, aurora: 84, zenith: 90
     };
     
-    // --- LUMA DYNAMIC MUSIC MOOD SYSTEM ---
+    // --- SUSTINE DYNAMIC MUSIC MOOD SYSTEM ---
     let mood = { intensity: 0, warmth: 0, tension: 0, space: 0 };
     
     if (state.mode === "menu") {
@@ -8438,10 +8480,12 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   
   const btnExportSave = document.getElementById('btnExportSave');
   if (btnExportSave) btnExportSave.addEventListener('click', () => {
+      // luma_core / luma_map mantem o nome antigo: arquivos de save que jogadores ja
+      // baixaram usam esses campos, e renomear quebraria a importacao deles.
       const data = JSON.stringify({ luma_core: localStorage.getItem(SAVE_KEY), luma_map: localStorage.getItem(JOURNEY_SAVE_KEY) });
       const blob = new Blob([data], { type: 'application/json' });
       const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob); a.download = `luma_save_${Date.now()}.json`;
+      a.href = URL.createObjectURL(blob); a.download = `sustine_save_${Date.now()}.json`;
       a.click(); URL.revokeObjectURL(a.href);
   });
   
@@ -8534,7 +8578,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   // --- WEB SHARE API (Redes Sociais) ---
   const poetryTemplates = {
       high: ["the sky opened to your persistence.", "you touched the stars.", "the horizon bowed to your light."],
-      medium: ["the mountain witnessed your light.", "the horizon drew closer.", "cada metro, uma conquista."],
+      medium: ["the mountain witnessed your light.", "the horizon drew closer.", "every meter, a small victory."],
       low: ["a spark. a beginning.", "every light begins small.", "the first flight is special."],
       combo: ["the rhythm woke the sky.", "each pulse, a constellation.", "harmony guided your way."],
       breakthrough: ["the dawn opened. the world breathes.", "the light overcame the void."],
@@ -8544,7 +8588,11 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   function generateShareData() {
       const isRecord = state.scoreMeters > state.bestMeters;
       const isEternal = state.worldLight >= 100;
-      const altCat = state.scoreMeters > 2000 ? 'high' : (state.scoreMeters > 1000 ? 'medium' : 'low');
+      // Estas faixas eram 2000m e 1000m, escritas para a fisica anterior. Com o teto real
+      // em ~387m (ver tools/sim-breath.cjs), altCat era SEMPRE 'low' e dois tercos dos
+      // versos deste arquivo nunca chegavam a aparecer. Reescaladas contra a curva atual,
+      // cujas metas vao de 100m a 300m.
+      const altCat = state.scoreMeters > 260 ? 'high' : (state.scoreMeters > 150 ? 'medium' : 'low');
       
       let verse1 = poetryTemplates[altCat][Math.floor(Math.random() * poetryTemplates[altCat].length)];
       let verse2 = state.runStats.breakthroughs > 0 ? poetryTemplates.breakthrough[Math.floor(Math.random() * poetryTemplates.breakthrough.length)] :
@@ -8555,12 +8603,15 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       
       return {
           type: isEternal ? 'eternal' : (state.runStats.breakthroughs > 0 ? 'breakthrough' : (isRecord ? 'record' : 'normal')),
-          poem: `o sol descansou\nno horizonte`,
-          quote: `${verse1} ${verse2}`,
+          poem: t('the sun rested on the horizon'),
+          quote: `${t(verse1)} ${t(verse2)}`,
           altitude: Math.floor(state.scoreMeters),
           time: state.runTime,
           harmony: clamp(harmonyVal, 0, 100),
-          rawText: `Alcancei ${Math.floor(state.scoreMeters)}m em LUMA — Hold the Sun. ${verse1} ✧ #LUMA`
+          // Esta frase estava em PORTUGUES FIXO num jogo que fala sete idiomas — e e o
+          // texto que o jogador manda para FORA, ou seja, a frase mais publica do jogo.
+          // O varredor nao pegou: ela nao vai para textContent, vai para a Web Share API.
+          rawText: `${t('I reached {n}m in Sustine.').replace('{n}', Math.floor(state.scoreMeters))} ${t(verse1)} ✧ #Sustine`
       };
   }
 
@@ -8581,18 +8632,18 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         const card = document.createElement('div');
         card.className = `share-card share-card-${data.type}`;
         card.innerHTML = `
-            <div class="share-card-header"><span>☼ LUMA</span><span>HOLD THE SUN</span></div>
+            <div class="share-card-header"><span>☼ Sustine</span><span>${t("hold the sun").toUpperCase()}</span></div>
             <div class="share-card-sun">☼</div>
             <div class="share-card-poem">${data.poem.replace('\n', '<br>')}</div>
             <div class="share-card-stats">
-                <div><span class="share-stat-label">altitude</span><span class="share-stat-value">${data.altitude.toLocaleString()} m</span></div>
-                <div><span class="share-stat-label">ritmo</span><span class="share-stat-value">${formatTime(data.time)}</span></div>
-                <div><span class="share-stat-label">harmonia</span><span class="share-stat-value">${data.harmony}%</span></div>
+                <div><span class="share-stat-label">${t("altitude")}</span><span class="share-stat-value">${data.altitude.toLocaleString()} m</span></div>
+                <div><span class="share-stat-label">${t("rhythm")}</span><span class="share-stat-value">${formatTime(data.time)}</span></div>
+                <div><span class="share-stat-label">${t("harmony")}</span><span class="share-stat-value">${data.harmony}%</span></div>
             </div>
             <div class="share-card-quote">"${data.quote}"</div>
             <div class="share-card-footer">
-                <span class="share-tagline">✧ pequenos gestos podem iluminar o mundo ✧</span>
-                <span class="share-hashtags">#LUMA #HoldTheSun</span>
+                <span class="share-tagline">✧ ${t("small gestures can light up the world")} ✧</span>
+                <span class="share-hashtags">#Sustine #HoldTheSun</span>
             </div>
         `;
         document.body.appendChild(card);
@@ -8629,7 +8680,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       saveImageBtn.addEventListener('click', () => {
           if (!cachedShareCanvas) return;
           const link = document.createElement('a');
-          link.download = `Luma_Journey_${Date.now()}.png`;
+          link.download = `Sustine_Journey_${Date.now()}.png`;
           link.href = cachedShareCanvas.toDataURL('image/png');
           link.click();
       });
@@ -8641,9 +8692,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
           if (!cachedShareCanvas) return;
           try {
               const blob = await new Promise(resolve => cachedShareCanvas.toBlob(resolve, 'image/png'));
-              const file = new File([blob], 'luma_journey.png', { type: 'image/png' });
+              const file = new File([blob], 'sustine_journey.png', { type: 'image/png' });
               if (navigator.share && navigator.canShare({ files: [file] })) {
-                  await navigator.share({ title: 'LUMA — Hold the Sun', text: cachedShareText, files: [file] });
+                  await navigator.share({ title: 'Sustine — Hold the Sun', text: cachedShareText, files: [file] });
               } else {
                   showFloating("this device cannot share directly", false);
               }
@@ -9315,7 +9366,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       el.addEventListener('mouseenter', () => { if (audioInitialized) playUIHover(); });
       el.addEventListener('click', () => { 
           if (!audioInitialized) { initAudio(); audioInitialized = true; }
-          if (el.classList.contains('luma-btn-secondary') || el.classList.contains('luma-btn-text') || el.id.includes('close')) {
+          if (el.classList.contains('sustine-btn-secondary') || el.classList.contains('sustine-btn-text') || el.id.includes('close')) {
               playUIBack();
           } else { playUIConfirm(); }
       });
@@ -9348,15 +9399,15 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
           const swCode = `
-              const CACHE_NAME = 'luma-cache-v1';
+              const CACHE_NAME = 'sustine-cache-v1';
               self.addEventListener('install', event => { event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(['/']))); });
               self.addEventListener('fetch', event => { event.respondWith(caches.match(event.request).then(response => response || fetch(event.request))); });
           `;
           const blob = new Blob([swCode], { type: 'application/javascript' });
           const swUrl = URL.createObjectURL(blob);
           navigator.serviceWorker.register(swUrl)
-              .then(reg => console.log('Luma Offline PWA Registered'))
-              .catch(err => console.log('Luma SW Error:', err));
+              .then(reg => console.log('Sustine Offline PWA Registered'))
+              .catch(err => console.log('Sustine SW Error:', err));
       });
   }
 })();

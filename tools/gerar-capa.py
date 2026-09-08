@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Capa 630x500 do LUMA.
+"""Capa 630x500 do SUSTINE.
 
 Duas tentativas anteriores falharam por motivos que vale registrar:
 
@@ -19,7 +19,8 @@ from PIL import Image, ImageDraw, ImageFont, ImageFilter
 INTER = "C:/Users/Yata/AppData/Local/Microsoft/Windows/Fonts/Inter-Light-slnt=0.ttf"
 W, H = 630, 500
 
-src = Image.open('press/shot-01-gameplay.png'  # trocar aqui para recompor com outra captura).convert('RGB')
+# Trocar o arquivo abaixo para recompor a capa a partir de outra captura.
+src = Image.open('press/shot-01-gameplay.png').convert('RGB')
 
 # --- fundo: o proprio ceu do jogo, esticado e desfocado, para a marca ter onde pousar ---
 fundo = src.resize((W, int(W * src.height / src.width)), Image.LANCZOS)
@@ -61,7 +62,7 @@ r = 21
 d.arc([cx, cy-64, cx+r*2, cy-64+r*2], start=-62, end=243, fill=(255, 216, 147), width=2)
 d.ellipse([cx+r-6, cy-64+r-6, cx+r+6, cy-64+r+6], fill=(255, 250, 238))
 
-fim = tracking(d, (cx, cy), "luma", f, (250, 245, 234), 13)
+fim = tracking(d, (cx, cy), "sustine", f, (250, 245, 234), 13)
 d.line([(cx+2, cy+66), (fim-13, cy+66)], fill=(255, 216, 147), width=1)
 tracking(d, (cx+3, cy+78), "hold the sun", fa, (234, 223, 206), 6)
 tracking(d, (cx+3, cy+118), "one touch. breathe in, let go.", fb, (206, 198, 186), 1.2)

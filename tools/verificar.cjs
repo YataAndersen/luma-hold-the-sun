@@ -11,6 +11,7 @@
 // Nenhuma ferramenta daqui pegou o gesto invertido, o anel ausente, o card em cima do sol
 // ou o painel colidindo com o anel do tempo. Ver VERIFICACAO.md.
 const { execFileSync } = require('node:child_process');
+const fs = require('node:fs');
 const path = require('node:path');
 const raiz = path.join(__dirname, '..');
 
@@ -56,6 +57,30 @@ for (const etapa of etapas) {
       console.log(`   FALHOU — ${etapa.porque}`);
       falhas++;
     }
+  }
+}
+
+// As ferramentas em Python (logo, capa, receptor de canvas) nunca eram executadas por
+// nada automático — e `gerar-capa.py` ficou COMITADO com erro de sintaxe por duas sessões,
+// sem ninguém perceber, porque só se descobre ao rodar. Um `py_compile` custa milissegundos.
+console.log(`\n── ferramentas python ${'─'.repeat(33)}`);
+{
+  const py = fs.readdirSync(path.join(raiz, 'tools')).filter(f => f.endsWith('.py'));
+  const quebradas = [];
+  for (const f of py) {
+    try {
+      execFileSync('python', ['-m', 'py_compile', path.join('tools', f)], { cwd: raiz, encoding: 'utf8' });
+    } catch (e) {
+      const saida = ((e.stderr || '') + (e.stdout || '')).trim().split('\n');
+      quebradas.push(`${f}: ${saida[saida.length - 1]}`);
+    }
+  }
+  if (quebradas.length) {
+    for (const q of quebradas) console.log('   ' + q);
+    console.log(`   FALHOU — ${quebradas.length} de ${py.length} não compilam`);
+    falhas++;
+  } else {
+    console.log(`   ok — ${py.length} ferramentas compilam`);
   }
 }
 

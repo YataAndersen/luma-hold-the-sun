@@ -1,6 +1,6 @@
 'use strict';
 
-// Run: node --test "LUMA - PROJETO PRINCIPAL/tests/locales.test.cjs"
+// Run: node --test "SUSTINE - PROJETO PRINCIPAL/tests/locales.test.cjs"
 // Guards the translation dictionaries in the shipped HTML: every language must
 // answer for every line the game can show, and must be reachable in the picker.
 // pt-BR is the reference set because it was the first full translation.

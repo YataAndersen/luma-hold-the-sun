@@ -1,4 +1,4 @@
-# Como verificar o LUMA — e por que não confiar na primeira medida
+# Como verificar o SUSTINE — e por que não confiar na primeira medida
 
 Este documento existe porque **quatro vezes, neste projeto, um instrumento de medida escondeu exatamente o problema que devia mostrar**. Em três delas eu declarei algo verificado que não estava; na quarta, quase "consertei" uma física que não tinha defeito nenhum.
 

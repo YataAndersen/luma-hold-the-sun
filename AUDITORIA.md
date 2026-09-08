@@ -1,4 +1,4 @@
-# LUMA — auditoria de código morto e quebrado
+# SUSTINE — auditoria de código morto e quebrado
 
 Varredura de 06/09/2026 sobre `index.html`: funções fantasmas (declaradas e nunca chamadas), stubs (corpo vazio), configuração que nada lê e referências de DOM quebradas.
 
@@ -72,7 +72,7 @@ Detalhe de CSS: `.tutorial-panel` é `pointer-events:none` para não roubar o to
 
 `consentModal`, `consentYes` e `consentNo` também não existem, mas aqui a recomendação é **não** reconstruir por enquanto.
 
-O sistema falha de forma segura: `track()` retorna cedo quando `enabled` é falso, e `enabled` só vira verdadeiro em `analytics.start()`, chamado apenas com consentimento explícito. Sem o modal, `analyticsConsent` fica `null` para sempre — **nada é coletado e nada é enviado**. Além disso, o endpoint é um placeholder declarado no próprio código como "fallback simulado" (`https://api.luma.game/analytics`).
+O sistema falha de forma segura: `track()` retorna cedo quando `enabled` é falso, e `enabled` só vira verdadeiro em `analytics.start()`, chamado apenas com consentimento explícito. Sem o modal, `analyticsConsent` fica `null` para sempre — **nada é coletado e nada é enviado**. Além disso, o endpoint é um placeholder declarado no próprio código como "fallback simulado" (`https://api.sustine.game/analytics`).
 
 Construir o modal hoje só serviria para pedir permissão de enviar dados a uma API que não existe. O certo é decidir primeiro se haverá telemetria de verdade; se não houver, remover o código órfão de analytics inteiro.
 
@@ -113,10 +113,10 @@ Duas lições registradas no código:
 Os scripts ficam em `tools/`:
 
 ```bash
-node "LUMA - PROJETO PRINCIPAL/tools/sweep-dead-code.cjs" "LUMA - PROJETO PRINCIPAL/index.html"
-node "LUMA - PROJETO PRINCIPAL/tools/sweep-dom-refs.cjs" "LUMA - PROJETO PRINCIPAL/index.html"
-node "LUMA - PROJETO PRINCIPAL/tools/check-reachability.cjs"
-node "LUMA - PROJETO PRINCIPAL/tools/sweep-i18n.cjs"
+node "SUSTINE - PROJETO PRINCIPAL/tools/sweep-dead-code.cjs" "SUSTINE - PROJETO PRINCIPAL/index.html"
+node "SUSTINE - PROJETO PRINCIPAL/tools/sweep-dom-refs.cjs" "SUSTINE - PROJETO PRINCIPAL/index.html"
+node "SUSTINE - PROJETO PRINCIPAL/tools/check-reachability.cjs"
+node "SUSTINE - PROJETO PRINCIPAL/tools/sweep-i18n.cjs"
 ```
 
 ## Varredura de tradução (06/09/2026)

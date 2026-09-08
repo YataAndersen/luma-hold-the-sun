@@ -118,6 +118,20 @@ for (const nome of ['05-missions.js']) {
     for (const item of m[1].matchAll(/(['"])((?:(?!\1)[^\\]|\\.)*)\1/g)) dados.add(item[2]);
   }
 }
+// Os versos do cartão de compartilhamento moram numa tabela e chegam ao t() como
+// `t(verse1)`, depois de duas indireções (`poetryTemplates[altCat][aleatorio]`). O
+// seguidor de variável local não alcança isso, então os quinze versos apareciam como
+// órfãos — prontos para alguém "limpar" e apagar a tradução do cartão em seis idiomas.
+{
+  const s = fonte.get('20-share.js') || '';
+  const de = s.indexOf('const poetryTemplates');
+  if (de !== -1) {
+    for (const lit of literaisDe(trechoBalanceado(s.split('\n'), s.slice(0, de).split('\n').length - 1, 30))) {
+      if (ehProsa(lit)) dados.add(lit);
+    }
+  }
+}
+
 // Rótulos de estado do mapa: t(node.state) recebe um destes quatro.
 for (const estado of ['current', 'completed', 'available', 'locked']) dados.add(estado);
 

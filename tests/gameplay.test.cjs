@@ -1,6 +1,6 @@
 'use strict';
 
-// Run: node --test "LUMA - PROJETO PRINCIPAL/tests/gameplay.test.cjs"
+// Run: node --test "SUSTINE - PROJETO PRINCIPAL/tests/gameplay.test.cjs"
 // These are behavior tests of declarations extracted from the shipped HTML.
 // Rendering, sound and persistence are explicit stubs; gameplay code is not copied.
 const test = require('node:test');

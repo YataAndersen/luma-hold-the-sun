@@ -1,6 +1,6 @@
 'use strict';
 
-// Simula a física do LUMA para medir o ritmo de subida em tempo de respiração.
+// Simula a física do SUSTINE para medir o ritmo de subida em tempo de respiração.
 // Uso: node tools/sim-breath.cjs
 //
 // Existe porque "parece calmo" e "as missões são alcançáveis" são perguntas diferentes,

@@ -85,7 +85,7 @@
 
     // A força do gesto é a qualidade da respiração, e a curva tem um pico nítido:
     // ao quadrado, meio fôlego rende só um quarto do impulso. É o que separa julgar a
-    // duração de apertar depressa — e é a única "dificuldade" que o LUMA quer ter.
+    // duração de apertar depressa — e é a única "dificuldade" que o SUSTINE quer ter.
     const fullness = clamp(state.sun.energy / maxBreath(), 0, 1);
     // Guardado antes de zerar abaixo: a qualidade do gesto é a do instante em que soltou.
     const strainAoSoltar = state.sun.strain;

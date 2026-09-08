@@ -1,7 +1,7 @@
   // --- WEB SHARE API (Redes Sociais) ---
   const poetryTemplates = {
       high: ["the sky opened to your persistence.", "you touched the stars.", "the horizon bowed to your light."],
-      medium: ["the mountain witnessed your light.", "the horizon drew closer.", "cada metro, uma conquista."],
+      medium: ["the mountain witnessed your light.", "the horizon drew closer.", "every meter, a small victory."],
       low: ["a spark. a beginning.", "every light begins small.", "the first flight is special."],
       combo: ["the rhythm woke the sky.", "each pulse, a constellation.", "harmony guided your way."],
       breakthrough: ["the dawn opened. the world breathes.", "the light overcame the void."],
@@ -11,7 +11,11 @@
   function generateShareData() {
       const isRecord = state.scoreMeters > state.bestMeters;
       const isEternal = state.worldLight >= 100;
-      const altCat = state.scoreMeters > 2000 ? 'high' : (state.scoreMeters > 1000 ? 'medium' : 'low');
+      // Estas faixas eram 2000m e 1000m, escritas para a fisica anterior. Com o teto real
+      // em ~387m (ver tools/sim-breath.cjs), altCat era SEMPRE 'low' e dois tercos dos
+      // versos deste arquivo nunca chegavam a aparecer. Reescaladas contra a curva atual,
+      // cujas metas vao de 100m a 300m.
+      const altCat = state.scoreMeters > 260 ? 'high' : (state.scoreMeters > 150 ? 'medium' : 'low');
       
       let verse1 = poetryTemplates[altCat][Math.floor(Math.random() * poetryTemplates[altCat].length)];
       let verse2 = state.runStats.breakthroughs > 0 ? poetryTemplates.breakthrough[Math.floor(Math.random() * poetryTemplates.breakthrough.length)] :
@@ -22,12 +26,15 @@
       
       return {
           type: isEternal ? 'eternal' : (state.runStats.breakthroughs > 0 ? 'breakthrough' : (isRecord ? 'record' : 'normal')),
-          poem: `o sol descansou\nno horizonte`,
-          quote: `${verse1} ${verse2}`,
+          poem: t('the sun rested on the horizon'),
+          quote: `${t(verse1)} ${t(verse2)}`,
           altitude: Math.floor(state.scoreMeters),
           time: state.runTime,
           harmony: clamp(harmonyVal, 0, 100),
-          rawText: `Alcancei ${Math.floor(state.scoreMeters)}m em LUMA — Hold the Sun. ${verse1} ✧ #LUMA`
+          // Esta frase estava em PORTUGUES FIXO num jogo que fala sete idiomas — e e o
+          // texto que o jogador manda para FORA, ou seja, a frase mais publica do jogo.
+          // O varredor nao pegou: ela nao vai para textContent, vai para a Web Share API.
+          rawText: `${t('I reached {n}m in Sustine.').replace('{n}', Math.floor(state.scoreMeters))} ${t(verse1)} ✧ #Sustine`
       };
   }
 
@@ -48,18 +55,18 @@
         const card = document.createElement('div');
         card.className = `share-card share-card-${data.type}`;
         card.innerHTML = `
-            <div class="share-card-header"><span>☼ LUMA</span><span>HOLD THE SUN</span></div>
+            <div class="share-card-header"><span>☼ Sustine</span><span>${t("hold the sun").toUpperCase()}</span></div>
             <div class="share-card-sun">☼</div>
             <div class="share-card-poem">${data.poem.replace('\n', '<br>')}</div>
             <div class="share-card-stats">
-                <div><span class="share-stat-label">altitude</span><span class="share-stat-value">${data.altitude.toLocaleString()} m</span></div>
-                <div><span class="share-stat-label">ritmo</span><span class="share-stat-value">${formatTime(data.time)}</span></div>
-                <div><span class="share-stat-label">harmonia</span><span class="share-stat-value">${data.harmony}%</span></div>
+                <div><span class="share-stat-label">${t("altitude")}</span><span class="share-stat-value">${data.altitude.toLocaleString()} m</span></div>
+                <div><span class="share-stat-label">${t("rhythm")}</span><span class="share-stat-value">${formatTime(data.time)}</span></div>
+                <div><span class="share-stat-label">${t("harmony")}</span><span class="share-stat-value">${data.harmony}%</span></div>
             </div>
             <div class="share-card-quote">"${data.quote}"</div>
             <div class="share-card-footer">
-                <span class="share-tagline">✧ pequenos gestos podem iluminar o mundo ✧</span>
-                <span class="share-hashtags">#LUMA #HoldTheSun</span>
+                <span class="share-tagline">✧ ${t("small gestures can light up the world")} ✧</span>
+                <span class="share-hashtags">#Sustine #HoldTheSun</span>
             </div>
         `;
         document.body.appendChild(card);
@@ -96,7 +103,7 @@
       saveImageBtn.addEventListener('click', () => {
           if (!cachedShareCanvas) return;
           const link = document.createElement('a');
-          link.download = `Luma_Journey_${Date.now()}.png`;
+          link.download = `Sustine_Journey_${Date.now()}.png`;
           link.href = cachedShareCanvas.toDataURL('image/png');
           link.click();
       });
@@ -108,9 +115,9 @@
           if (!cachedShareCanvas) return;
           try {
               const blob = await new Promise(resolve => cachedShareCanvas.toBlob(resolve, 'image/png'));
-              const file = new File([blob], 'luma_journey.png', { type: 'image/png' });
+              const file = new File([blob], 'sustine_journey.png', { type: 'image/png' });
               if (navigator.share && navigator.canShare({ files: [file] })) {
-                  await navigator.share({ title: 'LUMA — Hold the Sun', text: cachedShareText, files: [file] });
+                  await navigator.share({ title: 'Sustine — Hold the Sun', text: cachedShareText, files: [file] });
               } else {
                   showFloating("this device cannot share directly", false);
               }

@@ -55,6 +55,9 @@
   let W = canvas.width;
   let H = canvas.height;
   let HORIZON_Y = H * 0.865;
+  // ATENCAO: a chave abaixo guarda o nome antigo do jogo de proposito. O jogo se chamava
+  // LUMA e foi publicado assim; renomear a chave junto com a marca apagaria a jornada de
+  // todo mundo que ja jogou, sem aviso e sem volta. Nome invisivel e DADO, nao marca.
   const SAVE_KEY = "luma_hold_the_sun_merged_v3";
 
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));

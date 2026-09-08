@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Logo do LUMA.
+"""Logo do SUSTINE.
 
 O simbolo NAO e um sol generico: e o anel da respiracao, que virou a assinatura visual
 do jogo. Ele aparece quase fechado, com um vao no alto — o instante exato em que o jogo
@@ -48,7 +48,7 @@ def desenhar_logo(largura, cor_texto=TINTA, com_assinatura=True, escala_ss=4):
 
     # Wordmark
     f = ImageFont.truetype(INTER, alt_txt)
-    palavra, tracking = "luma", int(alt_txt * 0.30)
+    palavra, tracking = "sustine", int(alt_txt * 0.30)
     larguras = [d.textlength(c, font=f) for c in palavra]
     total = sum(larguras) + tracking * (len(palavra) - 1)
     x = (L - total) / 2
@@ -74,7 +74,7 @@ def desenhar_logo(largura, cor_texto=TINTA, com_assinatura=True, escala_ss=4):
 if __name__ == '__main__':
     import os
     os.makedirs('press', exist_ok=True)
-    for w, nome, ass in [(640, 'logo-luma.png', True), (320, 'logo-luma-small.png', True), (256, 'logo-luma-mark.png', False)]:
+    for w, nome, ass in [(640, 'logo-sustine.png', True), (320, 'logo-sustine-small.png', True), (256, 'logo-sustine-mark.png', False)]:
         im = desenhar_logo(w, com_assinatura=ass)
         im.save('press/' + nome)
         print(nome, im.size)

@@ -1,4 +1,4 @@
-# LUMA — Hold the Sun
+# SUSTINE — Hold the Sun
 
 > Pequenos gestos podem iluminar o mundo.
 
@@ -6,13 +6,13 @@ Um arcade contemplativo em retrato. Você sustenta um sol frágil contra a gravi
 
 A fantasia não é controlar um astro. É: **sou pequeno, mas minha persistência muda o amanhecer.**
 
-**[Jogar no itch.io](https://yata-andersen.itch.io/luma-hold-the-sun)** · HTML5, um arquivo só, sem instalação.
+**[Jogar no itch.io](https://yata-andersen.itch.io/sustine-hold-the-sun)** · HTML5, um arquivo só, sem instalação.
 
 ---
 
 ## O jogo em uma frase de regras
 
-O sol sempre cai. **Encostar na tela é inspirar; soltar é expirar** — e é ao soltar que o gesto acontece, com a força do fôlego acumulado. O LUMA nasceu como o avesso do Flappy Bird: a perícia pedida é **julgar duração**, como contar de zero a trinta de cabeça e terminar perto do que o relógio diria. Não é tocar rápido.
+O sol sempre cai. **Encostar na tela é inspirar; soltar é expirar** — e é ao soltar que o gesto acontece, com a força do fôlego acumulado. O SUSTINE nasceu como o avesso do Flappy Bird: a perícia pedida é **julgar duração**, como contar de zero a trinta de cabeça e terminar perto do que o relógio diria. Não é tocar rápido.
 
 - **Segurar** → o fôlego enche em 4,5s e a sustentação vence a gravidade com folga; o pânico sempre tem saída
 - **Soltar no ponto** → impulso máximo. A curva é quadrática: meio fôlego rende **um quarto** do impulso

@@ -1,5 +1,5 @@
 'use strict';
-// Varredura de funções fantasmas, stubs e parâmetros mortos no index.html do LUMA.
+// Varredura de funções fantasmas, stubs e parâmetros mortos no index.html do SUSTINE.
 const fs = require('fs');
 const path = process.argv[2];
 const src = fs.readFileSync(path, 'utf8').replace(/\r\n/g, '\n');
