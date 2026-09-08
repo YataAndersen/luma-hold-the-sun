@@ -104,7 +104,19 @@ Deixei de fora `pixel-art` (não é), `2d` (genérico demais para trazer alguém
 A página depende de imagens que eu não posso gerar aqui:
 
 1. **Cover image 630×500** — é o que aparece em toda listagem. Sem uma boa, o texto não é lido. Sugestão: o sol no centro alto, horizonte baixo, muito espaço negativo escuro, e o título pequeno. O contraste do sol contra o azul profundo é a assinatura visual do jogo — use isso.
-2. **Screenshots (3 a 5)** — priorize: o sol acima da linha do amanhecer com aurora, o mapa da jornada com as constelações, e um momento de combo alto. Evite screenshot de menu.
+2. **Screenshots (3 a 5)** — evite screenshot de menu. **O que está no ar hoje** (subido em 08/09/2026, gravado da build 20):
+
+   | arquivo | o que mostra |
+   |---|---|
+   | `press/luma-loop.gif` | um ciclo de respiração inteiro: o anel enchendo, o gesto ao soltar e o sol subindo — vem primeiro na galeria |
+   | `press/shot-01-gameplay.png` | o sol com o anel a meio caminho, nuvens em camadas |
+   | `press/shot-02-subindo.png` | o instante do gesto, com o raio de luz e a linha do amanhecer |
+   | `press/shot-03-ritmo.png` | altitude ganha, montanhas recuando em perspectiva aérea |
+
+   **A arte de imprensa envelhece junto com o jogo.** As screenshots anteriores mostravam o
+   painel de texto do HUD, que deixou de existir; foram substituídas, não acumuladas. Antes
+   de subir arte nova, confira se ela ainda mostra a versão atual — é o mesmo entulho
+   descrito em [VERIFICACAO.md](VERIFICACAO.md), só que em imagem.
 3. **GIF curto** — o itch dá muito peso a movimento na listagem. Um loop de 3s mostrando segurar → pulsar → o mundo respondendo vale mais que qualquer parágrafo desta página.
 
 ## Nota honesta sobre "performance de busca"
