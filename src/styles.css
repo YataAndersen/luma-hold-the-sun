@@ -450,7 +450,19 @@
     .ring-content { position: absolute; font: 400 14px/1 var(--font-display); color: var(--sun-pure); text-shadow: 0 0 8px rgba(255,249,236,0.6); }
     .celestial-altitude { font: 300 14px/1 var(--font-display); color: rgba(255,249,236,0.7); letter-spacing: 0.2em; text-shadow: 0 0 8px rgba(255,249,236,0.2); }
 
-    /* ===== LIVE MISSION TRACKER (ETHEREAL HUD) ===== */
+    /* ===== OBJETIVOS DURANTE A PARTIDA: MARCAS, NÃO PAINEL =====
+       O painel de texto foi tentado duas vezes e nas duas ficou apertado. Primeiro com 183px
+       fixos, passando por cima do anel do tempo. Depois estreito e com o texto quebrando em
+       três linhas — que era honesto, mas continuava sendo um bloco de leitura no canto do
+       olho, num jogo cuja perícia é julgar duração sem se distrair.
+
+       O modelo agora é o do Tiny Thief: **detalhe antes de jogar** (o mapa e o briefing),
+       **forma compacta durante** (estas três marcas), **frase só no instante da conquista**,
+       e **detalhe de novo no fim** (a lista com estado na tela de resultado). Ler é uma
+       atividade de antes e de depois; durante, o olho só precisa de um relance.
+
+       Três marcas de 13px numa linha ocupam ~60px. O problema de geometria deixa de existir
+       por construção, não por um teto calculado. */
     .live-mission-tracker {
         position: absolute;
         top: max(24px, env(safe-area-inset-top));
@@ -461,23 +473,63 @@
         display: flex;
         flex-direction: column;
         gap: 7px;
-        background: linear-gradient(90deg, rgba(10,26,42,0.3), transparent);
-        padding: 10px 14px 10px 12px;
-        border-left: 2px solid rgba(255,216,147,0.3);
-        border-radius: 4px;
-
-        /* O painel media 183px de largura fixa e a borda direita chegava a 207px. O anel do
-           tempo fica centrado: começa em 184px numa tela de 420 e em 154px numa de 360. Ou
-           seja, o painel passava POR CIMA do anel — 23px de invasão no desktop e 53px no
-           celular, onde ele cobria o mostrador inteiro. E como o tracker tem z-index 45
-           contra 40 do anel, era o anel que sumia.
-           O teto abaixo é geométrico, não um chute: metade da tela menos o recuo da esquerda
-           (16px), menos o meio-anel (26px), menos uma folga de 20px. Assim a borda direita
-           não alcança o anel em largura nenhuma. */
-        max-width: calc(50vw - 62px);
         box-sizing: border-box;
+        /* O teto continua, como cinto de segurança: se alguém voltar a exibir texto aqui,
+           ele ainda não alcança o anel. Meia tela, menos o recuo, menos o meio-anel, menos
+           20px de folga. */
+        max-width: calc(50vw - 62px);
     }
     .live-mission-tracker.hidden { opacity: 0; }
+
+    /* Durante a partida: só as marcas aparecem. Os itens de texto continuam no DOM porque a
+       tela de resultado os reaproveita, mas ficam fora da tela de jogo. */
+    .live-mission-tracker .tracker-title,
+    .live-mission-tracker .tracker-item { display: none; }
+
+    .tracker-marks { display: flex; align-items: center; gap: 10px; }
+    .t-mark {
+        font-size: 13px; line-height: 1;
+        color: rgba(255,249,236,0.28);
+        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        transition: color .5s ease, text-shadow .5s ease, opacity .5s ease;
+    }
+    .t-mark.done {
+        color: var(--sun-glow);
+        text-shadow: 0 0 10px rgba(255,216,147,0.75);
+    }
+    .t-mark.failed { color: var(--danger-warn); opacity: 0.45; }
+    /* Um pulso ÚNICO no instante da conquista — não um laço. O que se repete vira ruído;
+       o que acontece uma vez vira notícia. */
+    @keyframes marcaAcesa {
+        0%   { transform: scale(1);    filter: brightness(1); }
+        35%  { transform: scale(1.55); filter: brightness(2.2); }
+        100% { transform: scale(1);    filter: brightness(1); }
+    }
+    .t-mark.acabou-de-acender { animation: marcaAcesa .75s var(--ease-out); display: inline-block; }
+
+    /* Havia aqui um `.tracker-reveal`: uma frase no canto superior esquerdo no instante da
+       conquista. Ela duplicava o toast de announceTaskDone(), que já nomeia a tarefa
+       cumprida com som e pulso de halo — as duas apareciam juntas, em alturas diferentes,
+       para o mesmo evento. O HUD ficou com a parte periférica (a marca acende e pulsa uma
+       vez); quem fala é o toast. */
+
+    /* ===== OBJETIVOS NA TELA DE RESULTADO: aqui sim, por extenso ===== */
+    .result-objectives {
+        display: flex; flex-direction: column; gap: 8px;
+        margin: 0 auto 2.5vh; width: fit-content; max-width: 86%;
+        text-align: left;
+    }
+    .result-objective {
+        display: flex; align-items: flex-start; gap: 9px;
+        font: 300 13px/1.4 var(--font-display);
+        color: rgba(255,249,236,0.55);
+        text-transform: lowercase;
+        overflow-wrap: anywhere;
+    }
+    .result-objective .r-icon { flex: 0 0 14px; width: 14px; text-align: center; line-height: 1.4; }
+    .result-objective.done { color: rgba(255,249,236,0.96); }
+    .result-objective.done .r-icon { color: var(--sun-glow); text-shadow: 0 0 10px var(--sun-glow); }
+    .result-objective.failed { color: var(--danger-warn); opacity: 0.65; }
     .tracker-title { font: 600 10px/1.2 var(--font-display); color: var(--sun-glow); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 2px; text-shadow: 0 0 8px rgba(255,216,147,0.3); overflow-wrap: anywhere; }
     /* align-items:flex-start para que o ícone fique na PRIMEIRA linha quando o texto quebra;
        centrado, ele descia para o meio do bloco e a lista perdia o alinhamento.

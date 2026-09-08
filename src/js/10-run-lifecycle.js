@@ -25,10 +25,12 @@
     
     state.input.lastClick = -999; state.input.lastPress = -999; state.input.lastEmptyPulse = -999; state.input.keyboardHold = false; state.input.holding = false; state.input.inside = false; state.input.x = W * .5; state.input.y = H * .42;
     state.entropy = .12;
-    // O aviso de objetivos abre a corrida: é quando o jogador de fato quer saber o que a
-    // missão pede. Depois disso ele só volta quando um objetivo muda.
-    state.hud.trackerTimer = HUD_AVISO_SEGUNDOS + 2;
-    state.hud.trackerSig = '';
+    state.hud.marcasSemeadas = false;
+    for (const marca of [ui.tMarkSub1, ui.tMarkSub2, ui.tMarkPerf]) {
+      if (!marca) continue;
+      marca.classList.remove('done', 'failed', 'acabou-de-acender');
+      marca.textContent = marca.dataset.icone || '∘';
+    }
     state.sun.x = W * .5; state.sun.y = H * .38; state.sun.vx = 0; state.sun.vy = 0; state.sun.stability = .22; state.sun.energy = .25; state.sun.wear = 0;  // comeca quase vazio: a primeira respiracao tem que ser respirada
     state.sun.breath = 0;
     state.sun.breathStrength = .18;
@@ -232,6 +234,7 @@
     text.innerText = "";
     statsText.innerText = "";
     if (starsContainer) starsContainer.innerHTML = "";
+    if (ui.resultObjectives) ui.resultObjectives.innerHTML = '';
 
     // Avançar só é oferecido quando a missão foi de fato concluída.
     const nextBtn = document.getElementById("nextNodeBtn");
@@ -274,6 +277,36 @@
             if (isNewRecord) linhasStats.unshift(`\u2728 ${t("NEW RECORD")} \u2728`);
             statsText.innerText = linhasStats.join("\n");
             
+            // Os objetivos voltam por extenso, com o estado de cada um. Durante a partida
+            // eles são só três marcas de 13px; ler é atividade de antes e de depois, e este
+            // é o "depois". Sem isto, o jogador via três estrelas e não sabia qual faltou.
+            if (ui.resultObjectives && experienceState.mission) {
+                const node = MAP_NODES.find(n => n.id === experienceState.mission.id);
+                ui.resultObjectives.innerHTML = '';
+                if (node) {
+                    const e = estadoDosObjetivos(node);
+                    const linhas = [
+                        [t(node.main), e.main, false],
+                        [t(node.subs[0]), e.sub1, false],
+                        [t(node.subs[1]), e.sub2, false],
+                        [`${t("perfect")}: ${t(node.perf).toLowerCase()}`, e.perf, e.perfFailed],
+                    ];
+                    for (const [texto, feito, falhou] of linhas) {
+                        const li = document.createElement('div');
+                        li.className = 'result-objective' + (feito ? ' done' : falhou ? ' failed' : '');
+                        const ico = document.createElement('span');
+                        ico.className = 'r-icon';
+                        ico.textContent = feito ? '✦' : (falhou ? '×' : '∘');
+                        const txt = document.createElement('span');
+                        // textContent, não innerHTML: o texto vem de tabela de dados e de
+                        // dicionário, e não há por que dar a eles um caminho para markup.
+                        txt.textContent = String(texto).toLowerCase();
+                        li.append(ico, txt);
+                        ui.resultObjectives.appendChild(li);
+                    }
+                }
+            }
+
             // Animação de Estrelas de Conclusão
             if (isSuccess && starsContainer && experienceState.mission) {
                 const node = MAP_NODES.find(n => n.id === experienceState.mission.id);
@@ -284,7 +317,7 @@
                     if (sub1Done && sub2Done) stars = 2;
                     // A mesma condição que o mapa credita, para que resultado e jornada nunca discordem.
                     if (stars === 2 && evaluateLiveCondition(node.req.perf)) stars = 3;
-                    
+
                     let html = "";
                     for(let s=0; s<3; s++) {
                         const icon = s < stars ? "★" : "☆";

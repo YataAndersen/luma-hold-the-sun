@@ -295,3 +295,50 @@ Quatro testes novos travam isso: o painel não alcança o anel em nenhuma largur
 combo é sempre inteiro. **O varredor de i18n não pegou os rótulos** porque ele procura chaves
 pedidas a `t()` e ausentes do dicionário — texto que nunca passa por `t()` é invisível para
 ele. Vale ampliar.
+
+## Os objetivos viraram marcas: o modelo do Tiny Thief
+
+O painel de objetivos foi tentado duas vezes e nas duas ficou apertado. Primeiro com 183px
+fixos, passando por cima do anel do tempo. Depois estreito e com o texto quebrando em três
+linhas — honesto, e ainda assim **um bloco de leitura no canto do olho**, num jogo cuja
+perícia é julgar duração sem se distrair. O Yata apontou a saída, e é melhor do que as duas:
+
+> *detalhe antes do gameplay, forma compacta durante, informação só quando concluída, e no
+> fim da partida tudo reaparece com status.*
+
+**Durante a partida** os três objetivos são três glifos de 13px: `∿` ritmo, `☴` aves,
+`✧` perfeição. Apagados quando pendentes, dourados quando conquistados, `×` quando perdidos.
+Ocupam ~52px contra os 118px do painel anterior — o problema de geometria deixa de existir
+por construção, não por um teto calculado. **O teto continua no CSS assim mesmo**, como cinto
+de segurança: se alguém voltar a exibir texto ali, ele ainda não alcança o anel.
+
+**No instante da conquista** a marca pulsa **uma vez**. Um laço vira ruído; o que acontece
+uma vez vira notícia.
+
+**No fim**, a lista volta por extenso na tela de resultado, com o estado de cada objetivo.
+Antes o jogador via três estrelas e não sabia qual delas faltou.
+
+### Duas coisas que só apareceram ao jogar
+
+**Uma condição que já nasce verdadeira comemorava sozinha.** "zero quase-quedas" é verdade
+no primeiro quadro — ninguém caiu ainda —, então a partida abria anunciando uma conquista que
+o jogador não fez, e a frase mais frequente do jogo virava a menos significativa. As marcas
+agora são *semeadas* no primeiro quadro sem pulsar; só transições posteriores contam.
+
+**Um evento estava produzindo três mensagens.** Ao cumprir uma tarefa o jogo mostrava, ao
+mesmo tempo: um toast nomeando a tarefa (25% da altura), um `showFloating("task complete")`
+genérico (80%) e — depois da minha mudança — uma frase no canto superior esquerdo. Três
+alturas para uma notícia só. **Eu tinha acrescentado a terceira sem procurar se a primeira já
+existia.** Ficou o toast, que nomeia; o HUD faz a parte periférica, acendendo a marca. Um
+teste trava isso agora, e ele precisou ser corrigido uma vez porque lia o próprio comentário
+que explicava a remoção como se fosse a regressão.
+
+### E a medição enganou de novo
+
+Ao verificar, o sol não subia: 0m depois de cinco respirações. Antes de mexer na física,
+medi o quadro por segundo: **1,1 fps**. O painel do navegador estava estrangulado, e como o
+laço limita `realDt` a 33ms, o jogo rodava a ~3% da velocidade real. Não havia regressão
+nenhuma — era a **quarta vez** neste projeto que um instrumento mentiu. A verificação do HUD
+foi feita então de forma determinística, forçando a condição de um objetivo em vez de esperar
+o relógio. **Regra que fica: antes de acreditar numa medida de física no navegador, medir o
+fps.**

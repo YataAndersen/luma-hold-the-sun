@@ -71,9 +71,9 @@
       mountainGlowIntensity: 0
     },
 
-    // Aviso de objetivos: quanto tempo ainda fica na tela, e a assinatura do último estado
-    // mostrado — é a mudança dela que reacende o aviso.
-    hud: { trackerTimer: 0, trackerSig: '' },
+    // marcasSemeadas: as marcas de objetivo já foram acertadas uma vez nesta corrida. Sem
+    // isto, uma condição que nasce verdadeira ("zero quase-quedas") pulsa comemorando nada.
+    hud: { marcasSemeadas: false },
 
     tutorialStep: 0,
     tutorialDone: false,

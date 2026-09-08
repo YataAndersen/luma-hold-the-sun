@@ -80,7 +80,9 @@
       state.sun.tapScale = 1.3;
       triggerScreenFlash('rgba(255, 249, 236, 0.25)');
       emitAudioEvent('grace_gained');
-      showFloating("task complete", true);
+      // Saiu daqui um showFloating("task complete"): o toast logo abaixo ja diz QUAL tarefa
+      // foi concluida, e as duas mensagens apareciam juntas, em alturas diferentes, para o
+      // mesmo evento. Uma generica somada a uma especifica nao informa o dobro; atrapalha.
   }
 
   // O instante em que uma tarefa é cumprida não tinha retorno nenhum: os flags existiam,

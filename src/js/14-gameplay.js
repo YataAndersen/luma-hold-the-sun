@@ -634,18 +634,6 @@
     const topActions = document.getElementById('topActions');
     if (topActions) topActions.style.opacity = hideAll ? "0" : iconsOpacity;
 
-    // O tracker de objetivos deixou de ser um painel permanente e virou um AVISO.
-    //
-    // Antes ele desvanecia por combo e parava em 0,1 ou 0,15: legível o bastante para puxar
-    // o olho, ilegível o bastante para não ser lido. Três linhas de texto fantasma no canto
-    // é o que dá a impressão de informação truncada e misturada — e o gatilho era o combo,
-    // que depois da mudança respiratória passou a medir outra coisa.
-    //
-    // Agora ele aparece inteiro quando tem algo a dizer (início da corrida, e toda vez que
-    // um objetivo muda de estado) e some por completo depois. Nunca fica no meio: ou está
-    // lá para ser lido, ou não está.
-    const avisoVisivel = state.hud.trackerTimer > 0;
-    state.hud.trackerTimer = Math.max(0, state.hud.trackerTimer - dt);
 
     // PENDING DRAFT UI UPDATE
     const pendingBtn = document.getElementById("pendingDraftBtn");
@@ -673,54 +661,39 @@
         const esconderTracker = () => { ui.tracker.classList.add('hidden'); ui.tracker.style.opacity = '0'; };
         if (isTutorialActive()) {
             esconderTracker();
-        } else if (state.mode === 'gameplay' || state.mode === 'paused') {
+        } else if (state.mode === 'gameplay') {
+            // Na pausa e no resultado a tela cheia é dona da tela: nada de HUD por cima dela.
+            // As marcas são da partida, e só dela.
             ui.tracker.classList.remove('hidden');
-            // Na pausa o aviso ficava por cima do cabeçalho do painel — "o céu vai esperar"
-            // atravessava a linha "perfeito: zero quase-quedas". Uma tela cheia é dona da
-            // tela: nada de HUD flutuando em cima dela. O aviso é da partida, e só dela.
-            ui.tracker.style.opacity = (hideAll || state.mode !== 'gameplay' || !avisoVisivel) ? '0' : '1';
+            ui.tracker.style.opacity = hideAll ? '0' : '1';
 
-            const m = experienceState.mission;
             const node = experienceState.node; // resolvido na troca de missão, não a cada frame
             if (node) {
-                ui.tTitle.textContent = t(node.title).toLowerCase();
-                
-                // O objetivo principal vive fixo no topo, que nunca desvanece. Aqui o tracker
-                // mostra o que dá as estrelas: as duas tarefas secundárias e a perfeição.
-                ui.tItemMain.style.display = ui.topGoal ? 'none' : '';
-                ui.tTextMain.textContent = t(node.main).toLowerCase();
-                ui.tTextSub1.textContent = t(node.subs[0]).toLowerCase();
-                ui.tTextSub2.textContent = t(node.subs[1]).toLowerCase();
-                ui.tTextPerf.textContent = `${t("perfect")}: ${t(node.perf).toLowerCase()}`;
+                const estado = estadoDosObjetivos(node);
 
-                // O Tracker deve refletir APENAS a jogada atual para não confundir o jogador
-                const mainDone = experienceState.missionCompleted || evaluateLiveCondition(node.req.main);
-                const sub1Done = evaluateLiveCondition(node.req.subs[0]);
-                const sub2Done = evaluateLiveCondition(node.req.subs[1]);
-
-                // A mesma condição que o mapa credita. Antes era nearFails > 0 aqui, o que
-                // discordava das missões cuja perfeição é altitude ou combo.
-                const perfDone = evaluateLiveCondition(node.req.perf);
-                const perfFailed = node.req.perf[0] === 'nearFails' && state.runStats.nearFails > 0;
-                
-                const updateItem = (item, iconEl, done, failed = false, defaultIcon = '∘') => {
-                    item.classList.toggle('done', done);
-                    item.classList.toggle('failed', failed);
-                    iconEl.textContent = failed ? '×' : (done ? '✦' : defaultIcon);
-                };
-                
-                updateItem(ui.tItemMain, ui.tIconMain, mainDone);
-                updateItem(ui.tItemSub1, ui.tIconSub1, sub1Done);
-                updateItem(ui.tItemSub2, ui.tIconSub2, sub2Done);
-                updateItem(ui.tItemPerf, ui.tIconPerf, perfDone, perfFailed, '✧');
-
-                // Reacende o aviso quando algo de fato mudou. Sem esta assinatura o painel
-                // ou ficaria para sempre, ou sumiria antes de contar que uma estrela caiu.
-                const assinatura = `${mainDone}|${sub1Done}|${sub2Done}|${perfDone}|${perfFailed}|${node.title}`;
-                if (assinatura !== state.hud.trackerSig) {
-                  state.hud.trackerSig = assinatura;
-                  state.hud.trackerTimer = HUD_AVISO_SEGUNDOS;
+                // As marcas ficam SEMPRE na tela — são três glifos de 13px, custam quase nada
+                // de atenção. O texto é que é evento: aparece no instante da conquista e sai.
+                const marcas = [
+                    [ui.tMarkSub1, estado.sub1, false],
+                    [ui.tMarkSub2, estado.sub2, false],
+                    [ui.tMarkPerf, estado.perf, estado.perfFailed],
+                ];
+                for (const [el, feito, falhou] of marcas) {
+                    if (!el) continue;
+                    const antes = el.classList.contains('done');
+                    el.classList.toggle('done', feito);
+                    el.classList.toggle('failed', falhou && !feito);
+                    el.textContent = falhou && !feito ? '×' : (el.dataset.icone || '∘');
+                    // O pulso só vale para o que o jogador CONQUISTOU nesta corrida.
+                    // "zero quase-quedas" já é verdade no primeiro quadro — ninguém caiu
+                    // ainda —, então sem esta guarda a marca acendia comemorando nada.
+                    if (feito && !antes && state.hud.marcasSemeadas) {
+                        el.classList.remove('acabou-de-acender');
+                        void el.offsetWidth;                 // reinicia a animação
+                        el.classList.add('acabou-de-acender');
+                    }
                 }
+                state.hud.marcasSemeadas = true;
             }
         } else {
             esconderTracker();
@@ -731,6 +704,25 @@
     // Aqui cuidamos apenas do desvanecer por foco, que só faz sentido durante a partida.
     if (ui.celestialHUD) ui.celestialHUD.style.opacity = hideAll ? '0' : '1';
   }
+
+  // O estado dos três objetivos que dão estrela, num lugar só. O HUD durante a partida e a
+  // lista da tela de resultado leem daqui — se lessem cada um por conta, voltariam a
+  // discordar, como já discordaram quando a perfeição era `nearFails > 0` no tracker e outra
+  // coisa no mapa.
+  function estadoDosObjetivos(node) {
+    return {
+      main: experienceState.missionCompleted || evaluateLiveCondition(node.req.main),
+      sub1: evaluateLiveCondition(node.req.subs[0]),
+      sub2: evaluateLiveCondition(node.req.subs[1]),
+      perf: evaluateLiveCondition(node.req.perf),
+      perfFailed: node.req.perf[0] === 'nearFails' && state.runStats.nearFails > 0,
+    };
+  }
+
+  // A frase de conquista NÃO mora aqui. announceTaskDone(), em 09-mission-flow.js, já
+  // nomeia a tarefa cumprida num toast, com som e pulso de halo — e por um tempo o jogo
+  // mostrou as duas ao mesmo tempo, em alturas diferentes, para o mesmo evento. O HUD faz
+  // a parte periférica: a marca acende e pulsa uma vez. Quem fala é o toast.
 
   const evaluateLiveCondition = (cond) => {
     if (!cond) return false;

@@ -461,7 +461,19 @@
     .ring-content { position: absolute; font: 400 14px/1 var(--font-display); color: var(--sun-pure); text-shadow: 0 0 8px rgba(255,249,236,0.6); }
     .celestial-altitude { font: 300 14px/1 var(--font-display); color: rgba(255,249,236,0.7); letter-spacing: 0.2em; text-shadow: 0 0 8px rgba(255,249,236,0.2); }
 
-    /* ===== LIVE MISSION TRACKER (ETHEREAL HUD) ===== */
+    /* ===== OBJETIVOS DURANTE A PARTIDA: MARCAS, NÃO PAINEL =====
+       O painel de texto foi tentado duas vezes e nas duas ficou apertado. Primeiro com 183px
+       fixos, passando por cima do anel do tempo. Depois estreito e com o texto quebrando em
+       três linhas — que era honesto, mas continuava sendo um bloco de leitura no canto do
+       olho, num jogo cuja perícia é julgar duração sem se distrair.
+
+       O modelo agora é o do Tiny Thief: **detalhe antes de jogar** (o mapa e o briefing),
+       **forma compacta durante** (estas três marcas), **frase só no instante da conquista**,
+       e **detalhe de novo no fim** (a lista com estado na tela de resultado). Ler é uma
+       atividade de antes e de depois; durante, o olho só precisa de um relance.
+
+       Três marcas de 13px numa linha ocupam ~60px. O problema de geometria deixa de existir
+       por construção, não por um teto calculado. */
     .live-mission-tracker {
         position: absolute;
         top: max(24px, env(safe-area-inset-top));
@@ -472,23 +484,63 @@
         display: flex;
         flex-direction: column;
         gap: 7px;
-        background: linear-gradient(90deg, rgba(10,26,42,0.3), transparent);
-        padding: 10px 14px 10px 12px;
-        border-left: 2px solid rgba(255,216,147,0.3);
-        border-radius: 4px;
-
-        /* O painel media 183px de largura fixa e a borda direita chegava a 207px. O anel do
-           tempo fica centrado: começa em 184px numa tela de 420 e em 154px numa de 360. Ou
-           seja, o painel passava POR CIMA do anel — 23px de invasão no desktop e 53px no
-           celular, onde ele cobria o mostrador inteiro. E como o tracker tem z-index 45
-           contra 40 do anel, era o anel que sumia.
-           O teto abaixo é geométrico, não um chute: metade da tela menos o recuo da esquerda
-           (16px), menos o meio-anel (26px), menos uma folga de 20px. Assim a borda direita
-           não alcança o anel em largura nenhuma. */
-        max-width: calc(50vw - 62px);
         box-sizing: border-box;
+        /* O teto continua, como cinto de segurança: se alguém voltar a exibir texto aqui,
+           ele ainda não alcança o anel. Meia tela, menos o recuo, menos o meio-anel, menos
+           20px de folga. */
+        max-width: calc(50vw - 62px);
     }
     .live-mission-tracker.hidden { opacity: 0; }
+
+    /* Durante a partida: só as marcas aparecem. Os itens de texto continuam no DOM porque a
+       tela de resultado os reaproveita, mas ficam fora da tela de jogo. */
+    .live-mission-tracker .tracker-title,
+    .live-mission-tracker .tracker-item { display: none; }
+
+    .tracker-marks { display: flex; align-items: center; gap: 10px; }
+    .t-mark {
+        font-size: 13px; line-height: 1;
+        color: rgba(255,249,236,0.28);
+        text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+        transition: color .5s ease, text-shadow .5s ease, opacity .5s ease;
+    }
+    .t-mark.done {
+        color: var(--sun-glow);
+        text-shadow: 0 0 10px rgba(255,216,147,0.75);
+    }
+    .t-mark.failed { color: var(--danger-warn); opacity: 0.45; }
+    /* Um pulso ÚNICO no instante da conquista — não um laço. O que se repete vira ruído;
+       o que acontece uma vez vira notícia. */
+    @keyframes marcaAcesa {
+        0%   { transform: scale(1);    filter: brightness(1); }
+        35%  { transform: scale(1.55); filter: brightness(2.2); }
+        100% { transform: scale(1);    filter: brightness(1); }
+    }
+    .t-mark.acabou-de-acender { animation: marcaAcesa .75s var(--ease-out); display: inline-block; }
+
+    /* Havia aqui um `.tracker-reveal`: uma frase no canto superior esquerdo no instante da
+       conquista. Ela duplicava o toast de announceTaskDone(), que já nomeia a tarefa
+       cumprida com som e pulso de halo — as duas apareciam juntas, em alturas diferentes,
+       para o mesmo evento. O HUD ficou com a parte periférica (a marca acende e pulsa uma
+       vez); quem fala é o toast. */
+
+    /* ===== OBJETIVOS NA TELA DE RESULTADO: aqui sim, por extenso ===== */
+    .result-objectives {
+        display: flex; flex-direction: column; gap: 8px;
+        margin: 0 auto 2.5vh; width: fit-content; max-width: 86%;
+        text-align: left;
+    }
+    .result-objective {
+        display: flex; align-items: flex-start; gap: 9px;
+        font: 300 13px/1.4 var(--font-display);
+        color: rgba(255,249,236,0.55);
+        text-transform: lowercase;
+        overflow-wrap: anywhere;
+    }
+    .result-objective .r-icon { flex: 0 0 14px; width: 14px; text-align: center; line-height: 1.4; }
+    .result-objective.done { color: rgba(255,249,236,0.96); }
+    .result-objective.done .r-icon { color: var(--sun-glow); text-shadow: 0 0 10px var(--sun-glow); }
+    .result-objective.failed { color: var(--danger-warn); opacity: 0.65; }
     .tracker-title { font: 600 10px/1.2 var(--font-display); color: var(--sun-glow); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 2px; text-shadow: 0 0 8px rgba(255,216,147,0.3); overflow-wrap: anywhere; }
     /* align-items:flex-start para que o ícone fique na PRIMEIRA linha quando o texto quebra;
        centrado, ele descia para o meio do bloco e a lista perdia o alinhamento.
@@ -765,7 +817,16 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   <div class="floating-message" id="floatingMessage">✨</div>
   <div class="reward-badge" id="rewardBadge">FLOW STATE</div>
 
+  <!-- Durante a partida os objetivos sao MARCAS, nao texto. O modelo e o do Tiny Thief:
+       detalhe antes de jogar (mapa e briefing), forma compacta durante, e a frase so
+       aparece no instante em que um objetivo e concluido. Os elementos de texto continuam
+       no DOM porque a tela de resultado e a pausa os reaproveitam. -->
   <div id="liveMissionTracker" class="live-mission-tracker hidden">
+      <div class="tracker-marks" id="trackerMarks">
+          <span class="t-mark" id="tMarkSub1" data-icone="∿">∿</span>
+          <span class="t-mark" id="tMarkSub2" data-icone="☴">☴</span>
+          <span class="t-mark" id="tMarkPerf" data-icone="✧">✧</span>
+      </div>
       <div class="tracker-title" id="tTitle">autumn winds</div>
       <div class="tracker-item" id="tItemMain"><span class="t-icon" id="tIconMain">∘</span><span id="tTextMain">reach combo x3</span></div>
       <div class="tracker-item" id="tItemSub1"><span class="t-icon" id="tIconSub1">∘</span><span id="tTextSub1">survive 30s</span></div>
@@ -1108,6 +1169,10 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     
     <div class="result-stars-container" id="resultStars"></div>
 
+    <!-- No fim da corrida os objetivos voltam por extenso, com o estado de cada um: e aqui
+         que o jogador quer ler, nao no meio do gesto. -->
+    <div class="result-objectives" id="resultObjectives"></div>
+
     <div class="result-stats" id="resultStats" style="color: var(--sun-glow); white-space: pre-line; font-weight: 600; text-shadow: 0 0 12px rgba(255,196,107,0.4); margin-bottom: 6vh;"></div>
     
     <div class="luma-actions" id="resultActions" style="opacity:0; pointer-events:none; transition:opacity 1s;">
@@ -1326,6 +1391,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     topGoal: document.getElementById('topPersistentGoal'),
     celestialHUD: document.getElementById('celestialHUD'),
     tTitle: document.getElementById('tTitle'),
+    tMarkSub1: document.getElementById('tMarkSub1'), tMarkSub2: document.getElementById('tMarkSub2'),
+    tMarkPerf: document.getElementById('tMarkPerf'),
+    resultObjectives: document.getElementById('resultObjectives'),
     tItemMain: document.getElementById('tItemMain'), tIconMain: document.getElementById('tIconMain'), tTextMain: document.getElementById('tTextMain'),
     tItemSub1: document.getElementById('tItemSub1'), tIconSub1: document.getElementById('tIconSub1'), tTextSub1: document.getElementById('tTextSub1'),
     tItemSub2: document.getElementById('tItemSub2'), tIconSub2: document.getElementById('tIconSub2'), tTextSub2: document.getElementById('tTextSub2'),
@@ -3340,10 +3408,6 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   // Um gesto é uma expiração inteira: esvazia o peito, tenha enchido ou não. Encher de
   // novo leva ~4,5s, e é isso — não uma trava de cooldown — que dá o compasso ao jogo.
   // Mantido como constante porque a economia de fôlego e as graças se referem a ele.
-  // Quanto tempo o aviso de objetivos fica na tela depois de aparecer ou de mudar.
-  // Curto o bastante para não virar painel, longo o bastante para caber uma leitura.
-  const HUD_AVISO_SEGUNDOS = 5;
-
   const pulseEnergyCost = 0.85;
 
   // Teto de fôlego, descontado o desgaste acumulado na corrida.
@@ -3616,9 +3680,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       mountainGlowIntensity: 0
     },
 
-    // Aviso de objetivos: quanto tempo ainda fica na tela, e a assinatura do último estado
-    // mostrado — é a mudança dela que reacende o aviso.
-    hud: { trackerTimer: 0, trackerSig: '' },
+    // marcasSemeadas: as marcas de objetivo já foram acertadas uma vez nesta corrida. Sem
+    // isto, uma condição que nasce verdadeira ("zero quase-quedas") pulsa comemorando nada.
+    hud: { marcasSemeadas: false },
 
     tutorialStep: 0,
     tutorialDone: false,
@@ -3754,54 +3818,54 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
   const HOLD_THE_SUN_MISSIONS = [
     { id: 'm1', title: 'Still Night', subtitle: 'Reach 100m.', kind: MissionKind.REACH_ALTITUDE, target: 100, perfectText: 'zero near-fails', toast: 'The sky waits', nodeMeta: 'Ritual · Forest', biome: 'forest' },
     { id: 'm2', title: 'Neon Dusk', subtitle: 'Hold Dawn Line for 15s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 15, perfectText: 'zero near-fails', toast: 'City hums', nodeMeta: 'Ritual · City', biome: 'city' },
-    { id: 'm3', title: 'Autumn Winds', subtitle: 'Reach Combo x5.', kind: MissionKind.COMBO_TARGET, target: 5, perfectText: 'score 220m', toast: 'Leaves dance', nodeMeta: 'Ritual · Autumn', biome: 'autumn' },
-    { id: 'm4', title: 'Fragile Balance', subtitle: 'Reach 105m.', kind: MissionKind.REACH_ALTITUDE, target: 105, perfectText: 'combo x6', toast: 'Balance found', nodeMeta: 'Ritual · Snow', biome: 'snow' },
+    { id: 'm3', title: 'Autumn Winds', subtitle: 'Reach Combo x5.', kind: MissionKind.COMBO_TARGET, target: 5, perfectText: 'reach 145m', toast: 'Leaves dance', nodeMeta: 'Ritual · Autumn', biome: 'autumn' },
+    { id: 'm4', title: 'Fragile Balance', subtitle: 'Reach 105m.', kind: MissionKind.REACH_ALTITUDE, target: 105, perfectText: 'max combo x6', toast: 'Balance found', nodeMeta: 'Ritual · Snow', biome: 'snow' },
     { id: 'm5', title: 'Sakura Fall', subtitle: '80% Precision for 8s.', kind: MissionKind.STABILITY_TIME, target: 8, perfectText: 'zero near-fails', toast: 'Petals drift', nodeMeta: 'Ritual · Blossom', biome: 'sakura' },
     { id: 'm6', title: 'Rising Sky', subtitle: 'Reach 115m.', kind: MissionKind.REACH_ALTITUDE, target: 115, perfectText: 'zero near-fails', toast: 'The sky answered', nodeMeta: 'Ritual · Sea', biome: 'sea' },
-    { id: 'm7', title: 'Whispering Mire', subtitle: 'Awaken 3 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 3, perfectText: 'Max Combo x5', toast: 'Fog clears', nodeMeta: 'Ritual · Swamp', biome: 'swamp' },
-    { id: 'm8', title: 'Scorched Sands', subtitle: 'Reach 125m.', kind: MissionKind.REACH_ALTITUDE, target: 125, perfectText: 'reach 125m', toast: 'Heat endured', nodeMeta: 'Ritual · Desert', biome: 'desert' },
-    { id: 'm9', title: 'Crimson Divide', subtitle: 'Hold Dawn Line for 20s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 20, perfectText: 'Max Combo x6', toast: 'Canyons glow', nodeMeta: 'Ritual · Canyon', biome: 'canyon' },
-    { id: 'm10', title: 'Storm Front', subtitle: 'Reach 135m.', kind: MissionKind.REACH_ALTITUDE, target: 135, perfectText: 'Max Combo x6', toast: 'Clouds pierced', nodeMeta: 'Ritual · Storm', biome: 'storm' },
-    { id: 'm11', title: 'Ancient Echoes', subtitle: 'Reach Combo x7.', kind: MissionKind.COMBO_TARGET, target: 7, perfectText: 'Zero near-fails', toast: 'Ruins awaken', nodeMeta: 'Ritual · Ruins', biome: 'ruins' },
-    { id: 'm12', title: 'First Dawn', subtitle: '80% Precision for 12s.', kind: MissionKind.STABILITY_TIME, target: 12, perfectText: 'Clean run', toast: 'Dawn remembered', nodeMeta: 'Ritual · Volcano', biome: 'volcano' },
-    { id: 'm13', title: 'Midnight Depths', subtitle: 'Reach 140m.', kind: MissionKind.REACH_ALTITUDE, target: 140, perfectText: 'Max Combo x8', toast: 'Abyss illuminated', nodeMeta: 'Ritual · Abyss', biome: 'abyss' },
-    { id: 'm14', title: 'Luminous Flow', subtitle: 'Awaken 5 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 5, perfectText: 'Flawless run', toast: 'Care becomes rhythm', nodeMeta: 'Ritual · Aether', biome: 'aether' },
-    { id: 'm15', title: 'Neon Grid', subtitle: 'Hold Dawn Line for 25s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 25, perfectText: 'Reach 320m', toast: 'Grid overridden', nodeMeta: 'Ritual · Cyber', biome: 'cyber' },
-    { id: 'm16', title: 'Crystal Echoes', subtitle: 'Reach 155m.', kind: MissionKind.REACH_ALTITUDE, target: 155, perfectText: 'Max Combo x9', toast: 'Light fractured', nodeMeta: 'Ritual · Crystal', biome: 'crystal' },
-    { id: 'm17', title: 'Fractured Realm', subtitle: 'Reach Combo x8.', kind: MissionKind.COMBO_TARGET, target: 8, perfectText: 'Zero near-fails', toast: 'Reality mended', nodeMeta: 'Ritual · Shattered', biome: 'shattered' },
-    { id: 'm18', title: 'Stellar Nursery', subtitle: '80% Precision for 16s.', kind: MissionKind.STABILITY_TIME, target: 16, perfectText: 'Reach 330m', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
-    { id: 'm19', title: 'Cosmic Echo', subtitle: 'Reach 165m.', kind: MissionKind.REACH_ALTITUDE, target: 165, perfectText: 'reach 165m', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
-    { id: 'm20', title: 'Emerald Canopy', subtitle: 'Awaken 7 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 7, perfectText: 'Zero near-fails', toast: 'Stars aligned', nodeMeta: 'Ritual · Forest', biome: 'forest' },
-    { id: 'm21', title: 'Concrete Horizon', subtitle: 'Hold Dawn Line for 30s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 30, perfectText: 'Clean run', toast: 'City hums', nodeMeta: 'Ritual · City', biome: 'city' },
-    { id: 'm22', title: 'Amber Leaves', subtitle: 'Reach 175m.', kind: MissionKind.REACH_ALTITUDE, target: 175, perfectText: 'Reach 420m', toast: 'Leaves dance', nodeMeta: 'Ritual · Autumn', biome: 'autumn' },
-    { id: 'm23', title: 'Frostbound Peak', subtitle: 'Reach Combo x9.', kind: MissionKind.COMBO_TARGET, target: 9, perfectText: 'Flawless run', toast: 'Balance found', nodeMeta: 'Ritual · Snow', biome: 'snow' },
-    { id: 'm24', title: 'Petal Dance', subtitle: '80% Precision for 20s.', kind: MissionKind.STABILITY_TIME, target: 20, perfectText: 'Clean run', toast: 'Petals drift', nodeMeta: 'Ritual · Sakura', biome: 'sakura' },
-    { id: 'm25', title: 'Ocean Mirror', subtitle: 'Reach 190m.', kind: MissionKind.REACH_ALTITUDE, target: 190, perfectText: 'Flawless run', toast: 'The sky answered', nodeMeta: 'Ritual · Sea', biome: 'sea' },
-    { id: 'm26', title: 'Tangled Roots', subtitle: 'Awaken 9 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 9, perfectText: 'Max Combo x9', toast: 'Fog clears', nodeMeta: 'Ritual · Swamp', biome: 'swamp' },
-    { id: 'm27', title: 'Sunbaked Dunes', subtitle: 'Hold Dawn Line for 35s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 35, perfectText: 'Reach 420m', toast: 'Heat endured', nodeMeta: 'Ritual · Desert', biome: 'desert' },
-    { id: 'm28', title: 'Echoing Gorge', subtitle: 'Reach 205m.', kind: MissionKind.REACH_ALTITUDE, target: 205, perfectText: 'Max Combo x10', toast: 'Canyons glow', nodeMeta: 'Ritual · Canyon', biome: 'canyon' },
-    { id: 'm29', title: 'Thunders Roar', subtitle: 'Reach Combo x10.', kind: MissionKind.COMBO_TARGET, target: 10, perfectText: 'Zero near-fails', toast: 'Clouds pierced', nodeMeta: 'Ritual · Storm', biome: 'storm' },
-    { id: 'm30', title: 'Forgotten Temple', subtitle: '80% Precision for 24s.', kind: MissionKind.STABILITY_TIME, target: 24, perfectText: 'Clean run', toast: 'Ruins awaken', nodeMeta: 'Ritual · Ruins', biome: 'ruins' },
-    { id: 'm31', title: 'Magma Core', subtitle: 'Reach 210m.', kind: MissionKind.REACH_ALTITUDE, target: 210, perfectText: 'Max Combo x11', toast: 'Dawn remembered', nodeMeta: 'Ritual · Volcano', biome: 'volcano' },
-    { id: 'm32', title: 'Silent Trench', subtitle: 'Awaken 12 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 12, perfectText: 'Zero near-fails', toast: 'Abyss illuminated', nodeMeta: 'Ritual · Abyss', biome: 'abyss' },
-    { id: 'm33', title: 'Astral Stream', subtitle: 'Hold Dawn Line for 40s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 40, perfectText: 'Reach 530m', toast: 'Care becomes rhythm', nodeMeta: 'Ritual · Aether', biome: 'aether' },
-    { id: 'm34', title: 'Digital Dream', subtitle: 'Reach 225m.', kind: MissionKind.REACH_ALTITUDE, target: 225, perfectText: 'Flawless run', toast: 'Grid overridden', nodeMeta: 'Ritual · Cyber', biome: 'cyber' },
-    { id: 'm35', title: 'Prism Cavern', subtitle: 'Reach Combo x11.', kind: MissionKind.COMBO_TARGET, target: 11, perfectText: 'Zero near-fails', toast: 'Light fractured', nodeMeta: 'Ritual · Crystal', biome: 'crystal' },
-    { id: 'm36', title: 'Mirror Dimension', subtitle: '80% Precision for 28s.', kind: MissionKind.STABILITY_TIME, target: 28, perfectText: 'Clean run', toast: 'Reality mended', nodeMeta: 'Ritual · Shattered', biome: 'shattered' },
-    { id: 'm37', title: 'Purple Dust', subtitle: 'Reach 240m.', kind: MissionKind.REACH_ALTITUDE, target: 240, perfectText: 'Max Combo x12', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
-    { id: 'm38', title: 'Voids Edge', subtitle: 'Awaken 15 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 15, perfectText: 'Flawless run', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
-    { id: 'm39', title: 'Cassiopeia', subtitle: 'Hold Dawn Line for 45s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 45, perfectText: 'Reach 560m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
-    { id: 'm40', title: 'Cygnus', subtitle: 'Reach 250m.', kind: MissionKind.REACH_ALTITUDE, target: 250, perfectText: 'Zero near-fails', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
-    { id: 'm41', title: 'Lyra', subtitle: 'Reach Combo x12.', kind: MissionKind.COMBO_TARGET, target: 12, perfectText: 'Clean run', toast: 'Golden fleece', nodeMeta: 'Constellation · Aries', biome: 'aries' },
-    { id: 'm42', title: 'Draco', subtitle: '80% Precision for 34s.', kind: MissionKind.STABILITY_TIME, target: 34, perfectText: 'Reach 660m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
-    { id: 'm43', title: 'Pegasus', subtitle: 'Reach 265m.', kind: MissionKind.REACH_ALTITUDE, target: 265, perfectText: 'Max Combo x12', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
-    { id: 'm44', title: 'Phoenix', subtitle: 'Awaken 18 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 18, perfectText: 'Zero near-fails', toast: 'Golden fleece', nodeMeta: 'Constellation · Aries', biome: 'aries' },
-    { id: 'm45', title: 'Andromeda', subtitle: 'Hold Dawn Line for 50s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 50, perfectText: 'Reach 670m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
-    { id: 'm46', title: 'Perseus', subtitle: 'Reach 285m.', kind: MissionKind.REACH_ALTITUDE, target: 285, perfectText: 'Flawless run', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
-    { id: 'm47', title: 'Hercules', subtitle: 'Reach Combo x14.', kind: MissionKind.COMBO_TARGET, target: 14, perfectText: 'Zero near-fails', toast: 'Golden fleece', nodeMeta: 'Constellation · Aries', biome: 'aries' },
-    { id: 'm48', title: 'Galactic Core', subtitle: '80% Precision for 40s.', kind: MissionKind.STABILITY_TIME, target: 40, perfectText: 'Clean run', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
-    { id: 'm49', title: 'Eternity Gate', subtitle: 'Awaken 20 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 20, perfectText: 'Reach 690m', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
-    { id: 'm50', title: 'The Zenith', subtitle: 'Reach 300m into pure light.', kind: MissionKind.REACH_ALTITUDE, target: 300, perfectText: 'Flawless run', toast: 'Transcendence', nodeMeta: 'Apex · Zenith', biome: 'zenith' }
+    { id: 'm7', title: 'Whispering Mire', subtitle: 'Awaken 3 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 3, perfectText: 'max combo x5', toast: 'Fog clears', nodeMeta: 'Ritual · Swamp', biome: 'swamp' },
+    { id: 'm8', title: 'Scorched Sands', subtitle: 'Reach 125m.', kind: MissionKind.REACH_ALTITUDE, target: 125, perfectText: 'reach 145m', toast: 'Heat endured', nodeMeta: 'Ritual · Desert', biome: 'desert' },
+    { id: 'm9', title: 'Crimson Divide', subtitle: 'Hold Dawn Line for 20s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 20, perfectText: 'max combo x6', toast: 'Canyons glow', nodeMeta: 'Ritual · Canyon', biome: 'canyon' },
+    { id: 'm10', title: 'Storm Front', subtitle: 'Reach 135m.', kind: MissionKind.REACH_ALTITUDE, target: 135, perfectText: 'max combo x6', toast: 'Clouds pierced', nodeMeta: 'Ritual · Storm', biome: 'storm' },
+    { id: 'm11', title: 'Ancient Echoes', subtitle: 'Reach Combo x7.', kind: MissionKind.COMBO_TARGET, target: 7, perfectText: 'zero near-fails', toast: 'Ruins awaken', nodeMeta: 'Ritual · Ruins', biome: 'ruins' },
+    { id: 'm12', title: 'First Dawn', subtitle: '80% Precision for 12s.', kind: MissionKind.STABILITY_TIME, target: 12, perfectText: 'zero near-fails', toast: 'Dawn remembered', nodeMeta: 'Ritual · Volcano', biome: 'volcano' },
+    { id: 'm13', title: 'Midnight Depths', subtitle: 'Reach 140m.', kind: MissionKind.REACH_ALTITUDE, target: 140, perfectText: 'max combo x8', toast: 'Abyss illuminated', nodeMeta: 'Ritual · Abyss', biome: 'abyss' },
+    { id: 'm14', title: 'Luminous Flow', subtitle: 'Awaken 5 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 5, perfectText: 'zero near-fails', toast: 'Care becomes rhythm', nodeMeta: 'Ritual · Aether', biome: 'aether' },
+    { id: 'm15', title: 'Neon Grid', subtitle: 'Hold Dawn Line for 25s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 25, perfectText: 'reach 185m', toast: 'Grid overridden', nodeMeta: 'Ritual · Cyber', biome: 'cyber' },
+    { id: 'm16', title: 'Crystal Echoes', subtitle: 'Reach 155m.', kind: MissionKind.REACH_ALTITUDE, target: 155, perfectText: 'max combo x9', toast: 'Light fractured', nodeMeta: 'Ritual · Crystal', biome: 'crystal' },
+    { id: 'm17', title: 'Fractured Realm', subtitle: 'Reach Combo x8.', kind: MissionKind.COMBO_TARGET, target: 8, perfectText: 'zero near-fails', toast: 'Reality mended', nodeMeta: 'Ritual · Shattered', biome: 'shattered' },
+    { id: 'm18', title: 'Stellar Nursery', subtitle: '80% Precision for 16s.', kind: MissionKind.STABILITY_TIME, target: 16, perfectText: 'reach 185m', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
+    { id: 'm19', title: 'Cosmic Echo', subtitle: 'Reach 165m.', kind: MissionKind.REACH_ALTITUDE, target: 165, perfectText: 'reach 185m', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
+    { id: 'm20', title: 'Emerald Canopy', subtitle: 'Awaken 7 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 7, perfectText: 'zero near-fails', toast: 'Stars aligned', nodeMeta: 'Ritual · Forest', biome: 'forest' },
+    { id: 'm21', title: 'Concrete Horizon', subtitle: 'Hold Dawn Line for 30s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 30, perfectText: 'zero near-fails', toast: 'City hums', nodeMeta: 'Ritual · City', biome: 'city' },
+    { id: 'm22', title: 'Amber Leaves', subtitle: 'Reach 175m.', kind: MissionKind.REACH_ALTITUDE, target: 175, perfectText: 'reach 230m', toast: 'Leaves dance', nodeMeta: 'Ritual · Autumn', biome: 'autumn' },
+    { id: 'm23', title: 'Frostbound Peak', subtitle: 'Reach Combo x9.', kind: MissionKind.COMBO_TARGET, target: 9, perfectText: 'zero near-fails', toast: 'Balance found', nodeMeta: 'Ritual · Snow', biome: 'snow' },
+    { id: 'm24', title: 'Petal Dance', subtitle: '80% Precision for 20s.', kind: MissionKind.STABILITY_TIME, target: 20, perfectText: 'zero near-fails', toast: 'Petals drift', nodeMeta: 'Ritual · Sakura', biome: 'sakura' },
+    { id: 'm25', title: 'Ocean Mirror', subtitle: 'Reach 190m.', kind: MissionKind.REACH_ALTITUDE, target: 190, perfectText: 'zero near-fails', toast: 'The sky answered', nodeMeta: 'Ritual · Sea', biome: 'sea' },
+    { id: 'm26', title: 'Tangled Roots', subtitle: 'Awaken 9 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 9, perfectText: 'max combo x9', toast: 'Fog clears', nodeMeta: 'Ritual · Swamp', biome: 'swamp' },
+    { id: 'm27', title: 'Sunbaked Dunes', subtitle: 'Hold Dawn Line for 35s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 35, perfectText: 'reach 230m', toast: 'Heat endured', nodeMeta: 'Ritual · Desert', biome: 'desert' },
+    { id: 'm28', title: 'Echoing Gorge', subtitle: 'Reach 205m.', kind: MissionKind.REACH_ALTITUDE, target: 205, perfectText: 'max combo x10', toast: 'Canyons glow', nodeMeta: 'Ritual · Canyon', biome: 'canyon' },
+    { id: 'm29', title: 'Thunders Roar', subtitle: 'Reach Combo x10.', kind: MissionKind.COMBO_TARGET, target: 10, perfectText: 'zero near-fails', toast: 'Clouds pierced', nodeMeta: 'Ritual · Storm', biome: 'storm' },
+    { id: 'm30', title: 'Forgotten Temple', subtitle: '80% Precision for 24s.', kind: MissionKind.STABILITY_TIME, target: 24, perfectText: 'zero near-fails', toast: 'Ruins awaken', nodeMeta: 'Ritual · Ruins', biome: 'ruins' },
+    { id: 'm31', title: 'Magma Core', subtitle: 'Reach 210m.', kind: MissionKind.REACH_ALTITUDE, target: 210, perfectText: 'max combo x11', toast: 'Dawn remembered', nodeMeta: 'Ritual · Volcano', biome: 'volcano' },
+    { id: 'm32', title: 'Silent Trench', subtitle: 'Awaken 12 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 12, perfectText: 'zero near-fails', toast: 'Abyss illuminated', nodeMeta: 'Ritual · Abyss', biome: 'abyss' },
+    { id: 'm33', title: 'Astral Stream', subtitle: 'Hold Dawn Line for 40s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 40, perfectText: 'reach 270m', toast: 'Care becomes rhythm', nodeMeta: 'Ritual · Aether', biome: 'aether' },
+    { id: 'm34', title: 'Digital Dream', subtitle: 'Reach 225m.', kind: MissionKind.REACH_ALTITUDE, target: 225, perfectText: 'zero near-fails', toast: 'Grid overridden', nodeMeta: 'Ritual · Cyber', biome: 'cyber' },
+    { id: 'm35', title: 'Prism Cavern', subtitle: 'Reach Combo x11.', kind: MissionKind.COMBO_TARGET, target: 11, perfectText: 'zero near-fails', toast: 'Light fractured', nodeMeta: 'Ritual · Crystal', biome: 'crystal' },
+    { id: 'm36', title: 'Mirror Dimension', subtitle: '80% Precision for 28s.', kind: MissionKind.STABILITY_TIME, target: 28, perfectText: 'zero near-fails', toast: 'Reality mended', nodeMeta: 'Ritual · Shattered', biome: 'shattered' },
+    { id: 'm37', title: 'Purple Dust', subtitle: 'Reach 240m.', kind: MissionKind.REACH_ALTITUDE, target: 240, perfectText: 'max combo x12', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
+    { id: 'm38', title: 'Voids Edge', subtitle: 'Awaken 15 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 15, perfectText: 'zero near-fails', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
+    { id: 'm39', title: 'Cassiopeia', subtitle: 'Hold Dawn Line for 45s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 45, perfectText: 'reach 270m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
+    { id: 'm40', title: 'Cygnus', subtitle: 'Reach 250m.', kind: MissionKind.REACH_ALTITUDE, target: 250, perfectText: 'zero near-fails', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
+    { id: 'm41', title: 'Lyra', subtitle: 'Reach Combo x12.', kind: MissionKind.COMBO_TARGET, target: 12, perfectText: 'zero near-fails', toast: 'Golden fleece', nodeMeta: 'Constellation · Aries', biome: 'aries' },
+    { id: 'm42', title: 'Draco', subtitle: '80% Precision for 34s.', kind: MissionKind.STABILITY_TIME, target: 34, perfectText: 'reach 320m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
+    { id: 'm43', title: 'Pegasus', subtitle: 'Reach 265m.', kind: MissionKind.REACH_ALTITUDE, target: 265, perfectText: 'max combo x12', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
+    { id: 'm44', title: 'Phoenix', subtitle: 'Awaken 18 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 18, perfectText: 'zero near-fails', toast: 'Golden fleece', nodeMeta: 'Constellation · Aries', biome: 'aries' },
+    { id: 'm45', title: 'Andromeda', subtitle: 'Hold Dawn Line for 50s.', kind: MissionKind.ABOVE_DAWN_LINE, target: 50, perfectText: 'reach 320m', toast: 'Stars aligned', nodeMeta: 'Constellation · Ursa', biome: 'ursa' },
+    { id: 'm46', title: 'Perseus', subtitle: 'Reach 285m.', kind: MissionKind.REACH_ALTITUDE, target: 285, perfectText: 'zero near-fails', toast: 'Hunter awakened', nodeMeta: 'Constellation · Orion', biome: 'orion' },
+    { id: 'm47', title: 'Hercules', subtitle: 'Reach Combo x14.', kind: MissionKind.COMBO_TARGET, target: 14, perfectText: 'zero near-fails', toast: 'Golden fleece', nodeMeta: 'Constellation · Aries', biome: 'aries' },
+    { id: 'm48', title: 'Galactic Core', subtitle: '80% Precision for 40s.', kind: MissionKind.STABILITY_TIME, target: 40, perfectText: 'zero near-fails', toast: 'The void embraced', nodeMeta: 'Endurance · Cosmos', biome: 'cosmos' },
+    { id: 'm49', title: 'Eternity Gate', subtitle: 'Awaken 20 birds.', kind: MissionKind.BIRDS_THIS_RUN, target: 20, perfectText: 'reach 320m', toast: 'Stars born', nodeMeta: 'Ritual · Nebula', biome: 'nebula' },
+    { id: 'm50', title: 'The Zenith', subtitle: 'Reach 300m into pure light.', kind: MissionKind.REACH_ALTITUDE, target: 300, perfectText: 'zero near-fails', toast: 'Transcendence', nodeMeta: 'Apex · Zenith', biome: 'zenith' }
   ];
 
   const JOURNEY_SAVE_KEY = "luma_journey_progress_v3";
@@ -4723,7 +4787,9 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
       state.sun.tapScale = 1.3;
       triggerScreenFlash('rgba(255, 249, 236, 0.25)');
       emitAudioEvent('grace_gained');
-      showFloating("task complete", true);
+      // Saiu daqui um showFloating("task complete"): o toast logo abaixo ja diz QUAL tarefa
+      // foi concluida, e as duas mensagens apareciam juntas, em alturas diferentes, para o
+      // mesmo evento. Uma generica somada a uma especifica nao informa o dobro; atrapalha.
   }
 
   // O instante em que uma tarefa é cumprida não tinha retorno nenhum: os flags existiam,
@@ -4836,10 +4902,12 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     
     state.input.lastClick = -999; state.input.lastPress = -999; state.input.lastEmptyPulse = -999; state.input.keyboardHold = false; state.input.holding = false; state.input.inside = false; state.input.x = W * .5; state.input.y = H * .42;
     state.entropy = .12;
-    // O aviso de objetivos abre a corrida: é quando o jogador de fato quer saber o que a
-    // missão pede. Depois disso ele só volta quando um objetivo muda.
-    state.hud.trackerTimer = HUD_AVISO_SEGUNDOS + 2;
-    state.hud.trackerSig = '';
+    state.hud.marcasSemeadas = false;
+    for (const marca of [ui.tMarkSub1, ui.tMarkSub2, ui.tMarkPerf]) {
+      if (!marca) continue;
+      marca.classList.remove('done', 'failed', 'acabou-de-acender');
+      marca.textContent = marca.dataset.icone || '∘';
+    }
     state.sun.x = W * .5; state.sun.y = H * .38; state.sun.vx = 0; state.sun.vy = 0; state.sun.stability = .22; state.sun.energy = .25; state.sun.wear = 0;  // comeca quase vazio: a primeira respiracao tem que ser respirada
     state.sun.breath = 0;
     state.sun.breathStrength = .18;
@@ -5043,6 +5111,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     text.innerText = "";
     statsText.innerText = "";
     if (starsContainer) starsContainer.innerHTML = "";
+    if (ui.resultObjectives) ui.resultObjectives.innerHTML = '';
 
     // Avançar só é oferecido quando a missão foi de fato concluída.
     const nextBtn = document.getElementById("nextNodeBtn");
@@ -5085,6 +5154,36 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
             if (isNewRecord) linhasStats.unshift(`\u2728 ${t("NEW RECORD")} \u2728`);
             statsText.innerText = linhasStats.join("\n");
             
+            // Os objetivos voltam por extenso, com o estado de cada um. Durante a partida
+            // eles são só três marcas de 13px; ler é atividade de antes e de depois, e este
+            // é o "depois". Sem isto, o jogador via três estrelas e não sabia qual faltou.
+            if (ui.resultObjectives && experienceState.mission) {
+                const node = MAP_NODES.find(n => n.id === experienceState.mission.id);
+                ui.resultObjectives.innerHTML = '';
+                if (node) {
+                    const e = estadoDosObjetivos(node);
+                    const linhas = [
+                        [t(node.main), e.main, false],
+                        [t(node.subs[0]), e.sub1, false],
+                        [t(node.subs[1]), e.sub2, false],
+                        [`${t("perfect")}: ${t(node.perf).toLowerCase()}`, e.perf, e.perfFailed],
+                    ];
+                    for (const [texto, feito, falhou] of linhas) {
+                        const li = document.createElement('div');
+                        li.className = 'result-objective' + (feito ? ' done' : falhou ? ' failed' : '');
+                        const ico = document.createElement('span');
+                        ico.className = 'r-icon';
+                        ico.textContent = feito ? '✦' : (falhou ? '×' : '∘');
+                        const txt = document.createElement('span');
+                        // textContent, não innerHTML: o texto vem de tabela de dados e de
+                        // dicionário, e não há por que dar a eles um caminho para markup.
+                        txt.textContent = String(texto).toLowerCase();
+                        li.append(ico, txt);
+                        ui.resultObjectives.appendChild(li);
+                    }
+                }
+            }
+
             // Animação de Estrelas de Conclusão
             if (isSuccess && starsContainer && experienceState.mission) {
                 const node = MAP_NODES.find(n => n.id === experienceState.mission.id);
@@ -5095,7 +5194,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
                     if (sub1Done && sub2Done) stars = 2;
                     // A mesma condição que o mapa credita, para que resultado e jornada nunca discordem.
                     if (stars === 2 && evaluateLiveCondition(node.req.perf)) stars = 3;
-                    
+
                     let html = "";
                     for(let s=0; s<3; s++) {
                         const icon = s < stars ? "★" : "☆";
@@ -6252,18 +6351,6 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     const topActions = document.getElementById('topActions');
     if (topActions) topActions.style.opacity = hideAll ? "0" : iconsOpacity;
 
-    // O tracker de objetivos deixou de ser um painel permanente e virou um AVISO.
-    //
-    // Antes ele desvanecia por combo e parava em 0,1 ou 0,15: legível o bastante para puxar
-    // o olho, ilegível o bastante para não ser lido. Três linhas de texto fantasma no canto
-    // é o que dá a impressão de informação truncada e misturada — e o gatilho era o combo,
-    // que depois da mudança respiratória passou a medir outra coisa.
-    //
-    // Agora ele aparece inteiro quando tem algo a dizer (início da corrida, e toda vez que
-    // um objetivo muda de estado) e some por completo depois. Nunca fica no meio: ou está
-    // lá para ser lido, ou não está.
-    const avisoVisivel = state.hud.trackerTimer > 0;
-    state.hud.trackerTimer = Math.max(0, state.hud.trackerTimer - dt);
 
     // PENDING DRAFT UI UPDATE
     const pendingBtn = document.getElementById("pendingDraftBtn");
@@ -6291,54 +6378,39 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
         const esconderTracker = () => { ui.tracker.classList.add('hidden'); ui.tracker.style.opacity = '0'; };
         if (isTutorialActive()) {
             esconderTracker();
-        } else if (state.mode === 'gameplay' || state.mode === 'paused') {
+        } else if (state.mode === 'gameplay') {
+            // Na pausa e no resultado a tela cheia é dona da tela: nada de HUD por cima dela.
+            // As marcas são da partida, e só dela.
             ui.tracker.classList.remove('hidden');
-            // Na pausa o aviso ficava por cima do cabeçalho do painel — "o céu vai esperar"
-            // atravessava a linha "perfeito: zero quase-quedas". Uma tela cheia é dona da
-            // tela: nada de HUD flutuando em cima dela. O aviso é da partida, e só dela.
-            ui.tracker.style.opacity = (hideAll || state.mode !== 'gameplay' || !avisoVisivel) ? '0' : '1';
+            ui.tracker.style.opacity = hideAll ? '0' : '1';
 
-            const m = experienceState.mission;
             const node = experienceState.node; // resolvido na troca de missão, não a cada frame
             if (node) {
-                ui.tTitle.textContent = t(node.title).toLowerCase();
-                
-                // O objetivo principal vive fixo no topo, que nunca desvanece. Aqui o tracker
-                // mostra o que dá as estrelas: as duas tarefas secundárias e a perfeição.
-                ui.tItemMain.style.display = ui.topGoal ? 'none' : '';
-                ui.tTextMain.textContent = t(node.main).toLowerCase();
-                ui.tTextSub1.textContent = t(node.subs[0]).toLowerCase();
-                ui.tTextSub2.textContent = t(node.subs[1]).toLowerCase();
-                ui.tTextPerf.textContent = `${t("perfect")}: ${t(node.perf).toLowerCase()}`;
+                const estado = estadoDosObjetivos(node);
 
-                // O Tracker deve refletir APENAS a jogada atual para não confundir o jogador
-                const mainDone = experienceState.missionCompleted || evaluateLiveCondition(node.req.main);
-                const sub1Done = evaluateLiveCondition(node.req.subs[0]);
-                const sub2Done = evaluateLiveCondition(node.req.subs[1]);
-
-                // A mesma condição que o mapa credita. Antes era nearFails > 0 aqui, o que
-                // discordava das missões cuja perfeição é altitude ou combo.
-                const perfDone = evaluateLiveCondition(node.req.perf);
-                const perfFailed = node.req.perf[0] === 'nearFails' && state.runStats.nearFails > 0;
-                
-                const updateItem = (item, iconEl, done, failed = false, defaultIcon = '∘') => {
-                    item.classList.toggle('done', done);
-                    item.classList.toggle('failed', failed);
-                    iconEl.textContent = failed ? '×' : (done ? '✦' : defaultIcon);
-                };
-                
-                updateItem(ui.tItemMain, ui.tIconMain, mainDone);
-                updateItem(ui.tItemSub1, ui.tIconSub1, sub1Done);
-                updateItem(ui.tItemSub2, ui.tIconSub2, sub2Done);
-                updateItem(ui.tItemPerf, ui.tIconPerf, perfDone, perfFailed, '✧');
-
-                // Reacende o aviso quando algo de fato mudou. Sem esta assinatura o painel
-                // ou ficaria para sempre, ou sumiria antes de contar que uma estrela caiu.
-                const assinatura = `${mainDone}|${sub1Done}|${sub2Done}|${perfDone}|${perfFailed}|${node.title}`;
-                if (assinatura !== state.hud.trackerSig) {
-                  state.hud.trackerSig = assinatura;
-                  state.hud.trackerTimer = HUD_AVISO_SEGUNDOS;
+                // As marcas ficam SEMPRE na tela — são três glifos de 13px, custam quase nada
+                // de atenção. O texto é que é evento: aparece no instante da conquista e sai.
+                const marcas = [
+                    [ui.tMarkSub1, estado.sub1, false],
+                    [ui.tMarkSub2, estado.sub2, false],
+                    [ui.tMarkPerf, estado.perf, estado.perfFailed],
+                ];
+                for (const [el, feito, falhou] of marcas) {
+                    if (!el) continue;
+                    const antes = el.classList.contains('done');
+                    el.classList.toggle('done', feito);
+                    el.classList.toggle('failed', falhou && !feito);
+                    el.textContent = falhou && !feito ? '×' : (el.dataset.icone || '∘');
+                    // O pulso só vale para o que o jogador CONQUISTOU nesta corrida.
+                    // "zero quase-quedas" já é verdade no primeiro quadro — ninguém caiu
+                    // ainda —, então sem esta guarda a marca acendia comemorando nada.
+                    if (feito && !antes && state.hud.marcasSemeadas) {
+                        el.classList.remove('acabou-de-acender');
+                        void el.offsetWidth;                 // reinicia a animação
+                        el.classList.add('acabou-de-acender');
+                    }
                 }
+                state.hud.marcasSemeadas = true;
             }
         } else {
             esconderTracker();
@@ -6349,6 +6421,25 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
     // Aqui cuidamos apenas do desvanecer por foco, que só faz sentido durante a partida.
     if (ui.celestialHUD) ui.celestialHUD.style.opacity = hideAll ? '0' : '1';
   }
+
+  // O estado dos três objetivos que dão estrela, num lugar só. O HUD durante a partida e a
+  // lista da tela de resultado leem daqui — se lessem cada um por conta, voltariam a
+  // discordar, como já discordaram quando a perfeição era `nearFails > 0` no tracker e outra
+  // coisa no mapa.
+  function estadoDosObjetivos(node) {
+    return {
+      main: experienceState.missionCompleted || evaluateLiveCondition(node.req.main),
+      sub1: evaluateLiveCondition(node.req.subs[0]),
+      sub2: evaluateLiveCondition(node.req.subs[1]),
+      perf: evaluateLiveCondition(node.req.perf),
+      perfFailed: node.req.perf[0] === 'nearFails' && state.runStats.nearFails > 0,
+    };
+  }
+
+  // A frase de conquista NÃO mora aqui. announceTaskDone(), em 09-mission-flow.js, já
+  // nomeia a tarefa cumprida num toast, com som e pulso de halo — e por um tempo o jogo
+  // mostrou as duas ao mesmo tempo, em alturas diferentes, para o mesmo evento. O HUD faz
+  // a parte periférica: a marca acende e pulsa uma vez. Quem fala é o toast.
 
   const evaluateLiveCondition = (cond) => {
     if (!cond) return false;

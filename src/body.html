@@ -28,7 +28,16 @@
   <div class="floating-message" id="floatingMessage">✨</div>
   <div class="reward-badge" id="rewardBadge">FLOW STATE</div>
 
+  <!-- Durante a partida os objetivos sao MARCAS, nao texto. O modelo e o do Tiny Thief:
+       detalhe antes de jogar (mapa e briefing), forma compacta durante, e a frase so
+       aparece no instante em que um objetivo e concluido. Os elementos de texto continuam
+       no DOM porque a tela de resultado e a pausa os reaproveitam. -->
   <div id="liveMissionTracker" class="live-mission-tracker hidden">
+      <div class="tracker-marks" id="trackerMarks">
+          <span class="t-mark" id="tMarkSub1" data-icone="∿">∿</span>
+          <span class="t-mark" id="tMarkSub2" data-icone="☴">☴</span>
+          <span class="t-mark" id="tMarkPerf" data-icone="✧">✧</span>
+      </div>
       <div class="tracker-title" id="tTitle">autumn winds</div>
       <div class="tracker-item" id="tItemMain"><span class="t-icon" id="tIconMain">∘</span><span id="tTextMain">reach combo x3</span></div>
       <div class="tracker-item" id="tItemSub1"><span class="t-icon" id="tIconSub1">∘</span><span id="tTextSub1">survive 30s</span></div>
@@ -370,6 +379,10 @@
     <div class="subtitle" id="resultText" style="white-space: pre-line; margin-bottom: 2vh;"></div>
     
     <div class="result-stars-container" id="resultStars"></div>
+
+    <!-- No fim da corrida os objetivos voltam por extenso, com o estado de cada um: e aqui
+         que o jogador quer ler, nao no meio do gesto. -->
+    <div class="result-objectives" id="resultObjectives"></div>
 
     <div class="result-stats" id="resultStats" style="color: var(--sun-glow); white-space: pre-line; font-weight: 600; text-shadow: 0 0 12px rgba(255,196,107,0.4); margin-bottom: 6vh;"></div>
     

@@ -584,18 +584,75 @@ test('the objectives panel can never reach the timer ring, at any screen width',
     `O painel de objetivos encosta ou invade o anel do tempo: ${apertadas}`);
 });
 
-test('the objectives panel is a notice, not a permanent panel', () => {
-  // Ele desvanecia por combo e parava em 0,1 / 0,15: legível o bastante para puxar o olho,
-  // ilegível o bastante para ser lido. Agora ou está aceso para ser lido, ou está apagado.
+test('during play the objectives are marks, never a block of text', () => {
+  // O painel de texto foi tentado duas vezes e nas duas ficou apertado: primeiro invadindo
+  // o anel do tempo, depois estreito e quebrando em três linhas. O modelo agora é o do Tiny
+  // Thief — detalhe antes de jogar, marcas durante, frase só na conquista, detalhe de novo
+  // no fim. Ler é atividade de antes e de depois; durante, o olho só precisa de um relance.
+  assert.match(source, /\.live-mission-tracker \.tracker-title,\s*\n\s*\.live-mission-tracker \.tracker-item \{ display: none; \}/,
+    'Os itens de texto voltaram a aparecer no HUD durante a partida.');
+
   const hud = functionSource('updateHUD');
-  assert.match(hud, /state\.hud\.trackerTimer/,
-    'O aviso voltou a não ter tempo de vida próprio.');
+  assert.match(hud, /tMarkSub1/, 'As marcas sumiram do HUD.');
+  assert.doesNotMatch(hud, /ui\.tTextSub1\.textContent/,
+    'O HUD voltou a escrever texto de objetivo durante a partida.');
+});
+
+// Linhas de código, sem comentários: um comentário que EXPLICA a remoção de uma chamada não
+// pode fazer o teste acusar que a chamada voltou. Foi o que aconteceu na primeira versão
+// deste teste — ele leu a própria justificativa da correção como se fosse a regressão.
+function codigoSemComentarios() {
+  return source
+    .split('\n')
+    .filter(l => !/^\s*(\/\/|\*|\/\*)/.test(l))
+    .join('\n');
+}
+
+test('one event produces one message, not three', () => {
+  // O instante em que uma tarefa é cumprida chegou a disparar três coisas ao mesmo tempo:
+  // um toast nomeando a tarefa (25% da altura), um showFloating genérico "task complete"
+  // (80%) e uma frase no canto superior esquerdo. Três alturas, uma notícia só.
+  // Ficou o toast, que nomeia; o HUD faz a parte periférica, acendendo a marca.
+  const codigo = codigoSemComentarios();
+  assert.doesNotMatch(codigo, /showFloating\("task complete"/,
+    'Voltou a mensagem genérica junto do toast que já nomeia a tarefa.');
+  assert.doesNotMatch(codigo, /trackerReveal/,
+    'Voltou a terceira mensagem para o mesmo evento.');
+
+  const hud = functionSource('updateHUD');
   const opacidades = Array.from(hud.matchAll(/ui\.tracker\.style\.opacity = ([^;]+);/g)).map(m => m[1]);
   assert.ok(opacidades.length > 0, 'Ninguém mais controla a opacidade do tracker.');
   for (const expr of opacidades) {
-    assert.ok(!/0\.\d/.test(expr),
-      `O tracker voltou a ter opacidade fantasma: ${expr}`);
+    assert.ok(!/0\.\d/.test(expr), `O tracker voltou a ter opacidade fantasma: ${expr}`);
   }
+});
+
+test('a condition that is already true at the start does not celebrate itself', () => {
+  // "zero quase-quedas" é verdade no primeiro quadro: ninguém caiu ainda. Sem a semeadura,
+  // a partida abria comemorando uma conquista que o jogador não fez.
+  const hud = functionSource('updateHUD');
+  assert.match(hud, /state\.hud\.marcasSemeadas/,
+    'A guarda contra comemorar o que já nascia verdadeiro sumiu.');
+  assert.match(hud, /feito && !antes && state\.hud\.marcasSemeadas/,
+    'O pulso da marca voltou a disparar no primeiro quadro.');
+});
+
+test('a mark lights once when won, instead of pulsing forever', () => {
+  // A versão anterior animava as quatro linhas num laço de 4s, fora de fase, o tempo todo.
+  // Movimento periférico contínuo é o oposto do que um jogo de respiração quer.
+  assert.doesNotMatch(source, /animation:\s*taskWave/, 'Voltou a animação em laço das tarefas.');
+  const marca = regraCSS('.t-mark.acabou-de-acender');
+  assert.match(marca, /animation:\s*marcaAcesa/);
+  assert.doesNotMatch(marca, /infinite/, 'O pulso da conquista virou laço.');
+});
+
+test('the result screen brings the objectives back in full, with their state', () => {
+  // Três estrelas sem lista deixavam o jogador sem saber QUAL objetivo faltou.
+  const mostrar = functionSource('showResult');
+  assert.match(mostrar, /resultObjectives/,
+    'A tela de resultado parou de listar os objetivos.');
+  assert.match(mostrar, /estadoDosObjetivos/,
+    'A lista do resultado voltou a calcular o estado por conta própria, em vez de ler a fonte única.');
 });
 
 test('whatever hides the objectives panel writes the same channel that shows it', () => {
@@ -614,4 +671,45 @@ test('whatever hides the objectives panel writes the same channel that shows it'
   const soltas = Array.from(resto.matchAll(/ui\.tracker\.classList\.add\('hidden'\)/g));
   assert.equal(soltas.length, 0,
     'Alguém voltou a esconder o tracker só pela classe, por fora de esconderTracker().');
+});
+
+test('the third star is hard but reachable, in altitude and in combo', () => {
+  // A curva principal foi reescalada e as condições de PERFEIÇÃO ficaram para trás: dez
+  // delas ainda pediam altitudes de antes ("Reach 690m" numa corrida cujo teto é 387m).
+  // A terceira estrela de dez missões era inalcançável, e o teste de alcançabilidade não
+  // olhava para lá — ele só media o objetivo principal. Quem achou foi o varredor de i18n,
+  // por acidente, ao listar esses textos como traduções faltando.
+  const sim = require('../tools/sim-breath.cjs');
+  const game = makeHarness();
+
+  const perfs = Array.from(game.run(`MAP_NODES.map(n => n.id + '|' + n.perf + '|' + n.req.perf.join(','))`))
+    .map(l => l.split('|'));
+
+  const problemas = [];
+  for (const [id, texto, req] of perfs) {
+    const [campo, alvo] = req.split(',');
+    const tempo = sim.duracaoDaMissao(id);
+    if (campo === 'score') {
+      const teto = sim.tetoRealista(tempo);
+      if (Number(alvo) > teto * 0.9) {
+        problemas.push(`${id} pede "${texto}" em ${tempo}s (teto real: ${Math.round(teto)}m)`);
+      }
+    }
+    if (campo === 'combo' && Number(alvo) > 20) {
+      problemas.push(`${id} pede "${texto}", acima do teto de combo do jogo`);
+    }
+  }
+  assert.equal(problemas.join(' | '), '',
+    `Condições de perfeição fora do alcance: ${problemas.join(' | ')}`);
+});
+
+test('every perfection condition says exactly what it measures', () => {
+  // "Clean run" e "Flawless run" não descrevem nada verificável. getPerfObjective() já as
+  // traduzia para nearFails==0, mas o texto na tabela seguia vago — e quem lesse a tabela
+  // acreditaria numa regra que não existe. O campo agora diz a condição.
+  const game = makeHarness();
+  const vagas = Array.from(game.run(`missions
+    .map(m => m.id + '|' + m.perfectText)
+    .filter(l => !/\\|(zero near-fails|reach \\d+m|max combo x\\d+)$/.test(l))`)).join(' | ');
+  assert.equal(vagas, '', `Perfeição descrita de forma não verificável: ${vagas}`);
 });
