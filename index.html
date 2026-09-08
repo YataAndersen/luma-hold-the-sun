@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Sustine — Hold the Sun</title>
+  <title>Sustine</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Nunito:wght@300;400&display=swap" rel="stylesheet">
@@ -8694,7 +8694,7 @@ body.reduce-motion .breathe, body.reduce-motion .breatheLogo, body.reduce-motion
               const blob = await new Promise(resolve => cachedShareCanvas.toBlob(resolve, 'image/png'));
               const file = new File([blob], 'sustine_journey.png', { type: 'image/png' });
               if (navigator.share && navigator.canShare({ files: [file] })) {
-                  await navigator.share({ title: 'Sustine — Hold the Sun', text: cachedShareText, files: [file] });
+                  await navigator.share({ title: 'Sustine', text: cachedShareText, files: [file] });
               } else {
                   showFloating("this device cannot share directly", false);
               }

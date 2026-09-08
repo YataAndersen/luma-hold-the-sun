@@ -117,7 +117,7 @@
               const blob = await new Promise(resolve => cachedShareCanvas.toBlob(resolve, 'image/png'));
               const file = new File([blob], 'sustine_journey.png', { type: 'image/png' });
               if (navigator.share && navigator.canShare({ files: [file] })) {
-                  await navigator.share({ title: 'Sustine — Hold the Sun', text: cachedShareText, files: [file] });
+                  await navigator.share({ title: 'Sustine', text: cachedShareText, files: [file] });
               } else {
                   showFloating("this device cannot share directly", false);
               }
