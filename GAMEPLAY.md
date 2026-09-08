@@ -1,14 +1,36 @@
 # LUMA — gameplay: estado e direção
 
+> ## ⚠ Registro histórico, não descrição do jogo atual
+>
+> **Quase tudo abaixo desta linha descreve a economia que existia até 06/09/2026** — energia
+> como combustível, pulso com custo fixo, janela de anti-spam, sustentar e pulsar como duas
+> ações separadas. **Essa economia não existe mais.**
+>
+> Em 07/09/2026 o núcleo virou respiração: encostar é inspirar, soltar é expirar, e é ao
+> soltar que o gesto acontece. A perícia deixou de ser "quando pulsar" e passou a ser
+> **julgar duração**. Um ciclo leva ~5,8s — dez gestos por minuto.
+>
+> **Para o jogo de hoje, leia [RESPIRACAO.md](RESPIRACAO.md).**
+> Para verificar qualquer coisa, [VERIFICACAO.md](VERIFICACAO.md).
+>
+> Este arquivo fica porque o raciocínio do Ciclo 1 continua útil — vários problemas
+> descritos aqui (objetivo que promete uma coisa e mede outra, métrica grátis, missão
+> impossível) **voltaram a acontecer depois**, de outra forma. Mas nenhum número daqui
+> vale hoje.
+
 ## Objetivo do usuário
 
 Elevar gameplay, core loop, game feel, mecânicas e level design. Lançamentos futuros previstos: itch.io, Android e iPhone. O desenvolvimento acontece nesta pasta principal.
 
-## O ciclo do jogo
+## O ciclo do jogo — versão atual
 
-**Sustentar → escolher quando pulsar → enfrentar pressão → recuperar o sol → despertar o mundo.**
+**Inspirar segurando → sentir o fôlego encher → soltar no ponto → o mundo responde.**
 
-Preservar o arcade contemplativo do GDD: cuidado, tensão suave, domínio do gesto e resposta visível do mundo.
+Segurar além do cheio tensiona: mata a sustentação e enfraquece o gesto. É o que dá ao
+gesto uma duração com fim, em vez de um botão a manter apertado.
+
+*(O ciclo descrito no restante deste documento — "sustentar → escolher quando pulsar" — é o
+anterior.)*
 
 ---
 

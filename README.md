@@ -12,14 +12,17 @@ A fantasia não é controlar um astro. É: **sou pequeno, mas minha persistênci
 
 ## O jogo em uma frase de regras
 
-O sol sempre cai. **Segurar** perto dele o sustenta e recarrega energia; **pulsar** gasta essa energia e o impulsiona para cima. Você não pode fazer as duas coisas o tempo todo — é aí que mora o jogo.
+O sol sempre cai. **Encostar na tela é inspirar; soltar é expirar** — e é ao soltar que o gesto acontece, com a força do fôlego acumulado. O LUMA nasceu como o avesso do Flappy Bird: a perícia pedida é **julgar duração**, como contar de zero a trinta de cabeça e terminar perto do que o relógio diria. Não é tocar rápido.
 
-- **Segurar** → recupera energia, estabiliza, mas não vence a gravidade sozinho
-- **Pulsar** → ganha altitude, custa energia, e é recusado quando falta fôlego
-- **O vento** empurra o sol de lado: sustentar é rastrear, não repousar o dedo
-- **Ritmo** vale mais que velocidade — martelar o toque não constrói combo
+- **Segurar** → o fôlego enche em 4,5s e a sustentação vence a gravidade com folga; o pânico sempre tem saída
+- **Soltar no ponto** → impulso máximo. A curva é quadrática: meio fôlego rende **um quarto** do impulso
+- **Segurar demais** → a tensão cresce, **mata a sustentação** e enfraquece o gesto. Soltar é necessário, não recomendado
+- **Toque em qualquer lugar da tela** — mirar é perícia espacial e não tem relação com respirar
+- Um ciclo inteiro leva ~5,8s: **10 gestos por minuto**, dentro da faixa da respiração coerente
 
 50 missões numa jornada de constelações, com três estrelas por missão: o objetivo principal, duas tarefas secundárias e a perfeição.
+
+> Esta seção já descreveu a mecânica anterior — "segurar *perto* do sol", "pulsar gasta energia" — por várias versões depois de ela deixar de existir. É o padrão descrito em [VERIFICACAO.md](VERIFICACAO.md): **mudança de mecânica deixa entulho, e o entulho não parece bug, parece decisão antiga correta.**
 
 ## Rodar
 
@@ -31,32 +34,40 @@ Abra `index.html` no navegador. Não precisa de servidor, build ou instalação.
 
 ```bash
 node tools/build.cjs           # reconstrói index.html a partir de src/
-node tools/build.cjs --check   # falha se index.html estiver fora de sincronia
-node --test tests/gameplay.test.cjs
+node tools/verificar.cjs       # o ritual inteiro: build, testes, tradução, cor, ritmo
 ```
+
+**Antes de publicar, rode `node tools/verificar.cjs`.** Ele junta as cinco verificações que
+viviam espalhadas — e a que faltava rodar era sempre a que teria pego o problema. Ele também
+lembra do que não sabe fazer: **abrir o jogo e jogar**.
 
 Sem dependências, sem `node_modules`, sem bundler — só Node.
 
 | documento | conteúdo |
 |---|---|
 | [ARQUITETURA.md](ARQUITETURA.md) | como o projeto é montado e onde mexer para cada tarefa |
-| [GAMEPLAY.md](GAMEPLAY.md) | decisões de design, balanceamento e medições feitas no jogo |
+| [GAMEPLAY.md](GAMEPLAY.md) | registro histórico do Ciclo 1 — a economia descrita ali **não existe mais**; ver RESPIRACAO.md |
 | [AUDITORIA.md](AUDITORIA.md) | código morto e quebrado encontrado, e o que foi feito |
 | [IDIOMAS.md](IDIOMAS.md) | como o sistema de tradução funciona e como adicionar idiomas |
+| [RESPIRACAO.md](RESPIRACAO.md) | por que as constantes de `03-tuning.js` são o que são, e todos os erros que levaram até elas |
+| **[VERIFICACAO.md](VERIFICACAO.md)** | **como verificar qualquer coisa aqui — e as quatro vezes que um instrumento mentiu. Leia antes de medir.** |
 
 ### Ferramentas
 
 ```bash
+node tools/sim-breath.cjs           # o ciclo do gesto ainda está na faixa respiratória?
+node tools/sweep-i18n.cjs           # texto que vai para a tela sem tradução (sai 0 quando limpo)
+node tools/check-color-script.cjs   # o arco cromático das 50 missões tem quebras?
 node tools/check-reachability.cjs   # verifica se as 50 missões são vencíveis
 node tools/sweep-dead-code.cjs index.html
 node tools/sweep-dom-refs.cjs index.html
 ```
 
-A verificação de alcançabilidade existe porque a jornada é linear: **uma missão impossível trava o jogo inteiro**. Já aconteceu três vezes durante o desenvolvimento.
+A verificação de alcançabilidade existe porque a jornada é linear: **uma missão impossível trava o jogo inteiro**. Já aconteceu **quatro** vezes durante o desenvolvimento — e na terceira, o próprio teste de alcançabilidade passava, porque errava a mesma conta que a ferramenta. Por isso `sim-breath.cjs` hoje é um módulo que o teste importa: **um modelo só**, calibrado contra o jogo rodando. Ver [VERIFICACAO.md](VERIFICACAO.md).
 
 ## Idiomas
 
-Inglês e português. A chave de tradução é o próprio texto em inglês, então uma tradução faltando cai no original em vez de mostrar chave crua. Ver [IDIOMAS.md](IDIOMAS.md).
+Sete: inglês, português, espanhol, alemão, francês, russo e italiano. A chave de tradução é o próprio texto em inglês, então uma tradução faltando cai no original em vez de mostrar chave crua. Ver [IDIOMAS.md](IDIOMAS.md).
 
 ## Dependências externas
 
